@@ -58,4 +58,6 @@
 	<bean id="systemConfigDAO" parent="daoTemplate" class="com.jsh.dao.basic.SystemConfigDAO"/>
 	<!-- 配置materialPropertyDAO组件 -->
 	<bean id="materialPropertyDAO" parent="daoTemplate" class="com.jsh.dao.materials.MaterialPropertyDAO"/>
+	<!-- 配置regionAreaDAO组件 -->
+	<bean id="regionAreaDao" parent="daoTemplate" class="com.jsh.dao.basic.RegionAreaDAO"/>
 </beans>

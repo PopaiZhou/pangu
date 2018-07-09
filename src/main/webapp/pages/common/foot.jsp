@@ -14,6 +14,6 @@
     <link type="text/css" rel="stylesheet" href="<%=path %>/css/css.css"/>
 </head>
 <body>
-<div id="foot">Copyright © 2015 季圣华 版权所有 版本号 V1.0</div>
+<div id="foot">Copyright © 2018  版权所有 版本号 V1.0</div>
 </body>
 </html>

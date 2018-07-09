@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.jsh.model.po.RegionArea" table="jsh_region_area" schema="jsh_erp">
+        <id name="id" column="id"/>
+        <property name="regionId" column="region_id"/>
+        <property name="name" column="name"/>
+        <property name="parentId" column="parent_id"/>
+        <property name="parentName" column="parent_name"/>
+        <property name="areacode" column="areacode"/>
+        <property name="zipcode" column="zipcode"/>
+        <property name="depth" column="depth"/>
+        <property name="areaNameEn" column="area_name_en"/>
+        <property name="parentAreaNameEn" column="parent_area_name_en"/>
+        <property name="isoCode" column="iso_code"/>
+        <property name="gmtCreate" column="gmt_create"/>
+        <property name="gmtModify" column="gmt_modify"/>
+    </class>
+</hibernate-mapping>

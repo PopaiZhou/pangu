@@ -97,6 +97,21 @@
                 <comment>备注</comment>
             </column>
         </property>
+        <property name="state" type="java.lang.String">
+            <column name="state" length="32">
+                <comment>省</comment>
+            </column>
+        </property>
+        <property name="city" type="java.lang.String">
+            <column name="city" length="32">
+                <comment>市</comment>
+            </column>
+        </property>
+        <property name="street" type="java.lang.String">
+            <column name="street" length="64">
+                <comment>区县</comment>
+            </column>
+        </property>
         <property name="isystem" type="java.lang.Short">
             <column name="isystem" not-null="true">
                 <comment>是否系统自带 0==系统 1==非系统</comment>

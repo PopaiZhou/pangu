@@ -4,16 +4,8 @@
 
 <hibernate-configuration>
 <session-factory>
-	<!--
-		<property name="hibernate.connection.driver_class">
-		com.mysql.jdbc.Driver
-		</property>
-		<property name="hibernate.connection.url">
-		jdbc:mysql:///myshop
-		</property>
-		<property name="hibernate.connection.username">root</property>
-		<property name="connection.password">root</property>
-	-->
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/jsh_erp</property>
 	<property name="hibernate.dialect">
 		org.hibernate.dialect.MySQL5Dialect
 	</property>
@@ -45,5 +37,6 @@
     <mapping resource="hibernate/AccountItem.hbm.xml" />
 	<mapping resource="hibernate/SystemConfig.hbm.xml" />
 	<mapping resource="hibernate/MaterialProperty.hbm.xml" />
+	<mapping resource="hibernate/RegionArea.hbm.xml"/>
 </session-factory>
 </hibernate-configuration>

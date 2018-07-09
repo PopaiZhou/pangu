@@ -25,7 +25,7 @@ import java.util.Map;
 
 /*
  * 单位管理
- * @author ji-sheng-hua  qq:7 5 2 7 1 8 9 2 0
+ *
  */
 @SuppressWarnings("serial")
 public class SupplierAction extends BaseAction<SupplierModel> {
@@ -64,6 +64,10 @@ public class SupplierAction extends BaseAction<SupplierModel> {
             supplier.setBankName(model.getBankName());
             supplier.setAccountNumber(model.getAccountNumber());
             supplier.setTaxRate(model.getTaxRate());
+
+            supplier.setState(model.getState());
+            supplier.setCity(model.getCity());
+            supplier.setStreet(model.getStreet());
 
             supplierService.create(supplier);
 
@@ -143,6 +147,10 @@ public class SupplierAction extends BaseAction<SupplierModel> {
             supplier.setAccountNumber(model.getAccountNumber());
             supplier.setTaxRate(model.getTaxRate());
 
+            supplier.setState(model.getState());
+            supplier.setCity(model.getCity());
+            supplier.setStreet(model.getStreet());
+
             supplier.setEnabled(supplier.getEnabled());
             supplierService.update(supplier);
 
@@ -193,6 +201,10 @@ public class SupplierAction extends BaseAction<SupplierModel> {
             supplier.setBankName(supplier.getBankName());
             supplier.setAccountNumber(supplier.getAccountNumber());
             supplier.setTaxRate(supplier.getTaxRate());
+
+            supplier.setState(supplier.getState());
+            supplier.setCity(supplier.getCity());
+            supplier.setStreet(supplier.getStreet());
 
             supplier.setEnabled(supplier.getEnabled());
             supplierService.update(supplier);
@@ -334,6 +346,10 @@ public class SupplierAction extends BaseAction<SupplierModel> {
                     item.put("accountNumber", supplier.getAccountNumber());
                     item.put("taxRate", supplier.getTaxRate());
 
+                    item.put("state",supplier.getState());
+                    item.put("city",supplier.getCity());
+                    item.put("street",supplier.getStreet());
+
                     item.put("enabled", supplier.getEnabled());
                     item.put("op", supplier.getIsystem());
                     dataArray.add(item);
@@ -389,6 +405,10 @@ public class SupplierAction extends BaseAction<SupplierModel> {
                     item.put("bankName", supplier.getBankName());
                     item.put("accountNumber", supplier.getAccountNumber());
                     item.put("taxRate", supplier.getTaxRate());
+
+                    item.put("state",supplier.getState());
+                    item.put("city",supplier.getCity());
+                    item.put("street",supplier.getStreet());
 
                     item.put("enabled", supplier.getEnabled());
                     item.put("op", supplier.getIsystem());

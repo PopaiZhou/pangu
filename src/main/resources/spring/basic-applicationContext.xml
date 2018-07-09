@@ -384,4 +384,13 @@
     </bean>
 	<!--账户明细配置结束 -->
 
+	<!--区域配置开始 -->
+	<bean id="regionAreaService" class="com.jsh.service.basic.RegionAreaService">
+		<property name="regionAreaDao" ref="regionAreaDao" />
+	</bean>
+	<bean id="regionAreaAction" class="com.jsh.action.basic.RegionAreaAction" scope="prototype">
+		<property name="regionAreaService" ref="regionAreaService"/>
+	</bean>
+	<!--区域配置结束 -->
+
 </beans>

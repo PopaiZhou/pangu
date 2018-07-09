@@ -1,3 +1,9 @@
+create database jsh_erp
+DEFAULT CHARACTER SET utf8
+DEFAULT COLLATE utf8_general_ci;
+
+use jsh_erp;
+
 /*
 MySQL Backup
 Source Server Version: 5.0.22

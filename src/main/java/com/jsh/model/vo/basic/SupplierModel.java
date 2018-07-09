@@ -66,6 +66,20 @@ public class SupplierModel implements Serializable {
 
     private String fax = "";
     private String telephone = "";
+
+    /**
+     * 省
+     */
+    private String state;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String street;
+
     private String address = "";
     private String taxNum = "";
     private String bankName = "";
@@ -360,5 +374,59 @@ public class SupplierModel implements Serializable {
 
     public void setSupplierFile(File supplierFile) {
         this.supplierFile = supplierFile;
+    }
+
+    /**
+     * Getter method for property <tt>state</tt>.
+     *
+     * @return property value of state
+     */
+    public String getState() {
+        return state;
+    }
+
+    /**
+     * Setter method for property <tt>state</tt>.
+     *
+     * @param state value to be assigned to property state
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
+     * Getter method for property <tt>city</tt>.
+     *
+     * @return property value of city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * Setter method for property <tt>city</tt>.
+     *
+     * @param city value to be assigned to property city
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * Getter method for property <tt>street</tt>.
+     *
+     * @return property value of street
+     */
+    public String getStreet() {
+        return street;
+    }
+
+    /**
+     * Setter method for property <tt>street</tt>.
+     *
+     * @param street value to be assigned to property street
+     */
+    public void setStreet(String street) {
+        this.street = street;
     }
 }

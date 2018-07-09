@@ -99,7 +99,7 @@
                     {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type
-                            + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxNum + 'AaBb' + rec.bankName + 'AaBb' + rec.accountNumber + 'AaBb' + rec.taxRate;
+                            + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxNum + 'AaBb' + rec.bankName + 'AaBb' + rec.accountNumber + 'AaBb' + rec.taxRate + 'AaBb' + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street;
                         if(1 == value)
                         {
                             str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -506,7 +506,6 @@
                 $.messager.alert('提示','期初应收和期初应付不能同时输入','info');
                 return;
             }
-
             $.ajax({
                 url: url,
                 type:"post",
@@ -527,6 +526,11 @@
                     bankName:$("#bankName").val(),
                     accountNumber:$("#accountNumber").val(),
                     description:$("#description").val(),
+
+                    state:$('#state').combobox('getText'),
+                    city:$('#city').combobox('getText'),
+                    street:$('#street').combobox('getText'),
+
                     enabled:1,
                     clientIp: clientIp
                 },
@@ -619,6 +623,9 @@
             bankName : supplierInfo[14].replace("undefined",""),
             accountNumber : supplierInfo[15].replace("undefined",""),
             taxRate : supplierInfo[16].replace("undefined",""),
+            state : supplierInfo[17].replace("undefined",""),
+            city : supplierInfo[18].replace("undefined",""),
+            street : supplierInfo[19].replace("undefined",""),
             clientIp: clientIp
         };
         orgSupplier = supplierInfo[1];
@@ -758,4 +765,3 @@
             }
         });
     }
-

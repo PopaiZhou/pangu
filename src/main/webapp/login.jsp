@@ -34,8 +34,8 @@
             <p id="tip_userpwd" style="display: none">密码不能为空</p>
             <input type="button" value=" " id="btn_login"/>
         </div>
-        <p id="copyright">Copyright © 2017-2020 季圣华(jishenghua) <a style="color:#00458a;"
-                                                                   href="https://gitee.com/jishenghua/JSH_ERP"
+        <p id="copyright">Copyright © 2017-2020 <a style="color:#00458a;"
+                                                                   href="#"
                                                                    target="_blank">华夏ERP_v1.0</a></p>
     </div>
 </form>

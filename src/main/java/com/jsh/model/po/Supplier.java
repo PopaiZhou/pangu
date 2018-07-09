@@ -23,6 +23,9 @@ public class Supplier implements java.io.Serializable {
     private Double AllNeedGet = 0d;
     private Double AllNeedPay = 0d;
     private Short isystem = 1;
+    private String state = "";
+    private String city = "";
+    private String street = "";
     private String description = "";
     private Boolean enabled = true;
 
@@ -59,7 +62,7 @@ public class Supplier implements java.io.Serializable {
     public Supplier(String supplier, String type, String contacts, String phonenum,
                     String fax, String telephone, String email, String address, Short isystem, String description,
                     Boolean enabled, Double advanceIn, String taxNum, String bankName, String accountNumber, Double taxRate,
-                    Double beginNeedGet, Double beginNeedPay, Double allNeedGet, Double allNeedPay) {
+                    Double beginNeedGet, Double beginNeedPay, Double allNeedGet, Double allNeedPay,String state,String city,String street) {
         super();
         this.supplier = supplier;
         this.type = type;
@@ -81,6 +84,9 @@ public class Supplier implements java.io.Serializable {
         this.bankName = bankName;
         this.accountNumber = accountNumber;
         this.taxRate = taxRate;
+        this.state = state;
+        this.city = city;
+        this.street = street;
     }
 
     public Long getId() {
@@ -305,5 +311,59 @@ public class Supplier implements java.io.Serializable {
 
     public void setEnabledStr(String enabledStr) {
         this.enabledStr = enabledStr;
+    }
+
+    /**
+     * Getter method for property <tt>state</tt>.
+     *
+     * @return property value of state
+     */
+    public String getState() {
+        return state;
+    }
+
+    /**
+     * Setter method for property <tt>state</tt>.
+     *
+     * @param state value to be assigned to property state
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
+     * Getter method for property <tt>city</tt>.
+     *
+     * @return property value of city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * Setter method for property <tt>city</tt>.
+     *
+     * @param city value to be assigned to property city
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * Getter method for property <tt>street</tt>.
+     *
+     * @return property value of street
+     */
+    public String getStreet() {
+        return street;
+    }
+
+    /**
+     * Setter method for property <tt>street</tt>.
+     *
+     * @param street value to be assigned to property street
+     */
+    public void setStreet(String street) {
+        this.street = street;
     }
 }
