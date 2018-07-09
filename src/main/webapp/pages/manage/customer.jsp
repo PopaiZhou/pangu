@@ -19,11 +19,16 @@
     <script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
+    <script type="text/javascript" src="<%=path %>/js/pages/manage/city.js"></script>
     <script src="<%=path %>/js/pages/manage/supplier.js"></script>
     <script>
         var kid = ${sessionScope.user.id};
         var path = "<%=path%>";
         var clientIp = "<%=clientIp%>";
+
+        $(document).ready(function() {
+            initProvince();
+        });
     </script>
 </head>
 <body>
@@ -148,7 +153,19 @@
                 </td>
             </tr>
             <tr>
-                <td>地址</td>
+                <td>所在地址</td>
+                <td style="padding:1px">
+                    <input id="state" name="state" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择省份',missingMessage:'请选择省份'" />
+                </td>
+                <td style="padding:1px">
+                    <input id="city" name="city" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择城市',missingMessage:'请选择城市'" />
+                </td>
+                <td style="padding:1px">
+                    <input id="street" name="street" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择区县',missingMessage:'请选择区县'" />
+                </td>
+            </tr>
+            <tr>
+                <td>详细地址</td>
                 <td style="padding:1px" colspan="3">
                     <input name="address" id="address" class="easyui-validatebox" style="width: 408px;height: 20px"/>
                 </td>
