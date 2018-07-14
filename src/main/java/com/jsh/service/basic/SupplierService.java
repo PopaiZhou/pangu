@@ -86,7 +86,7 @@ public class SupplierService extends BaseService<Supplier> implements SupplierIS
             workbook = Workbook.createWorkbook(os);
             WritableSheet sheet = workbook.createSheet("信息报表", 0);
             //增加列头
-            String[] colunmName = {"名称", "类型", "联系人", "电话", "电子邮箱", "预收款", "期初应收", "期初应付", "备注", "传真", "手机", "地址", "纳税人识别号", "开户行", "账号", "税率", "状态"};
+            String[] colunmName = {"编号","名称", "类型", "联系人", "电话", "电子邮箱", "预收款", "期初应收", "期初应付", "备注", "传真", "手机", "地址", "纳税人识别号", "开户行", "账号", "税率", "状态"};
             for (int i = 0; i < colunmName.length; i++) {
                 sheet.setColumnView(i, 10);
                 sheet.addCell(new Label(i, 0, colunmName[i]));
@@ -96,6 +96,7 @@ public class SupplierService extends BaseService<Supplier> implements SupplierIS
                 for (Supplier supplier : dataList) {
                     int j = 0;
                     Map<Integer, String> cellInfo = supplier.getCellInfo();
+                    sheet.addCell(new Label(j++, i, supplier.getSupplierNo()));
                     sheet.addCell(new Label(j++, i, supplier.getSupplier()));
                     sheet.addCell(new Label(j++, i, supplier.getType()));
                     sheet.addCell(new Label(j++, i, supplier.getContacts() == null ? "" : supplier.getContacts()));

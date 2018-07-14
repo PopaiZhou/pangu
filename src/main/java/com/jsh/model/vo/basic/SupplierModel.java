@@ -10,6 +10,14 @@ public class SupplierModel implements Serializable {
 
     /**======开始接受页面参数=================**/
     /**
+     * 编号
+     */
+    private String supplierNo = "";
+    /**
+     * 简称
+     */
+    private String supplierShort = "";
+    /**
      * 名称
      */
     private String supplier = "";
@@ -428,5 +436,41 @@ public class SupplierModel implements Serializable {
      */
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    /**
+     * Getter method for property <tt>supplierNo</tt>.
+     *
+     * @return property value of supplierNo
+     */
+    public String getSupplierNo() {
+        return supplierNo;
+    }
+
+    /**
+     * Setter method for property <tt>supplierNo</tt>.
+     *
+     * @param supplierNo value to be assigned to property supplierNo
+     */
+    public void setSupplierNo(String supplierNo) {
+        this.supplierNo = supplierNo;
+    }
+
+    /**
+     * Getter method for property <tt>supplierShort</tt>.
+     *
+     * @return property value of supplierShort
+     */
+    public String getSupplierShort() {
+        return supplierShort;
+    }
+
+    /**
+     * Setter method for property <tt>supplierShort</tt>.
+     *
+     * @param supplierShort value to be assigned to property supplierShort
+     */
+    public void setSupplierShort(String supplierShort) {
+        this.supplierShort = supplierShort;
     }
 }

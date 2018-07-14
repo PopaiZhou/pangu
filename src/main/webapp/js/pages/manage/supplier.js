@@ -99,7 +99,8 @@
                     {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type
-                            + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxNum + 'AaBb' + rec.bankName + 'AaBb' + rec.accountNumber + 'AaBb' + rec.taxRate + 'AaBb' + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street;
+                            + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxNum + 'AaBb' + rec.bankName + 'AaBb' + rec.accountNumber + 'AaBb' + rec.taxRate + 'AaBb' + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street
+                            + 'AaBb' + rec.supplierNo + 'AaBb' + rec.supplierShort;
                         if(1 == value)
                         {
                             str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -108,10 +109,11 @@
                         return str;
                     }
                 },
-                { title: '名称',field: 'supplier',width:150},
+                { title: '编号',field: 'supplierNo',width:70},
+                { title: '名称',field: 'supplier',width:200},
                 { title: '联系人', field: 'contacts',width:50,align:"center"},
                 { title: '手机号码', field: 'telephone',width:100,align:"center"},
-                { title: '电子邮箱',field: 'email',width:80,align:"center"},
+                { title: '电子邮箱',field: 'email',width:120,align:"center"},
                 { title: '联系电话', field: 'phonenum',width:100,align:"center"},
                 { title: '传真', field: 'fax',width:100,align:"center"},
                 { title: '预付款',field: 'AdvanceIn',width:70,align:"center"},
@@ -511,6 +513,8 @@
                 type:"post",
                 dataType: "json",
                 data:{
+                    supplierNo:$("#supplierNo").val(),
+                    supplierShort:$("#supplierShort").val(),
                     supplier:$("#supplier").val(),
                     type: listType,
                     contacts:$("#contacts").val(),
@@ -626,6 +630,8 @@
             state : supplierInfo[17].replace("undefined",""),
             city : supplierInfo[18].replace("undefined",""),
             street : supplierInfo[19].replace("undefined",""),
+            supplierNo : supplierInfo[20].replace("undefined",""),
+            supplierShort : supplierInfo[21].replace("undefined",""),
             clientIp: clientIp
         };
         orgSupplier = supplierInfo[1];
@@ -744,6 +750,7 @@
             url: path + "/supplier/findBy.action",
             dataType: "json",
             data: ({
+                supplierNo:$.trim($("#searchSupplierNo").val()),
                 supplier:$.trim($("#searchSupplier").val()),
                 type: listType,
                 phonenum:$.trim($("#searchPhonenum").val()),

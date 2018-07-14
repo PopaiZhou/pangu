@@ -7,8 +7,18 @@
             <column name="id" />
             <generator class="native"/>
         </id>
+        <property name="supplierNo" type="java.lang.String">
+            <column name="supplierNo" not-null="true">
+                <comment>名称</comment>
+            </column>
+        </property>
         <property name="supplier" type="java.lang.String">
             <column name="supplier" not-null="true">
+                <comment>名称</comment>
+            </column>
+        </property>
+        <property name="supplierShort" type="java.lang.String">
+            <column name="supplierShort" not-null="true">
                 <comment>名称</comment>
             </column>
         </property>

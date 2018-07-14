@@ -37,6 +37,10 @@
      closable="false">
     <table id="searchTable">
         <tr>
+            <td>编&nbsp;&nbsp;&nbsp;&nbsp;号：</td>
+            <td>
+                <input type="text" name="searchSupplierNo" id="searchSupplierNo" style="width:100px;"/>
+            </td>
             <td>名&nbsp;&nbsp;&nbsp;&nbsp;称：</td>
             <td>
                 <input type="text" name="searchSupplier" id="searchSupplier" style="width:100px;"/>
@@ -75,10 +79,21 @@
     <form id="supplierFM">
         <table>
             <tr>
+                <td style="width: 80px;height: 20px">供应商编号</td>
+                <td style="width: 180px;padding:1px">
+                    <input name="supplierNo" id="supplierNo" class="easyui-validatebox"
+                           data-options="required:true,validType:'length[2,30]'" style="width: 160px;height: 20px"/>
+                </td>
+                <td style="width: 60px;height: 20px">供应商简称</td>
+                <td style="width:180px;padding:1px;">
+                    <input name="supplierShort" id="supplierShort" class="easyui-validatebox" style="width: 160px;height: 20px"/>
+                </td>
+            </tr>
+            <tr>
                 <td style="width: 80px;height: 20px">名称</td>
                 <td style="width: 180px;padding:1px">
                     <input name="supplier" id="supplier" class="easyui-validatebox"
-                           data-options="required:true,validType:'length[2,30]'" style="width: 160px;height: 20px"/>
+                           data-options="required:true,validType:'length[2,128]'" style="width: 160px;height: 20px"/>
                 </td>
                 <td style="width: 60px;height: 20px">联系人</td>
                 <td style="width:180px;padding:1px;">

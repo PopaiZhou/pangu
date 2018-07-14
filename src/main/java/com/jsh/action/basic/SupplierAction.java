@@ -45,6 +45,8 @@ public class SupplierAction extends BaseAction<SupplierModel> {
         Boolean flag = false;
         try {
             Supplier supplier = new Supplier();
+            supplier.setSupplierNo(model.getSupplierNo());
+            supplier.setSupplierShort(model.getSupplierShort());
             supplier.setContacts(model.getContacts());
             supplier.setType(model.getType());
             supplier.setDescription(model.getDescription());
@@ -128,6 +130,8 @@ public class SupplierAction extends BaseAction<SupplierModel> {
         Boolean flag = false;
         try {
             Supplier supplier = supplierService.get(model.getSupplierID());
+            supplier.setSupplierNo(model.getSupplierNo());
+            supplier.setSupplierShort(model.getSupplierShort());
             supplier.setContacts(model.getContacts());
             supplier.setType(model.getType());
             supplier.setDescription(model.getDescription());
@@ -183,6 +187,8 @@ public class SupplierAction extends BaseAction<SupplierModel> {
         Boolean flag = false;
         try {
             Supplier supplier = supplierService.get(model.getSupplierID());
+            supplier.setSupplierNo(supplier.getSupplierNo());
+            supplier.setSupplierShort(supplier.getSupplierShort());
             supplier.setContacts(supplier.getContacts());
             supplier.setType(supplier.getType());
             supplier.setDescription(supplier.getDescription());
@@ -350,8 +356,14 @@ public class SupplierAction extends BaseAction<SupplierModel> {
                     item.put("city",supplier.getCity());
                     item.put("street",supplier.getStreet());
 
+                    item.put("supplierNo", supplier.getSupplierNo());
+                    item.put("supplierShort", supplier.getSupplierShort());
+
                     item.put("enabled", supplier.getEnabled());
                     item.put("op", supplier.getIsystem());
+
+
+
                     dataArray.add(item);
                 }
             }
@@ -713,6 +725,7 @@ public class SupplierAction extends BaseAction<SupplierModel> {
          * 拼接搜索条件
          */
         Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("supplierNo_s_like", model.getSupplierNo());
         condition.put("supplier_s_like", model.getSupplier());
         condition.put("type_s_like", model.getType());
         condition.put("phonenum_s_like", model.getPhonenum());

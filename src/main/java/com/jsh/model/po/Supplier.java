@@ -5,7 +5,9 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class Supplier implements java.io.Serializable {
     private Long id = 0l;
+    private String supplierNo = "";
     private String supplier = "";
+    private String supplierShort = "";
     private String type = "";
     private String contacts = "";
     private String phonenum = "";
@@ -59,12 +61,14 @@ public class Supplier implements java.io.Serializable {
         this.id = id;
     }
 
-    public Supplier(String supplier, String type, String contacts, String phonenum,
+    public Supplier(String supplierNo,String supplier,String supplierShort, String type, String contacts, String phonenum,
                     String fax, String telephone, String email, String address, Short isystem, String description,
                     Boolean enabled, Double advanceIn, String taxNum, String bankName, String accountNumber, Double taxRate,
                     Double beginNeedGet, Double beginNeedPay, Double allNeedGet, Double allNeedPay,String state,String city,String street) {
         super();
+        this.supplierNo = supplierNo;
         this.supplier = supplier;
+        this.supplierShort = supplierShort;
         this.type = type;
         this.contacts = contacts;
         this.phonenum = phonenum;
@@ -365,5 +369,42 @@ public class Supplier implements java.io.Serializable {
      */
     public void setStreet(String street) {
         this.street = street;
+    }
+
+
+    /**
+     * Getter method for property <tt>supplierShort</tt>.
+     *
+     * @return property value of supplierShort
+     */
+    public String getSupplierShort() {
+        return supplierShort;
+    }
+
+    /**
+     * Setter method for property <tt>supplierShort</tt>.
+     *
+     * @param supplierShort value to be assigned to property supplierShort
+     */
+    public void setSupplierShort(String supplierShort) {
+        this.supplierShort = supplierShort;
+    }
+
+    /**
+     * Getter method for property <tt>supplierNo</tt>.
+     *
+     * @return property value of supplierNo
+     */
+    public String getSupplierNo() {
+        return supplierNo;
+    }
+
+    /**
+     * Setter method for property <tt>supplierNo</tt>.
+     *
+     * @param supplierNo value to be assigned to property supplierNo
+     */
+    public void setSupplierNo(String supplierNo) {
+        this.supplierNo = supplierNo;
     }
 }
