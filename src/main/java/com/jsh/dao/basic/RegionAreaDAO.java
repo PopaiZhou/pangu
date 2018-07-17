@@ -5,7 +5,6 @@
 package com.jsh.dao.basic;
 
 import com.jsh.base.BaseDAO;
-import com.jsh.model.po.Logdetails;
 import com.jsh.model.po.RegionArea;
 
 /**

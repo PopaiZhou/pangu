@@ -38,5 +38,6 @@
 	<mapping resource="hibernate/SystemConfig.hbm.xml" />
 	<mapping resource="hibernate/MaterialProperty.hbm.xml" />
 	<mapping resource="hibernate/RegionArea.hbm.xml"/>
+	<mapping resource="hibernate/Template.hbm.xml"/>
 </session-factory>
 </hibernate-configuration>

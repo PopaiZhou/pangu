@@ -393,4 +393,15 @@
 	</bean>
 	<!--区域配置结束 -->
 
+	<!--版本册配置开始 -->
+	<bean id="templateService" class="com.jsh.service.materials.TemplateService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="templateDao" ref="templateDao" />
+	</bean>
+	<bean id="templateAction" class="com.jsh.action.materials.TemplateAction" scope="prototype">
+		<property name="templateService" ref="templateService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--版本册配置结束 -->
+
 </beans>

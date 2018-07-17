@@ -228,11 +228,15 @@
                     success: function (tipInfo)
                     {
                         var msg = tipInfo.showModel.msgTip;
-                        if(msg == '成功')
-                        //加载完以后重新初始化
+                        if(msg == '成功'){
+                            //加载完以后重新初始化
+                            $.messager.alert('提示','删除供应商信息成功！','info');
                             $("#searchBtn").click();
-                        else
+                        }
+                        else{
                             $.messager.alert('删除提示','删除信息失败，请稍后再试！','error');
+                        }
+
                     },
                     //此处添加错误处理
                     error:function()
