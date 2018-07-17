@@ -1,11 +1,10 @@
 
 $(function(){
     initTableData();
-    ininPager();
     //初始化供应商列表
     initSupplierList();
-    initTemplateInfo();
     //绑定各种按钮事件
+    ininPager();
     bindEvent();
 });
 
@@ -58,7 +57,7 @@ function initTableData() {
             { title: '编号',field: 'templateId',width:100},
             { title: '名称',field: 'templateName',width:200},
             { title: '上市日期', field: 'listingDate',width:100,align:"center"},
-            { title: '供应商编号', field: 'supplierNo',width:150,align:"center"},
+            { title: '供应商名称', field: 'supplierName',width:200,align:"center"},
             { title: '备注', field: 'remarks',width:512,align:"center"}
         ]],
         toolbar:[
@@ -105,7 +104,7 @@ function initTemplateInfo(pageNo,pageSize){
         }),
         success: function (res) {
             if (res && res.rows) {
-                $("#tableData").datagrid('loadData',res.rows);
+                $("#tableData").datagrid('loadData',res);
             }
         },
         //此处添加错误处理

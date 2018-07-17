@@ -7,6 +7,7 @@ package com.jsh.action.materials;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.Logdetails;
+import com.jsh.model.po.Supplier;
 import com.jsh.model.po.Template;
 import com.jsh.model.vo.materials.TemplateModel;
 import com.jsh.service.materials.TemplateIService;
@@ -44,7 +45,7 @@ public class TemplateAction extends BaseAction<TemplateModel> {
             template.setTemplateId(model.getTemplateId());
             template.setTemplateName(model.getTemplateName());
             template.setListingDate(model.getListingDate());
-            template.setSupplierNo(model.getSupplierNo());
+            template.setSupplierNo(new Supplier(Long.parseLong(model.getSupplierNo())));
             template.setRemarks(model.getRemarks());
 
             templateService.create(template);
@@ -97,7 +98,8 @@ public class TemplateAction extends BaseAction<TemplateModel> {
                     item.put("templateId", template.getTemplateId());
                     item.put("templateName", template.getTemplateName());
                     item.put("listingDate", template.getListingDate() == null ? "" : Tools.getCurrentMonth(template.getListingDate()));
-                    item.put("supplierNo", template.getSupplierNo());
+                    item.put("supplierNo", template.getSupplierNo().getId());
+                    item.put("supplierName", template.getSupplierNo().getSupplier());
                     item.put("remarks",template.getRemarks());
                     item.put("op","1");
                     dataArray.add(item);
@@ -106,10 +108,13 @@ public class TemplateAction extends BaseAction<TemplateModel> {
             outer.put("rows", dataArray);
             //回写查询结果
             toClient(outer.toString());
-        } catch (DataAccessException e) {
+        } /*catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>查找版本册信息异常", e);
         } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>回写查询版本册结果异常", e);
+        }*/
+        catch(Exception e){
+            e.printStackTrace();
         }
     }
 

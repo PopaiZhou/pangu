@@ -17,9 +17,6 @@
         <property name="listingDate">
             <column name="listingDate" sql-type="date" not-null="false"/>
         </property>
-        <property name="supplierNo">
-            <column name="supplierNo" sql-type="varchar(32)" length="32" not-null="true"/>
-        </property>
         <property name="remarks">
             <column name="remarks" sql-type="varchar(512)" length="512" not-null="true"/>
         </property>
@@ -29,5 +26,10 @@
         <property name="gmtModify">
             <column name="gmtModify" sql-type="timestamp"/>
         </property>
+        <many-to-one name="supplierNo" class="com.jsh.model.po.Supplier" lazy="false">
+            <column name="supplierNo">
+                <comment>供应商Id</comment>
+            </column>
+        </many-to-one>
     </class>
 </hibernate-mapping>

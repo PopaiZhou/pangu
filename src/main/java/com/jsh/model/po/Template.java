@@ -24,25 +24,42 @@ public class Template implements Serializable{
     private String templateId;
     private String templateName;
     private Date listingDate;
-    private String supplierNo;
     private String remarks;
     private Timestamp gmtCreate;
     private Timestamp gmtModify;
-
-    public Template(long id, String templateId, String templateName, Date listingDate, String supplierNo, String remarks, Timestamp gmtCreate, Timestamp gmtModify) {
-        this.id = id;
-        this.templateId = templateId;
-        this.templateName = templateName;
-        this.listingDate = listingDate;
-        this.supplierNo = supplierNo;
-        this.remarks = remarks;
-        this.gmtCreate = gmtCreate;
-        this.gmtModify = gmtModify;
-    }
+    private Supplier supplierNo;
 
     public Template() {
     }
 
+    public Template(long id, String templateId, String templateName, Date listingDate, String remarks, Timestamp gmtCreate, Timestamp gmtModify, Supplier supplierNo) {
+        this.id = id;
+        this.templateId = templateId;
+        this.templateName = templateName;
+        this.listingDate = listingDate;
+        this.remarks = remarks;
+        this.gmtCreate = gmtCreate;
+        this.gmtModify = gmtModify;
+        this.supplierNo = supplierNo;
+    }
+
+    /**
+     * Getter method for property <tt>supplierNo</tt>.
+     *
+     * @return property value of supplierNo
+     */
+    public Supplier getSupplierNo() {
+        return supplierNo;
+    }
+
+    /**
+     * Setter method for property <tt>supplierNo</tt>.
+     *
+     * @param supplierNo value to be assigned to property supplierNo
+     */
+    public void setSupplierNo(Supplier supplierNo) {
+        this.supplierNo = supplierNo;
+    }
     /**
      * Getter method for property <tt>id</tt>.
      *
@@ -121,26 +138,6 @@ public class Template implements Serializable{
      */
     public void setListingDate(Date listingDate) {
         this.listingDate = listingDate;
-    }
-
-    /**
-     * Getter method for property <tt>supplierNo</tt>.
-     *
-     * @return property value of supplierNo
-     */
-    @Basic
-    @Column(name = "supplierNo", nullable = true, length = 32)
-    public String getSupplierNo() {
-        return supplierNo;
-    }
-
-    /**
-     * Setter method for property <tt>supplierNo</tt>.
-     *
-     * @param supplierNo value to be assigned to property supplierNo
-     */
-    public void setSupplierNo(String supplierNo) {
-        this.supplierNo = supplierNo;
     }
 
     /**
@@ -254,4 +251,5 @@ public class Template implements Serializable{
         result = 31 * result + (gmtModify != null ? gmtModify.hashCode() : 0);
         return result;
     }
+
 }
