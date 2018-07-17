@@ -40,7 +40,7 @@
             </td>
             <td>版本名称：</td>
             <td>
-                <input type="text" name="searchName" id="searchName" placeholder="名称，型号" style="width:160px;"/>
+                <input type="text" name="searchName" id="searchName" placeholder="版本册名称" style="width:160px;"/>
             </td>
             <td>上市日期：</td>
             <td>
@@ -54,7 +54,7 @@
             </td>
             <td>所属供应商：</td>
             <td>
-                <input type="text" name="searchSupplier" id="searchSupplier" style="width:200px;"/>
+                <input type="text" name="searchSupplier" id="searchSupplier" style="width:200px;" editable="false"/>
             </td>
             <td>&nbsp;</td>
             <td>

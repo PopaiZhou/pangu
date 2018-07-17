@@ -2,9 +2,9 @@
 $(function(){
     initTableData();
     ininPager();
-    initTemplateInfo();
     //初始化供应商列表
     initSupplierList();
+    initTemplateInfo();
     //绑定各种按钮事件
     bindEvent();
 });
@@ -95,6 +95,11 @@ function initTemplateInfo(pageNo,pageSize){
         url: path + "/template/findBy.action",
         dataType: "json",
         data: ({
+            templateId : $.trim($("#searchNumber").val()),
+            templateName : $.trim($("#searchName").val()),
+            beginTime: $("#searchBeginTime").val(),
+            endTime: $("#searchEndTime").val(),
+            supplierNo : $.trim($("#searchSupplier").datebox("getValue")),
             pageNo:pageNo,
             pageSize:pageSize
         }),
@@ -253,6 +258,39 @@ function bindEvent(){
                 }
             }
         });
+    });
+
+    //搜索处理
+    $("#searchBtn").unbind().bind({
+        click:function()
+        {
+            initTemplateInfo(1,initPageSize);
+            var opts = $("#tableData").datagrid('options');
+            var pager = $("#tableData").datagrid('getPager');
+            opts.pageNumber = 1;
+            opts.pageSize = initPageSize;
+            pager.pagination('refresh',
+                {
+                    pageNumber:1,
+                    pageSize:initPageSize
+                });
+        }
+    });
+
+    $("#searchBtn").click();
+
+    //重置按钮
+    $("#searchResetBtn").unbind().bind({
+        click:function(){
+            $("#searchNumber").val("");
+            $("#searchName").val("");
+            $("#searchBeginTime").val("");
+            $("#searchEndTime").val("");
+            $("#searchSupplier").combobox("setValue","");
+
+            //加载完以后重新初始化
+            $("#searchBtn").click();
+        }
     });
 }
 //检查版本册编号

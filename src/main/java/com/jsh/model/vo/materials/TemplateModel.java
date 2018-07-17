@@ -43,6 +43,15 @@ public class TemplateModel implements Serializable{
     private String templateIds = "";
 
     /**
+     * 查询-开始时间
+     */
+    private String beginTime;
+    /**
+     * 查询-结束时间
+     */
+    private String endTime;
+
+    /**
      * Getter method for property <tt>templateId</tt>.
      *
      * @return property value of templateId
@@ -238,5 +247,41 @@ public class TemplateModel implements Serializable{
      */
     public void setShowModel(TemplateShowModel showModel) {
         this.showModel = showModel;
+    }
+
+    /**
+     * Getter method for property <tt>beginTime</tt>.
+     *
+     * @return property value of beginTime
+     */
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    /**
+     * Setter method for property <tt>beginTime</tt>.
+     *
+     * @param beginTime value to be assigned to property beginTime
+     */
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    /**
+     * Getter method for property <tt>endTime</tt>.
+     *
+     * @return property value of endTime
+     */
+    public String getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * Setter method for property <tt>endTime</tt>.
+     *
+     * @param endTime value to be assigned to property endTime
+     */
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 }

@@ -149,6 +149,8 @@ public class TemplateAction extends BaseAction<TemplateModel> {
         condition.put("templateId_s_like", model.getTemplateId());
         condition.put("templateName_s_like", model.getTemplateName());
         condition.put("supplierNo_s_like", model.getSupplierNo());
+        condition.put("listingDate_s_gteq", model.getBeginTime());
+        condition.put("listingDate_s_lteq", model.getEndTime());
         condition.put("id_s_order", "desc");
         return condition;
     }
