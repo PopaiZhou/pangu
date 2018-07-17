@@ -8,7 +8,7 @@ $(function(){
     bindEvent();
 });
 
-
+var id = 0;
 //初始化表格数据
 function initTableData() {
     //改变宽度和高度
@@ -43,9 +43,7 @@ function initTableData() {
             { title: '操作',field: 'op',align:"center",width:60,formatter:function(value,rec)
             {
                 var str = '';
-                var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type
-                    + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxNum + 'AaBb' + rec.bankName + 'AaBb' + rec.accountNumber + 'AaBb' + rec.taxRate + 'AaBb' + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street
-                    + 'AaBb' + rec.supplierNo + 'AaBb' + rec.supplierShort;
+                var rowInfo = rec.id + 'AaBb' + rec.templateId +'AaBb' + rec.templateName + 'AaBb'+ rec.listingDate + 'AaBb'+ rec.supplierNo + 'AaBb'+ rec.remarks;
                 if(1 == value)
                 {
                     str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editTemplateInfo(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -147,8 +145,7 @@ function addSuppler() {
     $(".window-mask").css({ width: webW ,height: webH});
     $("#supplier").focus();
     $('#supplierFM').form('clear');
-    orgSupplier = "";
-    supplierID = 0;
+    id = 0;
     url = path + '/template/create.action';
 }
 //批量删除版本册
@@ -222,7 +219,7 @@ function initSupplierList() {
 }
 //绑定各种按钮事件
 function bindEvent(){
-    //保存信息
+    //保存按钮信息
     $("#saveTemplate").off("click").on("click",function() {
         if(!$('#supplierFM').form('validate')){
             return;
@@ -250,7 +247,6 @@ function bindEvent(){
             },
             success: function(res) {
                 if (res) {
-                    $.messager.alert('提示','新增版本册成功！','info');
                     $('#supplierDlg').dialog('close');
                     var opts = $("#tableData").datagrid('options');
                     initTemplateInfo(opts.pageNumber,opts.pageSize);
@@ -306,7 +302,7 @@ function checkTemplateId() {
             dataType: "json",
             async :  false,
             data: ({
-                id : 0,
+                id : id,
                 templateId : templateId
             }),
             success: function (tipInfo)
@@ -327,4 +323,59 @@ function checkTemplateId() {
         });
     }
     return flag;
+}
+
+//编辑版本册信息
+function editTemplateInfo(templateInfo) {
+    var template = templateInfo.split("AaBb");
+    var row = {
+        templateId : template[1],
+        templateName : template[2].replace("undefined",""),
+        listingDate : template[3].replace("undefined",""),
+        supplierNo : template[4].replace("undefined",""),
+        remarks : template[5].replace("undefined",""),
+        clientIp: clientIp
+    };
+    $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑版本册信息');
+    $(".window-mask").css({ width: webW ,height: webH});
+    $('#supplierFM').form('load',row);
+    id = template[0];
+    url = path + '/template/update.action?id=' + template[0];
+}
+//单个删除按钮
+function deleteTemplate(templateInfo) {
+    $.messager.confirm('删除确认','确定要删除此条信息吗？',function(r){
+        if (r){
+            var template = templateInfo.split("AaBb");
+            $.ajax({
+                type:"post",
+                url: path + "/template/delete.action",
+                dataType: "json",
+                data: ({
+                    id : template[0],
+                    templateId:template[1],
+                    templateName : template[2].replace("undefined",""),
+                    clientIp: clientIp
+                }),
+                success: function (tipInfo)
+                {
+                    var msg = tipInfo.showModel.msgTip;
+                    if(msg == '成功'){
+                        //加载完以后重新初始化
+                        $.messager.alert('提示','删除版本册信息成功！','info');
+                        $("#searchBtn").click();
+                    }
+                    else{
+                        $.messager.alert('删除提示','删除信息失败，请稍后再试！','error');
+                    }
+                },
+                //此处添加错误处理
+                error:function()
+                {
+                    $.messager.alert('删除提示','删除信息异常，请稍后再试！','error');
+                    return;
+                }
+            });
+        }
+    });
 }

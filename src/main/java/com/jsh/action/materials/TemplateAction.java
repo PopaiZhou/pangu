@@ -74,6 +74,43 @@ public class TemplateAction extends BaseAction<TemplateModel> {
     }
 
     /**
+     * 更新
+     */
+    public void update() {
+        Template template = templateService.get(model.getId());
+        Boolean flag = false;
+        try{
+            template.setTemplateId(model.getTemplateId());
+            template.setTemplateName(model.getTemplateName());
+            template.setListingDate(model.getListingDate());
+            template.setSupplierNo(new Supplier(Long.parseLong(model.getSupplierNo())));
+            template.setRemarks(model.getRemarks());
+
+            templateService.update(template);
+
+            //========标识位===========
+            flag = true;
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        }catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加版本册异常", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        } finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>增加版本册回写客户端结果异常", e);
+            }
+        }
+        logService.create(new Logdetails(getUser(), "增加版本册", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "增加版本册名称为  " + model.getTemplateName() + " " + tipMsg + "！", "增加版本册" + tipMsg));
+        Log.infoFileSync("==================结束调用增加版本册方法===================");
+    }
+    /**
      * 查询版本册列表
      */
     public void findBy(){
@@ -108,16 +145,34 @@ public class TemplateAction extends BaseAction<TemplateModel> {
             outer.put("rows", dataArray);
             //回写查询结果
             toClient(outer.toString());
-        } /*catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>查找版本册信息异常", e);
         } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>回写查询版本册结果异常", e);
-        }*/
-        catch(Exception e){
-            e.printStackTrace();
         }
     }
 
+    /**
+     * 单个删除
+     */
+    public String delete() {
+        Log.infoFileSync("====================开始调用单个删除版本册信息方法delete()================");
+        try {
+            templateService.delete(model.getId());
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>删除ID为 " + model.getId() + "  的版本册异常", e);
+            tipMsg = "失败";
+            tipType = 1;
+        }
+        model.getShowModel().setMsgTip(tipMsg);
+        logService.create(new Logdetails(getUser(), "删除版本册", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "删除版本册ID为  " + model.getId() + ",名称为  " + model.getTemplateName() + tipMsg + "！", "删除版本册" + tipMsg));
+        Log.infoFileSync("====================结束调用删除版本册信息方法delete()================");
+        return SUCCESS;
+    }
     /**
      * 批量删除指定ID版本册
      *
@@ -168,12 +223,12 @@ public class TemplateAction extends BaseAction<TemplateModel> {
         try {
             flag = templateService.checkIsNameExist("templateId", model.getTemplateId(), "id", model.getId());
         } catch (DataAccessException e) {
-            Log.errorFileSync(">>>>>>>>>>>>>>>>>检查供应商名称为：" + model.getTemplateId() + " ID为： " + model.getId() + " 是否存在异常！");
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>检查版本册名称为：" + model.getTemplateId() + " ID为： " + model.getId() + " 是否存在异常！");
         } finally {
             try {
                 toClient(flag.toString());
             } catch (IOException e) {
-                Log.errorFileSync(">>>>>>>>>>>>回写检查供应商名称为：" + model.getTemplateId() + " ID为： " + model.getId() + " 是否存在异常！", e);
+                Log.errorFileSync(">>>>>>>>>>>>回写检查版本册名称为：" + model.getTemplateId() + " ID为： " + model.getId() + " 是否存在异常！", e);
             }
         }
     }
