@@ -136,7 +136,7 @@
                     title: '操作', field: 'op', align: "center", width: 130, formatter: function (value, rec) {
                         var str = '';
                         var rowInfo = rec.Id + 'AaBb' + rec.Name;
-                        if (1 == value) {
+                        if (0 != value) {
                             str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editRole(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editRole(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                             str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteRole(' + rec.Id + ');"/>&nbsp;<a onclick="deleteRole(' + rec.Id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         }
@@ -151,14 +151,6 @@
                     iconCls: 'icon-add',
                     handler: function () {
                         addRole();
-                    }
-                },
-                {
-                    id: 'deleteRole',
-                    text: '删除',
-                    iconCls: 'icon-remove',
-                    handler: function () {
-                        batDeleteRole();
                     }
                 }
             ],

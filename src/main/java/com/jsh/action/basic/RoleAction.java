@@ -191,7 +191,7 @@ public class RoleAction extends BaseAction<RoleModel> {
                     item.put("Id", role.getId());
                     //供应商名称
                     item.put("Name", role.getName());
-                    item.put("op", 1);
+                    item.put("op", role.getIsystem());
                     dataArray.add(item);
                 }
             }
