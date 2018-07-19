@@ -15,8 +15,6 @@ import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.apache.commons.httpclient.util.DateUtil;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.dao.DataAccessException;
 
 import java.io.IOException;
@@ -77,6 +75,7 @@ public class TemplateAction extends BaseAction<TemplateModel> {
      * 更新
      */
     public void update() {
+        Log.infoFileSync("==================开始调用更新版本册方法===================");
         Template template = templateService.get(model.getId());
         Boolean flag = false;
         try{
@@ -94,7 +93,7 @@ public class TemplateAction extends BaseAction<TemplateModel> {
             tipMsg = "成功";
             tipType = 0;
         }catch (DataAccessException e) {
-            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加版本册异常", e);
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>更新版本册异常", e);
             flag = false;
             tipMsg = "失败";
             tipType = 1;
@@ -102,13 +101,13 @@ public class TemplateAction extends BaseAction<TemplateModel> {
             try {
                 toClient(flag.toString());
             } catch (IOException e) {
-                Log.errorFileSync(">>>>>>>>>>>>增加版本册回写客户端结果异常", e);
+                Log.errorFileSync(">>>>>>>>>>>>更新版本册回写客户端结果异常", e);
             }
         }
-        logService.create(new Logdetails(getUser(), "增加版本册", model.getClientIp(),
+        logService.create(new Logdetails(getUser(), "更新版本册", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-                , tipType, "增加版本册名称为  " + model.getTemplateName() + " " + tipMsg + "！", "增加版本册" + tipMsg));
-        Log.infoFileSync("==================结束调用增加版本册方法===================");
+                , tipType, "更新版本册名称为  " + model.getTemplateName() + " " + tipMsg + "！", "更新版本册" + tipMsg));
+        Log.infoFileSync("==================结束调用更新版本册方法===================");
     }
     /**
      * 查询版本册列表
@@ -231,6 +230,52 @@ public class TemplateAction extends BaseAction<TemplateModel> {
                 Log.errorFileSync(">>>>>>>>>>>>回写检查版本册名称为：" + model.getTemplateId() + " ID为： " + model.getId() + " 是否存在异常！", e);
             }
         }
+    }
+
+    /**
+     * 查找供应商信息-下拉框
+     *
+     * @return
+     */
+    public void findBySelect_temp() {
+        try {
+            PageUtil<Template> pageUtil = new PageUtil<Template>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getCondition_Select_temp());
+            templateService.find(pageUtil);
+            List<Template> dataList = pageUtil.getPageList();
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Template template : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", template.getId());
+                    //供应商名称
+                    item.put("templateName", template.getTemplateName());
+                    dataArray.add(item);
+                }
+            }
+            //回写查询结果
+            toClient(dataArray.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找版本册下拉框信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询版本册下拉框信息结果异常", e);
+        }
+    }
+    /**
+     * 拼接搜索条件-下拉框-版本册
+     *
+     * @return
+     */
+    private Map<String, Object> getCondition_Select_temp() {
+        /**
+         * 拼接搜索条件
+         */
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("id_s_order", "desc");
+        return condition;
     }
 
 

@@ -47,7 +47,7 @@
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>&nbsp;&nbsp;
                 <a id="btnSetRole" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配角色'>分配角色</a>&nbsp;&nbsp;
-                <a id="btnSetDepart" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配仓库'>分配仓库</a>&nbsp;&nbsp;
+                <%--<a id="btnSetDepart" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配仓库'>分配仓库</a>&nbsp;&nbsp;--%>
                 <a id="btnSetCustomer" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配客户'>分配客户</a>
             </td>
         </tr>

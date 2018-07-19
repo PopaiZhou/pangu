@@ -404,4 +404,16 @@
 	</bean>
 	<!--版本册配置结束 -->
 
+	<!--产品型号配置开始 -->
+	<bean id="productService" class="com.jsh.service.materials.ProductService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="productDao" ref="productDao" />
+	</bean>
+	<bean id="productAction" class="com.jsh.action.materials.ProductAction" scope="prototype">
+		<property name="productService" ref="productService"/>
+		<property name="templateService" ref="templateService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--版本册配置结束 -->
+
 </beans>

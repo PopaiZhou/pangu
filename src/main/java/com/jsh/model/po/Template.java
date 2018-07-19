@@ -31,7 +31,9 @@ public class Template implements Serializable{
 
     public Template() {
     }
-
+    public Template(long id) {
+        this.id = id;
+    }
     public Template(long id, String templateId, String templateName, Date listingDate, String remarks, Timestamp gmtCreate, Timestamp gmtModify, Supplier supplierNo) {
         this.id = id;
         this.templateId = templateId;
