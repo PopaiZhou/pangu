@@ -158,14 +158,6 @@
                     }
                 },'-',
                 {
-                    id:'setInput',
-                    text:'导入',
-                    iconCls:'icon-excel',
-                    handler:function() {
-                        setInputFun();
-                    }
-                },'-',
-                {
                     id:'setOutput',
                     text:'导出',
                     iconCls:'icon-excel',

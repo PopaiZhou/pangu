@@ -414,6 +414,19 @@
 		<property name="templateService" ref="templateService"/>
 		<property name="logService" ref="logService"/>
 	</bean>
-	<!--版本册配置结束 -->
+	<!--产品型号配置结束 -->
+
+	<!--客户信息配置开始 -->
+	<bean id="customerService" class="com.jsh.service.materials.CustomerService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="customerDao" ref="customerDao" />
+	</bean>
+	<bean id="customerAction" class="com.jsh.action.materials.CustomerAction" scope="prototype">
+		<property name="customerService" ref="customerService"/>
+		<property name="userBusinessService" ref="userBusinessService"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--客户信息配置结束 -->
 
 </beans>

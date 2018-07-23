@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.jsh.model.po.Customer" table="jsh_customer" schema="jsh_erp">
+        <id name="id">
+            <column name="id" sql-type="bigint(20)"/>
+        </id>
+        <property name="customerNo">
+            <column name="customerNo" sql-type="varchar(32)" length="32" not-null="true"/>
+        </property>
+        <property name="customerName">
+            <column name="customerName" sql-type="varchar(255)"/>
+        </property>
+        <property name="customerShort">
+            <column name="customerShort" sql-type="varchar(255)" not-null="true"/>
+        </property>
+        <property name="contacts">
+            <column name="contacts" sql-type="varchar(100)" length="100" not-null="true"/>
+        </property>
+        <property name="phonenum">
+            <column name="phonenum" sql-type="varchar(30)" length="30" not-null="true"/>
+        </property>
+        <property name="email">
+            <column name="email" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="description">
+            <column name="description" sql-type="varchar(500)" length="500" not-null="true"/>
+        </property>
+        <property name="isystem">
+            <column name="isystem" sql-type="tinyint(4)" not-null="true"/>
+        </property>
+        <property name="type">
+            <column name="type" sql-type="varchar(20)" length="20" not-null="true"/>
+        </property>
+        <property name="enabled">
+            <column name="enabled" sql-type="bit(1)" not-null="true"/>
+        </property>
+        <property name="fax">
+            <column name="fax" sql-type="varchar(30)" length="30" not-null="true"/>
+        </property>
+        <property name="telephone">
+            <column name="telephone" sql-type="varchar(30)" length="30" not-null="true"/>
+        </property>
+        <property name="qq">
+            <column name="qq" sql-type="varchar(30)" length="30" not-null="true"/>
+        </property>
+        <property name="express">
+            <column name="express" sql-type="varchar(30)" length="30" not-null="true"/>
+        </property>
+        <property name="address">
+            <column name="address" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="taxNum">
+            <column name="taxNum" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="bankName">
+            <column name="bankName" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="accountNumber">
+            <column name="accountNumber" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="taxRate">
+            <column name="taxRate" sql-type="double" precision="-1" not-null="true"/>
+        </property>
+        <property name="state">
+            <column name="state" sql-type="varchar(32)" length="32" not-null="true"/>
+        </property>
+        <property name="city">
+            <column name="city" sql-type="varchar(32)" length="32" not-null="true"/>
+        </property>
+        <property name="street">
+            <column name="street" sql-type="varchar(64)" length="64" not-null="true"/>
+        </property>
+        <many-to-one name="user" class="com.jsh.model.po.Basicuser" lazy="false">
+            <column name="userId">
+                <comment>业务员</comment>
+            </column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

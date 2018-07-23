@@ -233,7 +233,7 @@ public class TemplateAction extends BaseAction<TemplateModel> {
     }
 
     /**
-     * 查找供应商信息-下拉框
+     * 查找版本册信息-下拉框
      *
      * @return
      */
@@ -251,7 +251,7 @@ public class TemplateAction extends BaseAction<TemplateModel> {
                 for (Template template : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("id", template.getId());
-                    //供应商名称
+                    //版本册名称
                     item.put("templateName", template.getTemplateName());
                     dataArray.add(item);
                 }
