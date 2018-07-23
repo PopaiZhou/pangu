@@ -4,6 +4,7 @@
  */
 package com.jsh.model.vo.materials;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -15,7 +16,7 @@ public class CustomerModel implements Serializable{
 
     private static final long serialVersionUID = 5232161392816748516L;
 
-    private CustomerShowModel model = new CustomerShowModel();
+    private CustomerShowModel showModel = new CustomerShowModel();
 
     private long id;
     private String customerNo;
@@ -42,6 +43,8 @@ public class CustomerModel implements Serializable{
     private String street;
     private String userId;
 
+    private String batchDeleteIds;
+
     /**
      * 每页显示的个数
      */
@@ -56,6 +59,13 @@ public class CustomerModel implements Serializable{
      * 用户IP，用户记录操作日志
      */
     private String clientIp = "";
+
+    /**
+     * excel导属性
+     */
+    private String browserType = ""; //浏览器类型
+    private String fileName = ""; //文件名称
+    private InputStream excelStream;  //输入流，导出excel文件
 
 
     /**
@@ -543,22 +553,93 @@ public class CustomerModel implements Serializable{
     public void setClientIp(String clientIp) {
         this.clientIp = clientIp;
     }
-
     /**
-     * Getter method for property <tt>model</tt>.
+     * Getter method for property <tt>batchDeleteIds</tt>.
      *
-     * @return property value of model
+     * @return property value of batchDeleteIds
      */
-    public CustomerShowModel getModel() {
-        return model;
+    public String getBatchDeleteIds() {
+        return batchDeleteIds;
     }
 
     /**
-     * Setter method for property <tt>model</tt>.
+     * Setter method for property <tt>batchDeleteIds</tt>.
      *
-     * @param model value to be assigned to property model
+     * @param batchDeleteIds value to be assigned to property batchDeleteIds
      */
-    public void setModel(CustomerShowModel model) {
-        this.model = model;
+    public void setBatchDeleteIds(String batchDeleteIds) {
+        this.batchDeleteIds = batchDeleteIds;
+    }
+
+    /**
+     * Getter method for property <tt>showModel</tt>.
+     *
+     * @return property value of showModel
+     */
+    public CustomerShowModel getShowModel() {
+        return showModel;
+    }
+
+    /**
+     * Setter method for property <tt>showModel</tt>.
+     *
+     * @param showModel value to be assigned to property showModel
+     */
+    public void setShowModel(CustomerShowModel showModel) {
+        this.showModel = showModel;
+    }
+
+    /**
+     * Getter method for property <tt>browserType</tt>.
+     *
+     * @return property value of browserType
+     */
+    public String getBrowserType() {
+        return browserType;
+    }
+
+    /**
+     * Setter method for property <tt>browserType</tt>.
+     *
+     * @param browserType value to be assigned to property browserType
+     */
+    public void setBrowserType(String browserType) {
+        this.browserType = browserType;
+    }
+
+    /**
+     * Getter method for property <tt>fileName</tt>.
+     *
+     * @return property value of fileName
+     */
+    public String getFileName() {
+        return fileName;
+    }
+
+    /**
+     * Setter method for property <tt>fileName</tt>.
+     *
+     * @param fileName value to be assigned to property fileName
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    /**
+     * Getter method for property <tt>excelStream</tt>.
+     *
+     * @return property value of excelStream
+     */
+    public InputStream getExcelStream() {
+        return excelStream;
+    }
+
+    /**
+     * Setter method for property <tt>excelStream</tt>.
+     *
+     * @param excelStream value to be assigned to property excelStream
+     */
+    public void setExcelStream(InputStream excelStream) {
+        this.excelStream = excelStream;
     }
 }

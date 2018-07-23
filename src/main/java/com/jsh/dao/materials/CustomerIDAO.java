@@ -12,4 +12,5 @@ import com.jsh.model.po.Customer;
  * @version $Id CustomerIDAO.java, v 0.1 2018-07-15 12:17 Lenovo Exp $$
  */
 public interface CustomerIDAO extends BaseIDAO<Customer> {
+    public void batchSetEnable(Boolean enable, String batchDeleteIds);
 }

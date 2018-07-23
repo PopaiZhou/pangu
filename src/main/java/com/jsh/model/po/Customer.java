@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Map;
 
 /**
  * @author zhoujp
@@ -41,6 +42,18 @@ public class Customer {
     private String city;
     private String street;
     private Basicuser user;
+
+
+    //----------以下属性导入exel表格使用--------------------
+    /**
+     * 类型 right--正确 warn--警告  wrong--错误
+     */
+    private Map<Integer, String> cellInfo;
+
+    /**
+     * 行号
+     */
+    private Integer rowLineNum;
 
     /**
      * Getter method for property <tt>user</tt>.
@@ -585,5 +598,41 @@ public class Customer {
         result = 31 * result + (street != null ? street.hashCode() : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * Getter method for property <tt>cellInfo</tt>.
+     *
+     * @return property value of cellInfo
+     */
+    public Map<Integer, String> getCellInfo() {
+        return cellInfo;
+    }
+
+    /**
+     * Setter method for property <tt>cellInfo</tt>.
+     *
+     * @param cellInfo value to be assigned to property cellInfo
+     */
+    public void setCellInfo(Map<Integer, String> cellInfo) {
+        this.cellInfo = cellInfo;
+    }
+
+    /**
+     * Getter method for property <tt>rowLineNum</tt>.
+     *
+     * @return property value of rowLineNum
+     */
+    public Integer getRowLineNum() {
+        return rowLineNum;
+    }
+
+    /**
+     * Setter method for property <tt>rowLineNum</tt>.
+     *
+     * @param rowLineNum value to be assigned to property rowLineNum
+     */
+    public void setRowLineNum(Integer rowLineNum) {
+        this.rowLineNum = rowLineNum;
     }
 }

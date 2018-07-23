@@ -37,6 +37,7 @@ import java.util.Map;
  */
 @SuppressWarnings("serial")
 public class CustomerAction extends BaseAction<CustomerModel> {
+    public static final String EXCEL = "excel";  //action返回excel结果
     private CustomerIService customerService;
     private UserBusinessIService userBusinessService;
     private UserIService userService;
@@ -112,6 +113,8 @@ public class CustomerAction extends BaseAction<CustomerModel> {
 
             customerService.find(pageUtil);
 
+            getSession().put("pageUtilCustomer", pageUtil);
+
             List<Customer> dataList = pageUtil.getPageList();
             JSONObject outer = new JSONObject();
             outer.put("total", pageUtil.getTotalCount());
@@ -147,6 +150,76 @@ public class CustomerAction extends BaseAction<CustomerModel> {
         } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>回写查询客户信息结果异常", e);
         }
+    }
+
+    /**
+     * 批量删除指定ID客户信息
+     *
+     * @return
+     */
+    public String batchDelete() {
+        try {
+            customerService.batchDelete(model.getBatchDeleteIds());
+            model.getShowModel().setMsgTip("成功");
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>批量删除客户信息ID为：" + model.getBatchDeleteIds() + "信息异常", e);
+            tipMsg = "失败";
+            tipType = 1;
+        }
+        logService.create(new Logdetails(getUser(), "批量删除客户信息", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "批量删除客户信息ID为  " + model.getBatchDeleteIds() + " " + tipMsg + "！", "批量删除客户信息" + tipMsg));
+        return SUCCESS;
+    }
+    /**
+     * 批量设置状态-启用或者禁用
+     *
+     * @return
+     */
+    public String batchSetEnable() {
+        try {
+            customerService.batchSetEnable(model.getEnabled(), model.getBatchDeleteIds());
+            model.getShowModel().setMsgTip("成功");
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>批量修改状态，客户ID为：" + model.getBatchDeleteIds() + "信息异常", e);
+            tipMsg = "失败";
+            tipType = 1;
+        }
+        logService.create(new Logdetails(getUser(), "批量修改客户状态", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "批量修改状态，客户ID为  " + model.getBatchDeleteIds() + " " + tipMsg + "！", "批量修改客户状态" + tipMsg));
+        return SUCCESS;
+    }
+
+    /**
+     * 导出excel表格
+     *
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public String exportExcel() {
+        Log.infoFileSync("===================调用导出客户信息action方法exportExcel开始=======================");
+        try {
+            String sName = "pageUtil" + model.getType();
+            PageUtil<Customer> pageUtil = (PageUtil<Customer>) getSession().get(sName);
+
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            String isCurrentPage = "allPage";
+            model.setFileName(Tools.changeUnicode("report" + System.currentTimeMillis() + ".xls", model.getBrowserType()));
+            model.setExcelStream(customerService.exmportExcel(isCurrentPage, pageUtil));
+        } catch (Exception e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>>>>调用导出信息action方法exportExcel异常", e);
+            model.getShowModel().setMsgTip("export excel exception");
+        }
+        Log.infoFileSync("===================调用导出客户信息action方法exportExcel结束==================");
+        return EXCEL;
     }
 
 
@@ -214,7 +287,7 @@ public class CustomerAction extends BaseAction<CustomerModel> {
                     for (Basicuser basicuser : userDataList) {
                         JSONObject item = new JSONObject();
                         item.put("id", basicuser.getId());
-                        //版本册名称
+                        //客户信息名称
                         item.put("sales", basicuser.getUsername());
                         dataArray.add(item);
                     }
@@ -224,11 +297,13 @@ public class CustomerAction extends BaseAction<CustomerModel> {
             //回写查询结果
             toClient(dataArray.toString());
         } catch (DataAccessException e) {
-            Log.errorFileSync(">>>>>>>>>查找版本册下拉框信息异常", e);
+            Log.errorFileSync(">>>>>>>>>查找客户信息下拉框信息异常", e);
         } catch (IOException e) {
-            Log.errorFileSync(">>>>>>>>>回写查询版本册下拉框信息结果异常", e);
+            Log.errorFileSync(">>>>>>>>>回写查询客户信息下拉框信息结果异常", e);
         }
     }
+
+
 
 
     /**

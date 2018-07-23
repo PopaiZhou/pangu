@@ -7,5 +7,15 @@
 		<action name="*" class="customerAction" method="{1}">
 			<result type="json"/>
 		</action>
+
+		<!--导出excel表格 -->
+		<action name="exportExcel" class="customerAction" method="exportExcel">
+			<result name="excel" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="inputName">excelStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
 	</package>
 </struts>

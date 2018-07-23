@@ -261,6 +261,180 @@ function addCustomer() {
     id = 0;
     url = path + '/customer/create.action';
 }
+//批量删除
+function batDeleteCustomer() {
+    var row = $('#tableData').datagrid('getChecked');
+    if(row.length == 0)
+    {
+        $.messager.alert('删除提示','没有记录被选中！','info');
+        return;
+    }
+    if(row.length > 0){
+        $.messager.confirm('删除确认','确定要删除选中的' + row.length + '条信息吗？',function(r){
+            if (r){
+                var ids = "";
+                for(var i = 0;i < row.length; i ++)
+                {
+                    if(i == row.length-1)
+                    {
+                        ids += row[i].id;
+                        break;
+                    }
+                    ids += row[i].id + ",";
+                }
+            }
+            $.ajax({
+                type:"post",
+                url: path + "/customer/batchDelete.action",
+                dataType: "json",
+                async :  false,
+                data: ({
+                    batchDeleteIds : ids,
+                    clientIp: clientIp
+                }),
+                success: function (tipInfo)
+                {
+                    var msg = tipInfo.showModel.msgTip;
+                    if(msg == '成功')
+                    {
+                        $.messager.alert('提示','删除客户信息成功！','info');
+                        //加载完以后重新初始化
+                        $("#searchBtn").click();
+                        $(":checkbox").attr("checked",false);
+                    }
+                    else{
+                        $.messager.alert('删除提示','删除信息失败，请稍后再试！','error');
+                    }
+                },
+                //此处添加错误处理
+                error:function()
+                {
+                    $.messager.alert('删除提示','删除信息异常，请稍后再试！','error');
+                    return;
+                }
+            });
+        });
+    }
+}
+//批量启用
+function setEnableFun() {
+    var row = $('#tableData').datagrid('getChecked');
+    if(row.length == 0)
+    {
+        $.messager.alert('启用提示','没有记录被选中！','info');
+        return;
+    }
+    if(row.length > 0)
+    {
+        $.messager.confirm('启用确认','确定要启用选中的' + row.length + '条信息吗？',function(r)
+        {
+            if (r)
+            {
+                var ids = "";
+                for(var i = 0;i < row.length; i ++)
+                {
+                    if(i == row.length-1)
+                    {
+                        ids += row[i].id;
+                        break;
+                    }
+                    ids += row[i].id + ",";
+                }
+                $.ajax({
+                    type:"post",
+                    url: path + "/customer/batchSetEnable.action",
+                    dataType: "json",
+                    async :  false,
+                    data: ({
+                        enabled: true,
+                        batchDeleteIds : ids,
+                        clientIp: clientIp
+                    }),
+                    success: function (tipInfo)
+                    {
+                        var msg = tipInfo.showModel.msgTip;
+                        if(msg == '成功')
+                        {
+                            //加载完以后重新初始化
+                            $("#searchBtn").click();
+                            $(":checkbox").attr("checked",false);
+                        }
+                        else
+                            $.messager.alert('启用提示','启用信息失败，请稍后再试！','error');
+                    },
+                    //此处添加错误处理
+                    error:function()
+                    {
+                        $.messager.alert('启用提示','启用信息异常，请稍后再试！','error');
+                        return;
+                    }
+                });
+            }
+        });
+    }
+}
+//批量禁用
+function setDisEnableFun() {
+    var row = $('#tableData').datagrid('getChecked');
+    if(row.length == 0)
+    {
+        $.messager.alert('禁用提示','没有记录被选中！','info');
+        return;
+    }
+    if(row.length > 0)
+    {
+        $.messager.confirm('禁用确认','确定要禁用选中的' + row.length + '条信息吗？',function(r)
+        {
+            if (r)
+            {
+                var ids = "";
+                for(var i = 0;i < row.length; i ++)
+                {
+                    if(i == row.length-1)
+                    {
+                        ids += row[i].id;
+                        break;
+                    }
+                    ids += row[i].id + ",";
+                }
+                $.ajax({
+                    type:"post",
+                    url: path + "/customer/batchSetEnable.action",
+                    dataType: "json",
+                    async :  false,
+                    data: ({
+                        enabled: false,
+                        batchDeleteIds : ids,
+                        clientIp: clientIp
+                    }),
+                    success: function (tipInfo)
+                    {
+                        var msg = tipInfo.showModel.msgTip;
+                        if(msg == '成功')
+                        {
+                            //加载完以后重新初始化
+                            $("#searchBtn").click();
+                            $(":checkbox").attr("checked",false);
+                        }
+                        else
+                            $.messager.alert('禁用提示','禁用信息失败，请稍后再试！','error');
+                    },
+                    //此处添加错误处理
+                    error:function()
+                    {
+                        $.messager.alert('禁用提示','禁用信息异常，请稍后再试！','error');
+                        return;
+                    }
+                });
+            }
+        });
+    }
+}
+
+//导出数据
+function setOutputFun(){
+    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer";
+}
 
 //检查客户编号
 function checkCustomerNo() {
