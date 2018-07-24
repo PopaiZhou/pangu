@@ -46,6 +46,13 @@ public class CustomerModel implements Serializable{
     private String batchDeleteIds;
 
     /**
+     * 批量转移客户参数
+     */
+    private String oldUserId;
+    private String newUserId;
+    private String customerIds;
+
+    /**
      * 每页显示的个数
      */
     private int pageSize = 10;
@@ -641,5 +648,59 @@ public class CustomerModel implements Serializable{
      */
     public void setExcelStream(InputStream excelStream) {
         this.excelStream = excelStream;
+    }
+
+    /**
+     * Getter method for property <tt>oldUserId</tt>.
+     *
+     * @return property value of oldUserId
+     */
+    public String getOldUserId() {
+        return oldUserId;
+    }
+
+    /**
+     * Setter method for property <tt>oldUserId</tt>.
+     *
+     * @param oldUserId value to be assigned to property oldUserId
+     */
+    public void setOldUserId(String oldUserId) {
+        this.oldUserId = oldUserId;
+    }
+
+    /**
+     * Getter method for property <tt>newUserId</tt>.
+     *
+     * @return property value of newUserId
+     */
+    public String getNewUserId() {
+        return newUserId;
+    }
+
+    /**
+     * Setter method for property <tt>newUserId</tt>.
+     *
+     * @param newUserId value to be assigned to property newUserId
+     */
+    public void setNewUserId(String newUserId) {
+        this.newUserId = newUserId;
+    }
+
+    /**
+     * Getter method for property <tt>customerIds</tt>.
+     *
+     * @return property value of customerIds
+     */
+    public String getCustomerIds() {
+        return customerIds;
+    }
+
+    /**
+     * Setter method for property <tt>customerIds</tt>.
+     *
+     * @param customerIds value to be assigned to property customerIds
+     */
+    public void setCustomerIds(String customerIds) {
+        this.customerIds = customerIds;
     }
 }

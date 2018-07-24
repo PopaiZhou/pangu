@@ -48,7 +48,8 @@
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>&nbsp;&nbsp;
                 <a id="btnSetRole" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配角色'>分配角色</a>&nbsp;&nbsp;
                 <%--<a id="btnSetDepart" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配仓库'>分配仓库</a>&nbsp;&nbsp;--%>
-                <a id="btnSetCustomer" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配客户'>分配客户</a>
+                <%--<a id="btnSetCustomer" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='分配客户'>分配客户</a>--%>
+                <a id="btnSetCustomerNew" class='easyui-linkbutton iframe iframe_LargeForm' href='#' title='转移客户'>转移客户</a>
             </td>
         </tr>
     </table>
@@ -564,7 +565,7 @@
         this.href = "<%=path %>/pages/user/userDepot.jsp?id=" + currentRow.id;
     });
 
-    //分配客户
+    //分配客户--原来方法
     $('#btnSetCustomer').click(function () {
         var currentRow = $("#tableData").datagrid("getSelected");
         if (currentRow == null) {
@@ -573,6 +574,18 @@
         }
         this.href = "<%=path %>/pages/user/userCustomer.jsp?id=" + currentRow.id;
     });
+
+    //新的方法
+    $('#btnSetCustomerNew').click(function () {
+        var currentRow = $("#tableData").datagrid("getSelected");
+        if (currentRow == null) {
+            $.messager.alert('提示','请选择一条数据再操作！','info');
+            return false;
+        }
+        this.href = "<%=path %>/pages/user/userCustomer.jsp?id=" + currentRow.id;
+    });
+
+
 </script>
 </body>
 </html>

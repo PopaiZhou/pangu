@@ -44,13 +44,15 @@ function initTableData() {
             { title: '操作',field: 'op',align:"center",width:60,formatter:function(value,rec)
             {
                 var str = '';
-                var rowInfo = rec.id + 'AaBb' + rec.supplier +'AaBb' + rec.contacts + 'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.BeginNeedGet + 'AaBb'+ rec.BeginNeedPay + 'AaBb' + rec.isystem + 'AaBb' + rec.description+ 'AaBb' + rec.type
-                    + 'AaBb' + rec.fax + 'AaBb' + rec.telephone + 'AaBb' + rec.address + 'AaBb' + rec.taxNum + 'AaBb' + rec.bankName + 'AaBb' + rec.accountNumber + 'AaBb' + rec.taxRate + 'AaBb' + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street
-                    + 'AaBb' + rec.supplierNo + 'AaBb' + rec.supplierShort;
+                var rowInfo = rec.id + 'AaBb' + rec.customerNo +'AaBb' + rec.customerName + 'AaBb' + rec.customerShort + 'AaBb' + rec.contacts +  'AaBb'+ rec.phonenum + 'AaBb'+ rec.email + 'AaBb'+ rec.description
+                    + 'AaBb'+ rec.telephone + 'AaBb' + rec.qq + 'AaBb' + rec.express+ 'AaBb' + rec.address
+                    + 'AaBb' + rec.taxNum + 'AaBb' + rec.bankName + 'AaBb' + rec.accountNumber + 'AaBb' + rec.taxRate
+                    + 'AaBb' + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street + 'AaBb' + rec.type + 'AaBb' + rec.userId + 'AaBb' + rec.userName + 'AaBb' + rec.typeId
+                    + 'AaBb' + rec.isystem + 'AaBb' + rec.enabled;
                 if(1 == value)
                 {
-                    str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editSupplier(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-                    str += '<img title="删除" src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteSupplier(\'' + rowInfo + '\');"/>';
+                    str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editCustomerInfo(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
+                    str += '<img title="删除" src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteCustomer(\'' + rowInfo + '\');"/>';
                 }
                 return str;
             }
@@ -494,5 +496,76 @@ function initSalesList() {
         url: path +'/js/pages/manage/customerType.json',
         valueField:'value',
         textField:'name'
+    });
+}
+
+//编辑客户信息信息
+function editCustomerInfo(customerInfo) {
+    var customer = customerInfo.split("AaBb");
+    var row = {
+        customerNo : customer[1],
+        customerName : customer[2],
+        customerShort : customer[3].replace("undefined",""),
+        contacts : customer[4].replace("undefined",""),
+        phonenum : customer[5].replace("undefined",""),
+        email : customer[6].replace("undefined",""),
+        description : customer[7].replace("undefined",""),
+        telephone : customer[8].replace("undefined",""),
+        qq : customer[9].replace("undefined",""),
+        express : customer[10].replace("undefined",""),
+        address : customer[11].replace("undefined",""),
+        taxNum : customer[12].replace("undefined",""),
+        bankName : customer[13].replace("undefined",""),
+        accountNumber : customer[14].replace("undefined",""),
+        taxRate : customer[15].replace("undefined",""),
+        state : customer[16].replace("undefined",""),
+        city : customer[17].replace("undefined",""),
+        street : customer[18].replace("undefined",""),
+
+        basicUser : customer[20].replace("undefined",""),
+        type : customer[22].replace("undefined",""),
+        enabled : true,
+        clientIp: clientIp
+    };
+    $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑客户信息信息');
+    $(".window-mask").css({ width: webW ,height: webH});
+    $('#supplierFM').form('load',row);
+    id = customer[0];
+    url = path + '/customer/update.action?id=' + customer[0];
+}
+
+//单个删除客户信息
+function deleteCustomer(customerInfo) {
+    $.messager.confirm('删除确认','确定要删除此条信息吗？',function(r) {
+        if (r) {
+            var customer = customerInfo.split("AaBb");
+            $.ajax({
+                type: "post",
+                url: path + "/customer/delete.action",
+                dataType: "json",
+                data: ({
+                    id: customer[0],
+                    customerId: customer[1],
+                    customerName: customer[2].replace("undefined", ""),
+                    clientIp: clientIp
+                }),
+                success: function (tipInfo) {
+                    var msg = tipInfo.showModel.msgTip;
+                    if (msg == '成功') {
+                        //加载完以后重新初始化
+                        $.messager.alert('提示', '删除客户信息成功！', 'info');
+                        $("#searchBtn").click();
+                    }
+                    else {
+                        $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('删除提示', '删除信息异常，请稍后再试！', 'error');
+                    return;
+                }
+            });
+        }
     });
 }

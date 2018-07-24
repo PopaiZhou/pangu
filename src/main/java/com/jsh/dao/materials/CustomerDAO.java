@@ -25,4 +25,11 @@ public class CustomerDAO extends BaseDAO<Customer> implements CustomerIDAO{
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
         query.executeUpdate();
     }
+
+    @Override
+    public void batchTransCustomer(String oldId, String newId, String customerIds) {
+        String sql = "update jsh_customer s set s.userId=" + newId + " where s.id in (" + customerIds + ")";
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
+        query.executeUpdate();
+    }
 }

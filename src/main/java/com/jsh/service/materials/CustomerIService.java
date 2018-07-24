@@ -20,6 +20,8 @@ import java.io.InputStream;
 public interface CustomerIService extends BaseIService<Customer> {
     public void batchSetEnable(Boolean enable, String batchDeleteIds);
 
+    public void batchTransCustomer(String oldId,String newId,String customerIds);
+
     /**
      * 导出excel方法
      * @param isAllPage

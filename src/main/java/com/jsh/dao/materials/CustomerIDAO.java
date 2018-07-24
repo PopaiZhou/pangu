@@ -13,4 +13,6 @@ import com.jsh.model.po.Customer;
  */
 public interface CustomerIDAO extends BaseIDAO<Customer> {
     public void batchSetEnable(Boolean enable, String batchDeleteIds);
+
+    public void batchTransCustomer(String oldId, String newId, String customerIds);
 }

@@ -37,6 +37,11 @@ public class CustomerService extends BaseService<Customer> implements CustomerIS
     }
 
     @Override
+    public void batchTransCustomer(String oldId, String newId, String customerIds) {
+        customerDao.batchTransCustomer(oldId,newId,customerIds);
+    }
+
+    @Override
     public InputStream exmportExcel(String isAllPage, PageUtil<Customer> pageUtil) throws JshException {
         try {
             //将OutputStream转化为InputStream
