@@ -164,6 +164,99 @@ public class ProductAction extends BaseAction<ProductModel>{
     }
 
     /**
+     * 根据ID查询
+     * @return
+     */
+    public void findById(){
+        try{
+            /**
+             * 拼接搜索条件
+             */
+            Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("Id_n_eq", model.getId());
+
+            PageUtil<Product> pageUtil = new PageUtil<>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(condition);
+
+            productService.find(pageUtil);
+
+            List<Product> dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for(Product product : dataList){
+                    JSONObject item = new JSONObject();
+                    //收支项目名称
+                    item.put("id",product.getId());
+                    item.put("productId", product.getProductId());
+                    item.put("productName", product.getProductName());
+                    item.put("tId", product.getTemplateId().getId());
+                    item.put("templateId", product.getTemplateId().getTemplateId());
+                    item.put("templateName", product.getTemplateId().getTemplateName());
+                    item.put("supplier", product.getSupplierNo().getSupplier());
+                    item.put("standard",product.getStandard());
+                    item.put("purchasePrice",product.getPurchasePrice());
+                    item.put("wholesalePrice",product.getWholesalePrice());
+                    item.put("retailPrice",product.getRetailPrice());
+                    item.put("op","1");
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找产品信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询产品结果异常", e);
+        }
+    }
+
+    /**
+     * 根据模版编号查询
+     * @return
+     */
+    public void findByTemplateId(){
+        try{
+            /**
+             * 拼接搜索条件
+             */
+            Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("templateId_s_eq", model.getId());
+
+            PageUtil<Product> pageUtil = new PageUtil<>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(condition);
+
+            productService.find(pageUtil);
+
+            List<Product> dataList = pageUtil.getPageList();
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Product product : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", product.getId());
+                    //型号名称
+                    item.put("productName", product.getProductName()+"("+product.getProductId()+")");
+                    dataArray.add(item);
+                }
+            }
+            //回写查询结果
+            toClient(dataArray.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找型号下拉框信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询型号下拉框信息结果异常", e);
+        }
+    }
+
+    /**
      * 单个删除
      */
     public String delete() {
@@ -240,6 +333,42 @@ public class ProductAction extends BaseAction<ProductModel>{
         condition.put("templateId_s_like", model.getTemplateId());
         condition.put("id_s_order", "desc");
         return condition;
+    }
+
+    /**
+     * 查找型号信息-下拉框
+     *
+     * @return
+     */
+    public void findBySelect() {
+        try {
+            Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("id_s_order", "desc");
+
+            PageUtil<Product> pageUtil = new PageUtil<Product>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(condition);
+            productService.find(pageUtil);
+            List<Product> dataList = pageUtil.getPageList();
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Product product : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", product.getId());
+                    //型号名称
+                    item.put("productName", product.getProductName()+"("+product.getProductId()+")");
+                    dataArray.add(item);
+                }
+            }
+            //回写查询结果
+            toClient(dataArray.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找型号下拉框信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询型号下拉框信息结果异常", e);
+        }
     }
 
     //=============以下spring注入以及Model驱动公共方法，与Action处理无关==================

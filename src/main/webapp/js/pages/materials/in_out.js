@@ -1552,7 +1552,7 @@
 					res = JSON.parse(res);
 					var defaultNumber = res.DefaultNumber;
 					var thisDateTwo = getNowFormatDateTwo(); //当前日期
-					var newNumber = amountNum + thisDateTwo + defaultNumber
+					var newNumber = amountNum + thisDateTwo + defaultNumber;
 					$("#Number").val(newNumber).attr("data-defaultNumber",newNumber);
 				}
 			},

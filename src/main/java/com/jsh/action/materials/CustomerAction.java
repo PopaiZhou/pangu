@@ -168,6 +168,79 @@ public class CustomerAction extends BaseAction<CustomerModel> {
         }
     }
     /**
+     * 查询客户信息列表
+     */
+    public void findById(){
+        try{
+            /**
+             * 拼接搜索条件
+             */
+            Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("Id_n_eq", model.getId());
+
+            PageUtil<Customer> pageUtil = new PageUtil<>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(condition);
+
+            customerService.find(pageUtil);
+
+            getSession().put("pageUtilCustomer", pageUtil);
+
+            List<Customer> dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for(Customer customer : dataList){
+                    JSONObject item = new JSONObject();
+                    //收支项目名称
+                    item.put("id", customer.getId());
+                    //客户信息名称
+                    item.put("customerNo", customer.getCustomerNo());
+                    item.put("customerName", customer.getCustomerName());
+                    item.put("customerShort", customer.getCustomerShort());
+                    item.put("contacts", customer.getContacts());
+                    item.put("phonenum", customer.getPhonenum());
+                    item.put("email", customer.getEmail());
+                    item.put("description", customer.getDescription());
+
+                    item.put("telephone", customer.getTelephone());
+                    item.put("qq", customer.getQq());
+                    item.put("express", customer.getExpress());
+                    item.put("address", customer.getAddress());
+                    item.put("taxNum", customer.getTaxNum());
+                    item.put("bankName", customer.getBankName());
+                    item.put("accountNumber", customer.getAccountNumber());
+                    item.put("taxRate", customer.getTaxRate());
+
+                    item.put("state",customer.getState());
+                    item.put("city",customer.getCity());
+                    item.put("street",customer.getStreet());
+
+                    item.put("type", CustomerTypeEnum.getSexEnumByCode(customer.getType()).getName());
+                    item.put("typeId", customer.getType());
+                    item.put("userId", customer.getUser().getId());
+                    item.put("userName", customer.getUser().getUsername());
+
+                    item.put("isystem", customer.getIsystem() == (short) 0 ? "是" : "否");
+                    item.put("enabled", customer.getEnabled());
+                    item.put("op", customer.getIsystem());
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找客户信息信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询客户信息结果异常", e);
+        }
+    }
+
+    /**
      * 更新客户信息
      *
      * @return
@@ -478,6 +551,43 @@ public class CustomerAction extends BaseAction<CustomerModel> {
                 , tipType, "批量转移客户id为：  " + model.getCustomerIds() + "转移前所属业务员编号：  " + model.getOldUserId() + "转移后所属业务员编号：  " + model.getNewUserId()
                 + " " + tipMsg + "！", "增加客户信息" + tipMsg));
         Log.infoFileSync("==================结束调用增加客户信息方法===================");
+    }
+    /**
+     * 查询客户信息下拉列表
+     */
+    public void findBySelect_sup() {
+        try {
+            /**
+             * 拼接搜索条件
+             */
+            Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("enabled_s_eq", 1);
+            condition.put("id_s_order", "desc");
+
+            PageUtil<Customer> pageUtil = new PageUtil<Customer>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(condition);
+            customerService.find(pageUtil);
+            List<Customer> dataList = pageUtil.getPageList();
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Customer customer : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", customer.getId());
+                    //客户名称
+                    item.put("customerName", customer.getCustomerName());
+                    dataArray.add(item);
+                }
+            }
+            //回写查询结果
+            toClient(dataArray.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找客户信息下拉框信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询客户信息下拉框信息结果异常", e);
+        }
     }
 
     /**
