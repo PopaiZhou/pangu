@@ -301,13 +301,18 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                 for (DepotItem depotItem : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("Id", depotItem.getId());
+                    //型号
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
+                    item.put("MaterialName", depotItem.getMaterialId().getProductName());
+                    //版本
+                    item.put("DepotId", depotItem.getTemplateId() == null ? "" : depotItem.getTemplateId().getId());
+                    item.put("DepotName", depotItem.getTemplateId() == null ? "" : depotItem.getTemplateId().getTemplateName());
                     //版本名称
                     item.put("TemplateName", depotItem.getTemplateId().getTemplateName());
                     //型号名称
                     item.put("ProductName", depotItem.getMaterialId().getProductName());
                     //规格
-                    item.put("MUnit", depotItem.getMUnit());
+                    item.put("Unit", depotItem.getMUnit());
                     //单价
                     item.put("UnitPrice", depotItem.getUnitPrice());
                     //数量

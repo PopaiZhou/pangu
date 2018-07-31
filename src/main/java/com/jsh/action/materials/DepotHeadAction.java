@@ -167,6 +167,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      * @return
      */
     public void update() {
+        Log.infoFileSync("====================开始调用更新单据信息方法update()================");
         Boolean flag = false;
         try {
             DepotHead depotHead = depotHeadService.get(model.getDepotHeadID());
@@ -231,6 +232,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         logService.create(new Logdetails(getUser(), "更新单据", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
                 , tipType, "更新单据ID为  " + model.getDepotHeadID() + " " + tipMsg + "！", "更新单据" + tipMsg));
+        Log.infoFileSync("====================结束调用更新单据信息方法update()================");
     }
 
     /**
@@ -425,6 +427,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("HandsPersonId", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getId());
                     Basicuser user = userService.get(Long.parseLong(depotHead.getSalesman()));
                     item.put("Salesman", user == null ? "" : user.getUsername());
+                    item.put("SalesmanId", user == null ? "" : user.getId());
                     item.put("HandsPersonName", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getName());
                     item.put("AccountId", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getId());
                     item.put("AccountName", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getName());

@@ -10,6 +10,10 @@ var depotHeadID = 0;
 var depotHeadMaxId=null; //获取最大的Id
 var listType = '下单';
 var listSubType = '销售';
+var preTotalPrice = 0; //前一次加载的金额
+var oldNumber = ""; //编辑前的单据编号
+var oldId = 0; //编辑前的单据Id
+var url;
 
 $(function(){
     initTableData();
@@ -54,7 +58,7 @@ function initTableData() {
                 formatter:function(value,rec) {
                     var str = '';
                     var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb'
-                        + rec.OrganId+ 'AaBb' + rec.Remark + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman;
+                        + rec.OrganId+ 'AaBb' + rec.Remark + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId;
                     if(1 == value) {
                         var orgId = rec.OrganId? rec.OrganId:0;
                         str += '<img title="查看" src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -147,7 +151,6 @@ function addDepotHead(){
     $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加订单');
     $(".window-mask").css({ width: webW ,height: webH});
 
-    orgDepotHead = "";
     depotHeadID = 0;
     initTableData_material("add"); //商品列表
     reject(); //撤销下、刷新商品列表
@@ -216,12 +219,73 @@ function batDeleteDepotHead(){
     }
 }
 
+//删除单据信息 -- 单条删除
+function deleteDepotHead(depotHeadID, thisOrganId, totalPrice, status){
+    if(status) {
+        $.messager.alert('删除提示','已审核的单据不能删除！','warning');
+        return;
+    }
+    $.messager.confirm('删除确认','确定要删除此单据信息吗？',function(r) {
+        if (r) {
+            $.ajax({
+                type:"post",
+                url: path + "/depotHead/delete.action",
+                dataType: "json",
+                data: ({
+                    depotHeadID : depotHeadID,
+                    clientIp: clientIp
+                }),
+                success: function (tipInfo)
+                {
+                    var msg = tipInfo.showModel.msgTip;
+                    if(msg == '成功')
+                    {
+                        //加载完以后重新初始化
+                        $("#searchBtn").click();
+                    }
+                    else
+                        $.messager.alert('删除提示','删除单据信息失败，请稍后再试！','error');
+                },
+                //此处添加错误处理
+                error:function()
+                {
+                    $.messager.alert('删除提示','删除单据信息异常，请稍后再试！','error');
+                    return;
+                }
+            });
+        }
+    });
+}
+
+//编辑信息
+function editDepotHead(depotHeadTotalInfo, status){
+    if(status) {
+        $.messager.alert('编辑提示','已审核的单据不能编辑！','warning');
+        return;
+    }
+    var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
+    $("#clientIp").val(clientIp);
+    $("#Number").val(depotHeadInfo[1]).attr("data-defaultNumber",depotHeadInfo[1]);
+    $("#OperTime").val(depotHeadInfo[2]);
+    $('#OrganId').combobox('setValue', depotHeadInfo[3]);
+    $("#Remark").val(depotHeadInfo[4]);
+    var TotalPrice = depotHeadInfo[6];
+    preTotalPrice = depotHeadInfo[6]; //记录前一次合计金额，用于扣预付款
+    oldNumber = depotHeadInfo[1]; //记录编辑前的单据编号
+    oldId = depotHeadInfo[0]; //记录单据Id
+    Salesman = depotHeadInfo[8];
+    $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑订单明细');
+    $(".window-mask").css({ width: webW ,height: webH});
+    depotHeadID = depotHeadInfo[0];
+
+    initTableData_material("edit",TotalPrice); //商品列表
+    reject(); //撤销下、刷新商品列表
+    url = path + '/depotHead/update.action?depotHeadID=' + depotHeadInfo[0];
+}
+
 //初始化表格数据-商品列表-编辑状态
 function initTableData_material(type,TotalPrice){
     var body,footer,input; //定义表格和文本框
-    var ratio = 1; //比例-品名专用
-    var ratioDepot = 1; //比例-仓库用
-    var monthTime = getNowFormatMonth();
     $('#materialData').datagrid({
         height:245,
         rownumbers: false,
@@ -403,17 +467,12 @@ function initTableData_material(type,TotalPrice){
         dataType: "json",
         success: function (res) {
             var AllPrice = 0;
-            var TaxLastMoney = 0;
-            var DiscountMoney = $("#DiscountMoney").val()-0; //优惠金额
-            var DiscountLastMoney = $("#DiscountLastMoney").val()-0; //优惠后金额
             if(type === "edit") {
                 AllPrice = TotalPrice;
-                TaxLastMoney = DiscountMoney + DiscountLastMoney;
             }
             var array = [];
             array.push({
-                "AllPrice": AllPrice,
-                "TaxLastMoney": TaxLastMoney
+                "AllPrice": AllPrice
             });
             res.footer = array;
             $("#materialData").datagrid('loadData',res);
@@ -523,6 +582,14 @@ function append(){
 }
 //删除
 function removeit(){
+    var row = $('#materialData').datagrid('getChecked');
+    if(row.length > 0){
+        for(var i = 0;i < row.length; i++){
+            var rowIndex = $('#materialData').datagrid('getRowIndex', row[i]);
+            $('#materialData').datagrid('cancelEdit', rowIndex)
+                .datagrid('deleteRow', rowIndex);
+        }
+    }
     if (editIndex == undefined) { return }
     $('#materialData').datagrid('cancelEdit', editIndex)
         .datagrid('deleteRow', editIndex);
@@ -568,7 +635,6 @@ function autoReckon() {
 //最底下合计方法
 function statisticsFun(body,UnitPrice,OperNumber,footer){
     var TotalPrice = 0;
-    var taxLastMoneyTotal = 0;
     //金额的合计
     body.find("[field='AllPrice']").each(function(){
         if($(this).find("div").text()!==""){
@@ -703,7 +769,7 @@ function bindEvent(){
             var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();
             $.ajax({
                 type:"post",
-                url: path + '/depotHead/create.action',
+                url: url,
                 dataType: "json",
                 async :  false,
                 data: ({
@@ -944,7 +1010,7 @@ function initTableData_material_show(TotalPrice){
         columns:[[
             { title: '版本名称',field: 'TemplateName',width:230},
             { title: '型号',field: 'ProductName',width:230},
-            { title: '规格',field: 'MUnit',editor:'validatebox',width:60},
+            { title: '规格',field: 'Unit',editor:'validatebox',width:60},
             { title: '单价',field: 'UnitPrice',editor:'validatebox',width:60},
             { title: '数量',field: 'OperNumber',editor:'validatebox',width:60},
             { title: '总价',field: 'AllPrice',editor:'validatebox',width:75},
