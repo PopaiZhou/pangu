@@ -47,7 +47,7 @@
     <comment>出入库时间</comment>
    </column>
   </property>
-  <many-to-one name="OrganId" class="com.jsh.model.po.Supplier" lazy="false">
+  <many-to-one name="OrganId" class="com.jsh.model.po.Customer" lazy="false">
    <column name="OrganId">
     <comment>供应商或客户Id</comment>
    </column>

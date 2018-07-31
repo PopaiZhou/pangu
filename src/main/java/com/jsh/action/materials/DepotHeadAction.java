@@ -4,6 +4,7 @@ import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.*;
 import com.jsh.model.vo.materials.DepotHeadModel;
+import com.jsh.service.basic.UserIService;
 import com.jsh.service.materials.DepotHeadIService;
 import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
@@ -27,6 +28,7 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     private DepotHeadIService depotHeadService;
+    private UserIService userService;
     private DepotHeadModel model = new DepotHeadModel();
 
     /*
@@ -81,7 +83,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 Log.errorFileSync(">>>>>>>>>>>>>>>解析购买日期格式异常", e);
             }
             if (model.getOrganId() != null) {
-                depotHead.setOrganId(new Supplier(model.getOrganId()));
+                depotHead.setOrganId(new Customer(model.getOrganId()));
             }
             if (model.getHandsPersonId() != null) {
                 depotHead.setHandsPersonId(new Person(model.getHandsPersonId()));
@@ -181,7 +183,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 Log.errorFileSync(">>>>>>>>>>>>>>>解析入库时间格式异常", e);
             }
             if (model.getOrganId() != null) {
-                depotHead.setOrganId(new Supplier(model.getOrganId()));
+                depotHead.setOrganId(new Customer(model.getOrganId()));
             }
             if (model.getHandsPersonId() != null) {
                 depotHead.setHandsPersonId(new Person(model.getHandsPersonId()));
@@ -363,11 +365,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     public void getHeaderIdByMaterial() {
         try {
             String materialParam = model.getMaterialParam(); //商品参数
-            String depotIds = model.getDepotIds(); //拥有的仓库信息
             PageUtil pageUtil = new PageUtil();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
-            depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam, depotIds);
+            depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam);
             JSONObject outer = new JSONObject();
             String allReturn = "";
             List dataList = pageUtil.getPageList();
@@ -420,9 +421,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("CreateTime", Tools.getCenternTime(depotHead.getCreateTime()));
                     item.put("OperTime", Tools.getCenternTime(depotHead.getOperTime()));
                     item.put("OrganId", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getId());
-                    item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getSupplier());
+                    item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getCustomerName());
                     item.put("HandsPersonId", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getId());
-                    item.put("Salesman", depotHead.getSalesman().toString());
+                    Basicuser user = userService.get(Long.parseLong(depotHead.getSalesman()));
+                    item.put("Salesman", user == null ? "" : user.getUsername());
                     item.put("HandsPersonName", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getName());
                     item.put("AccountId", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getId());
                     item.put("AccountName", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getName());
@@ -442,7 +444,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("payType", depotHead.getPayType() == null ? "" : depotHead.getPayType());
                     item.put("Status", depotHead.getStatus());
                     item.put("Remark", depotHead.getRemark());
-                    item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+                    //item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+                    item.put("MaterialsList", findProductListByHeaderId(depotHead.getId()));
                     item.put("op", 1);
                     dataArray.add(item);
                 }
@@ -455,6 +458,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询单据信息结果异常", e);
         }
+
     }
 
     /**
@@ -479,9 +483,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 item.put("CreateTime", Tools.getCenternTime(depotHead.getCreateTime()));
                 item.put("OperTime", Tools.getCenternTime(depotHead.getOperTime()));
                 item.put("OrganId", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getId());
-                item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getSupplier());
+                item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getCustomerName());
                 item.put("HandsPersonId", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getId());
-                item.put("Salesman", depotHead.getSalesman().toString());
+                item.put("Salesman", depotHead.getSalesman());
                 item.put("HandsPersonName", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getName());
                 item.put("AccountId", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getId());
                 item.put("AccountName", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getName());
@@ -748,13 +752,31 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         }
     }
 
-    public String findMaterialsListByHeaderId(Long headerId) {
+    private String findMaterialsListByHeaderId(Long headerId) {
         String allReturn = "";
         PageUtil pageUtil = new PageUtil();
         pageUtil.setPageSize(0);
         pageUtil.setCurPage(0);
         try {
             depotHeadService.findMaterialsListByHeaderId(pageUtil, headerId);
+            allReturn = pageUtil.getPageList().toString();
+            allReturn = allReturn.substring(1, allReturn.length() - 1);
+            if (allReturn.equals("null")) {
+                allReturn = "";
+            }
+        } catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        }
+        return allReturn;
+    }
+
+    public String findProductListByHeaderId(Long headerId) {
+        String allReturn = "";
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try {
+            depotHeadService.findProductListByHeaderId(pageUtil, headerId);
             allReturn = pageUtil.getPageList().toString();
             allReturn = allReturn.substring(1, allReturn.length() - 1);
             if (allReturn.equals("null")) {
@@ -910,11 +932,21 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     }
 
     //=============以下spring注入以及Model驱动公共方法，与Action处理无关==================
+    @Override
     public DepotHeadModel getModel() {
         return model;
     }
 
     public void setDepotHeadService(DepotHeadIService depotHeadService) {
         this.depotHeadService = depotHeadService;
+    }
+
+    /**
+     * Setter method for property <tt>userService</tt>.
+     *
+     * @param userService value to be assigned to property userService
+     */
+    public void setUserService(UserIService userService) {
+        this.userService = userService;
     }
 }

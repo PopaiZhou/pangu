@@ -56,7 +56,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     DepotItem depotItem = new DepotItem();
                     JSONObject tempInsertedJson = JSONObject.fromObject(insertedJson.get(i));
                     depotItem.setHeaderId(new DepotHead(headerId));
-                    depotItem.setMaterialId(new Material(tempInsertedJson.getLong("MaterialId")));
+                    depotItem.setMaterialId(new Product(tempInsertedJson.getLong("MaterialId")));
                     depotItem.setMUnit(tempInsertedJson.getString("Unit"));
                     if (!StringUtils.isEmpty(tempInsertedJson.get("OperNumber").toString())) {
                         depotItem.setOperNumber(tempInsertedJson.getDouble("OperNumber"));
@@ -87,27 +87,41 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     if (!StringUtils.isEmpty(tempInsertedJson.get("UnitPrice").toString())) {
                         depotItem.setUnitPrice(tempInsertedJson.getDouble("UnitPrice"));
                     }
-                    if (!StringUtils.isEmpty(tempInsertedJson.get("TaxUnitPrice").toString())) {
-                        depotItem.setTaxUnitPrice(tempInsertedJson.getDouble("TaxUnitPrice"));
+                    if(tempInsertedJson.containsKey("TaxUnitPrice")){
+                        if (!StringUtils.isEmpty(tempInsertedJson.get("TaxUnitPrice").toString())) {
+                            depotItem.setTaxUnitPrice(tempInsertedJson.getDouble("TaxUnitPrice"));
+                        }
                     }
                     if (!StringUtils.isEmpty(tempInsertedJson.get("AllPrice").toString())) {
                         depotItem.setAllPrice(tempInsertedJson.getDouble("AllPrice"));
                     }
                     depotItem.setRemark(tempInsertedJson.getString("Remark"));
                     if (tempInsertedJson.get("DepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("DepotId").toString())) {
-                        depotItem.setDepotId(new Depot(tempInsertedJson.getLong("DepotId")));
+                        depotItem.setDepotId("0");
                     }
-                    if (tempInsertedJson.get("AnotherDepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("AnotherDepotId").toString())) {
-                        depotItem.setAnotherDepotId(new Depot(tempInsertedJson.getLong("AnotherDepotId")));
+                    //对应版本编号
+                    if (tempInsertedJson.get("DepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("DepotId").toString())) {
+                        depotItem.setTemplateId(new Template(tempInsertedJson.getLong("DepotId")));
                     }
-                    if (!StringUtils.isEmpty(tempInsertedJson.get("TaxRate").toString())) {
-                        depotItem.setTaxRate(tempInsertedJson.getDouble("TaxRate"));
+                    if(tempInsertedJson.containsKey("AnotherDepotId")){
+                        if (tempInsertedJson.get("AnotherDepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("AnotherDepotId").toString())) {
+                            depotItem.setAnotherDepotId(new Depot(tempInsertedJson.getLong("AnotherDepotId")));
+                        }
                     }
-                    if (!StringUtils.isEmpty(tempInsertedJson.get("TaxMoney").toString())) {
-                        depotItem.setTaxMoney(tempInsertedJson.getDouble("TaxMoney"));
+                    if(tempInsertedJson.containsKey("TaxRate")){
+                        if (!StringUtils.isEmpty(tempInsertedJson.get("TaxRate").toString())) {
+                            depotItem.setTaxRate(tempInsertedJson.getDouble("TaxRate"));
+                        }
                     }
-                    if (!StringUtils.isEmpty(tempInsertedJson.get("TaxLastMoney").toString())) {
-                        depotItem.setTaxLastMoney(tempInsertedJson.getDouble("TaxLastMoney"));
+                    if(tempInsertedJson.containsKey("TaxMoney")){
+                        if (!StringUtils.isEmpty(tempInsertedJson.get("TaxMoney").toString())) {
+                            depotItem.setTaxMoney(tempInsertedJson.getDouble("TaxMoney"));
+                        }
+                    }
+                    if(tempInsertedJson.containsKey("TaxLastMoney")){
+                        if (!StringUtils.isEmpty(tempInsertedJson.get("TaxLastMoney").toString())) {
+                            depotItem.setTaxLastMoney(tempInsertedJson.getDouble("TaxLastMoney"));
+                        }
                     }
                     if (tempInsertedJson.get("OtherField1") != null) {
                         depotItem.setOtherField1(tempInsertedJson.getString("OtherField1"));
@@ -140,7 +154,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                 for (int i = 0; i < updatedJson.size(); i++) {
                     JSONObject tempUpdatedJson = JSONObject.fromObject(updatedJson.get(i));
                     DepotItem depotItem = depotItemService.get(tempUpdatedJson.getLong("Id"));
-                    depotItem.setMaterialId(new Material(tempUpdatedJson.getLong("MaterialId")));
+                    depotItem.setMaterialId(new Product(tempUpdatedJson.getLong("MaterialId")));
                     depotItem.setMUnit(tempUpdatedJson.getString("Unit"));
                     if (!StringUtils.isEmpty(tempUpdatedJson.get("OperNumber").toString())) {
                         depotItem.setOperNumber(tempUpdatedJson.getDouble("OperNumber"));
@@ -171,34 +185,43 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     if (!StringUtils.isEmpty(tempUpdatedJson.get("UnitPrice").toString())) {
                         depotItem.setUnitPrice(tempUpdatedJson.getDouble("UnitPrice"));
                     }
-                    if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxUnitPrice").toString())) {
-                        depotItem.setTaxUnitPrice(tempUpdatedJson.getDouble("TaxUnitPrice"));
+                    if(tempUpdatedJson.containsKey("TaxUnitPrice")){
+                        if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxUnitPrice").toString())) {
+                            depotItem.setTaxUnitPrice(tempUpdatedJson.getDouble("TaxUnitPrice"));
+                        }
                     }
                     if (!StringUtils.isEmpty(tempUpdatedJson.get("AllPrice").toString())) {
                         depotItem.setAllPrice(tempUpdatedJson.getDouble("AllPrice"));
                     }
                     depotItem.setRemark(tempUpdatedJson.getString("Remark"));
+                    //对应版本编号
                     if (tempUpdatedJson.get("DepotId") != null && !StringUtils.isEmpty(tempUpdatedJson.get("DepotId").toString())) {
-                        depotItem.setDepotId(new Depot(tempUpdatedJson.getLong("DepotId")));
+                        depotItem.setTemplateId(new Template(tempUpdatedJson.getLong("DepotId")));
                     }
                     if (tempUpdatedJson.get("AnotherDepotId") != null && !StringUtils.isEmpty(tempUpdatedJson.get("AnotherDepotId").toString())) {
                         depotItem.setAnotherDepotId(new Depot(tempUpdatedJson.getLong("AnotherDepotId")));
                     }
-                    if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxRate").toString())) {
-                        depotItem.setTaxRate(tempUpdatedJson.getDouble("TaxRate"));
+                    if(tempUpdatedJson.containsKey("TaxRate")){
+                        if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxRate").toString())) {
+                            depotItem.setTaxRate(tempUpdatedJson.getDouble("TaxRate"));
+                        }
                     }
-                    if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxMoney").toString())) {
-                        depotItem.setTaxMoney(tempUpdatedJson.getDouble("TaxMoney"));
+                    if(tempUpdatedJson.containsKey("TaxMoney")){
+                        if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxMoney").toString())) {
+                            depotItem.setTaxMoney(tempUpdatedJson.getDouble("TaxMoney"));
+                        }
                     }
-                    if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxLastMoney").toString())) {
-                        depotItem.setTaxLastMoney(tempUpdatedJson.getDouble("TaxLastMoney"));
+                    if(tempUpdatedJson.containsKey("TaxLastMoney")){
+                        if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxLastMoney").toString())) {
+                            depotItem.setTaxLastMoney(tempUpdatedJson.getDouble("TaxLastMoney"));
+                        }
                     }
                     depotItem.setOtherField1(tempUpdatedJson.getString("OtherField1"));
                     depotItem.setOtherField2(tempUpdatedJson.getString("OtherField2"));
                     depotItem.setOtherField3(tempUpdatedJson.getString("OtherField3"));
                     depotItem.setOtherField4(tempUpdatedJson.getString("OtherField4"));
                     depotItem.setOtherField5(tempUpdatedJson.getString("OtherField5"));
-                    depotItem.setMType(tempUpdatedJson.getString("MType"));
+                    depotItem.setMType(tempUpdatedJson.getString("MType") );
                     depotItemService.create(depotItem);
                 }
             }
@@ -208,7 +231,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
             //记录操作日志使用
             tipMsg = "成功";
             tipType = 0;
-        } catch (DataAccessException e) {
+        }
+        catch (DataAccessException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>保存仓管通明细信息异常", e);
             flag = false;
             tipMsg = "失败";
@@ -278,39 +302,20 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     JSONObject item = new JSONObject();
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
-                    String ratio; //比例
-                    if (depotItem.getMaterialId().getUnitId() == null || depotItem.getMaterialId().getUnitId().equals("")) {
-                        ratio = "";
-                    } else {
-                        ratio = depotItem.getMaterialId().getUnitId().getUName();
-                        ratio = ratio.substring(ratio.indexOf("("));
-                    }
-                    //品名/型号/扩展信息/包装
-                    String MaterialName = depotItem.getMaterialId().getName() + ((depotItem.getMaterialId().getModel() == null || depotItem.getMaterialId().getModel().equals("")) ? "" : "(" + depotItem.getMaterialId().getModel() + ")");
-                    String materialOther = getOtherInfo(mpArr, depotItem);
-                    MaterialName = MaterialName + materialOther + ((depotItem.getMaterialId().getUnit() == null || depotItem.getMaterialId().getUnit().equals("")) ? "" : "(" + depotItem.getMaterialId().getUnit() + ")") + ratio;
-                    item.put("MaterialName", MaterialName);
-                    item.put("Unit", depotItem.getMUnit());
-                    item.put("OperNumber", depotItem.getOperNumber());
-                    item.put("BasicNumber", depotItem.getBasicNumber());
+                    //版本名称
+                    item.put("TemplateName", depotItem.getTemplateId().getTemplateName());
+                    //型号名称
+                    item.put("ProductName", depotItem.getMaterialId().getProductName());
+                    //规格
+                    item.put("MUnit", depotItem.getMUnit());
+                    //单价
                     item.put("UnitPrice", depotItem.getUnitPrice());
-                    item.put("TaxUnitPrice", depotItem.getTaxUnitPrice());
+                    //数量
+                    item.put("OperNumber", depotItem.getOperNumber());
+                    //总价
                     item.put("AllPrice", depotItem.getAllPrice());
+                    //备注
                     item.put("Remark", depotItem.getRemark());
-                    item.put("Img", depotItem.getImg());
-                    item.put("DepotId", depotItem.getDepotId() == null ? "" : depotItem.getDepotId().getId());
-                    item.put("DepotName", depotItem.getDepotId() == null ? "" : depotItem.getDepotId().getName());
-                    item.put("AnotherDepotId", depotItem.getAnotherDepotId() == null ? "" : depotItem.getAnotherDepotId().getId());
-                    item.put("AnotherDepotName", depotItem.getAnotherDepotId() == null ? "" : depotItem.getAnotherDepotId().getName());
-                    item.put("TaxRate", depotItem.getTaxRate());
-                    item.put("TaxMoney", depotItem.getTaxMoney());
-                    item.put("TaxLastMoney", depotItem.getTaxLastMoney());
-                    item.put("OtherField1", depotItem.getOtherField1());
-                    item.put("OtherField2", depotItem.getOtherField2());
-                    item.put("OtherField3", depotItem.getOtherField3());
-                    item.put("OtherField4", depotItem.getOtherField4());
-                    item.put("OtherField5", depotItem.getOtherField5());
-                    item.put("MType", depotItem.getMType());
                     item.put("op", 1);
                     dataArray.add(item);
                 }
@@ -356,13 +361,13 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     Double OutPrice = sumPrice("出库", pid, depotItem.getMaterialId().getId(), model.getMonthTime(), false);
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
-                    item.put("MaterialName", depotItem.getMaterialId().getName());
-                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialName", depotItem.getMaterialId().getProductName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getProductName());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, depotItem);
                     item.put("MaterialOther", materialOther);
-                    item.put("MaterialColor", depotItem.getMaterialId().getColor());
-                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
+                    item.put("MaterialColor", "");
+                    item.put("MaterialUnit", "");
                     Double unitPrice = 0.0;
                     if (prevSum + InSum - OutSum != 0.0) {
                         unitPrice = (prevPrice + InPrice - OutPrice) / (prevSum + InSum - OutSum);
@@ -411,8 +416,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     Integer InSum = sumNumber("入库", pid, depotItem.getMaterialId().getId(), model.getMonthTime(), false);
                     Integer OutSum = sumNumber("出库", pid, depotItem.getMaterialId().getId(), model.getMonthTime(), false);
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
-                    item.put("MaterialName", depotItem.getMaterialId().getName());
-                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialName", depotItem.getMaterialId().getProductName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getProductName());
                     item.put("thisSum", prevSum + InSum - OutSum);
                     dataArray.add(item);
                 }
@@ -450,8 +455,8 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     Integer InSum = sumNumberByMaterialId("入库", depotItem.getMaterialId().getId());
                     Integer OutSum = sumNumberByMaterialId("出库", depotItem.getMaterialId().getId());
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
-                    item.put("MaterialName", depotItem.getMaterialId().getName());
-                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialName", depotItem.getMaterialId().getProductName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getProductName());
                     item.put("thisSum", InSum - OutSum);
                     dataArray.add(item);
                 }
@@ -532,13 +537,13 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     Integer OutSum = sumNumberGift("礼品销售", pid, depotItem.getMaterialId().getId(), "out");
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
-                    item.put("MaterialName", depotItem.getMaterialId().getName());
-                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialName", depotItem.getMaterialId().getProductName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getProductName());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, depotItem);
                     item.put("MaterialOther", materialOther);
-                    item.put("MaterialColor", depotItem.getMaterialId().getColor());
-                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
+                    item.put("MaterialColor", "");
+                    item.put("MaterialUnit", "");
                     item.put("thisSum", InSum - OutSum);
                     dataArray.add(item);
                 }
@@ -581,13 +586,13 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     Double OutSumPrice = sumPriceBuyOrSale("出库", "采购退货", depotItem.getMaterialId().getId(), model.getMonthTime());
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
-                    item.put("MaterialName", depotItem.getMaterialId().getName());
-                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialName", depotItem.getMaterialId().getProductName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getProductName());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, depotItem);
                     item.put("MaterialOther", materialOther);
-                    item.put("MaterialColor", depotItem.getMaterialId().getColor());
-                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
+                    item.put("MaterialColor", "");
+                    item.put("MaterialUnit", "");
                     item.put("InSum", InSum);
                     item.put("OutSum", OutSum);
                     item.put("InSumPrice", InSumPrice);
@@ -637,13 +642,13 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     Double InSumPrice = sumPriceBuyOrSale("入库", "销售退货", depotItem.getMaterialId().getId(), model.getMonthTime());
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
-                    item.put("MaterialName", depotItem.getMaterialId().getName());
-                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialName", depotItem.getMaterialId().getProductName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getProductName());
                     //扩展信息
                     String materialOther = getOtherInfo(mpArr, depotItem);
                     item.put("MaterialOther", materialOther);
-                    item.put("MaterialColor", depotItem.getMaterialId().getColor());
-                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
+                    item.put("MaterialColor", "");
+                    item.put("MaterialUnit", "");
                     item.put("OutSum", OutSumRetail + OutSum);
                     item.put("InSum", InSumRetail + InSum);
                     item.put("OutSumPrice", OutSumRetailPrice + OutSumPrice);
@@ -730,11 +735,11 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     }
                     item.put("Id", depotItem.getId());
                     item.put("MaterialId", depotItem.getMaterialId() == null ? "" : depotItem.getMaterialId().getId());
-                    item.put("MaterialName", depotItem.getMaterialId().getName());
-                    item.put("MaterialModel", depotItem.getMaterialId().getModel());
+                    item.put("MaterialName", depotItem.getMaterialId().getProductName());
+                    item.put("MaterialModel", depotItem.getMaterialId().getProductName());
                     item.put("MaterialStandard", depotItem.getMaterialId().getStandard());
-                    item.put("MaterialColor", depotItem.getMaterialId().getColor());
-                    item.put("MaterialUnit", depotItem.getMaterialId().getUnit());
+                    item.put("MaterialColor", "");
+                    item.put("MaterialUnit", "");
                     item.put("UnitPrice", unitPrice);
                     item.put("prevSum", prevSum);
                     item.put("InSum", InSum);
@@ -822,8 +827,6 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
      *
      * @param type
      * @param MId
-     * @param MonthTime
-     * @param isPrev
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -937,7 +940,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
     public String getOtherInfo(String[] mpArr, DepotItem depotItem) {
         String materialOther = "";
         for (int i = 0; i < mpArr.length; i++) {
-            if (mpArr[i].equals("颜色")) {
+            /*if (mpArr[i].equals("颜色")) {
                 materialOther = materialOther + ((depotItem.getMaterialId().getColor() == null || depotItem.getMaterialId().getColor().equals("")) ? "" : "(" + depotItem.getMaterialId().getColor() + ")");
             }
             if (mpArr[i].equals("规格")) {
@@ -954,7 +957,7 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
             }
             if (mpArr[i].equals("自定义3")) {
                 materialOther = materialOther + ((depotItem.getMaterialId().getOtherField3() == null || depotItem.getMaterialId().getOtherField3().equals("")) ? "" : "(" + depotItem.getMaterialId().getOtherField3() + ")");
-            }
+            }*/
         }
         return materialOther;
     }

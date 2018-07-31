@@ -48,6 +48,10 @@ public class Product {
         this.gmtModify = gmtModify;
     }
 
+    public Product(long id) {
+        this.id = id;
+    }
+
     public Product() {
     }
 

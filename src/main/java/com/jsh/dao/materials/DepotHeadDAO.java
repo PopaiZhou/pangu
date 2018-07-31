@@ -142,6 +142,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         pageUtil.setPageList(query.list());
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void findMaterialsListByHeaderId(PageUtil pageUtil, Long headerId) throws JshException {
         StringBuffer queryString = new StringBuffer();
@@ -151,6 +152,17 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         pageUtil.setPageList(query.list());
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findProductListByHeaderId(PageUtil pageUtil, Long headerId) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select group_concat(concat(jsh_product.`productId`,' ',jsh_product.productName)) as mName from jsh_depotitem inner join jsh_product " +
+                " on jsh_depotitem.MaterialId = jsh_product.Id where jsh_depotitem.HeaderId =" + headerId);
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public void findStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId, String supType) throws JshException {
         StringBuffer queryString = new StringBuffer();
@@ -190,6 +202,16 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         if (!depotIds.equals("")) {
             queryString.append(" and dt.DepotId in (" + depotIds + ") ");
         }
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select dt.HeaderId from jsh_depotitem dt INNER JOIN jsh_product m on dt.MaterialId = m.Id where ( m.`productName` " +
+                " like '%" + materialParam + "%' or m.productId like '%" + materialParam + "%') ");
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }

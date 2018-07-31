@@ -21,7 +21,11 @@ public interface DepotHeadIService extends BaseIService<DepotHead> {
 
     void findMaterialsListByHeaderId(PageUtil pageUtil, Long headerId) throws JshException;
 
+    void findProductListByHeaderId(PageUtil pageUtil, Long headerId) throws JshException;
+
     void findStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId, String supType) throws JshException;
 
     void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam, String depotIds) throws JshException;
+
+    void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam) throws JshException;
 }

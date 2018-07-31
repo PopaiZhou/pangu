@@ -44,7 +44,10 @@ public class Customer {
     private Basicuser user;
 
 
-    //----------以下属性导入exel表格使用--------------------
+    public Customer(long id) {
+        this.id = id;
+    }
+//----------以下属性导入exel表格使用--------------------
     /**
      * 类型 right--正确 warn--警告  wrong--错误
      */
@@ -54,6 +57,9 @@ public class Customer {
      * 行号
      */
     private Integer rowLineNum;
+
+    public Customer() {
+    }
 
     /**
      * Getter method for property <tt>user</tt>.

@@ -46,12 +46,12 @@
             <td>单据日期：</td>
             <td>
                 <input type="text" name="searchBeginTime" id="searchBeginTime"
-                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" class="txt Wdate" style="width:100px;"/>
+                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate" style="width:150px;"/>
             </td>
             <td>-</td>
             <td>
-                <input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})"
-                       class="txt Wdate" style="width:100px;"/>
+                <input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                       class="txt Wdate" style="width:150px;"/>
             </td>
             <td>&nbsp;</td>
             <td>
@@ -102,49 +102,6 @@
                               style="width: 1130px; height:35px;"></textarea>
                 </td>
             </tr>
-            <tr>
-                <td>优惠率：</td>
-                <td style="padding:5px">
-                    <input id="Discount" name="Discount" style="width:110px;"/>
-                    %
-                </td>
-                <td>收款优惠：</td>
-                <td style="padding:5px">
-                    <input id="DiscountMoney" name="DiscountMoney" style="width:120px;"/>
-                </td>
-                <td>优惠后金额：</td>
-                <td style="padding:5px">
-                    <input id="DiscountLastMoney" name="DiscountLastMoney" readonly="readonly" style="width:120px;"/>
-                </td>
-                <td>本次收款：</td>
-                <td style="padding:5px">
-                    <input id="ChangeAmount" name="ChangeAmount" data-changeamount="0" style="width:120px;"/>
-                </td>
-                <td style="width:100px;"></td>
-            </tr>
-            <tr>
-                <td>结算账户：</td>
-                <td style="padding:5px">
-                    <select name="AccountId" id="AccountId" style="width:120px;"></select>
-                    <img class="many-account-ico" src="<%=path%>/js/easyui-1.3.5/themes/icons/filelist.jpg"
-                         style="display: none;"/>
-                </td>
-                <td>本次欠款：</td>
-                <td style="padding:5px">
-                    <input id="Debt" name="Debt" readonly="readonly" style="width:120px;"/>
-                </td>
-                <td>销售费用：</td>
-                <td style="padding:5px">
-                    <input id="OtherMoney" name="OtherMoney" style="width:120px;" readonly="readonly"/>
-                    <img class="other-money-ico" src="<%=path%>/js/easyui-1.3.5/themes/icons/filelist.jpg"/>
-                </td>
-                <td>结算天数：</td>
-                <td style="padding:5px">
-                    <input id="AccountDay" name="AccountDay" class="easyui-numberbox"
-                           data-options="validType:'length[1,3]'" style="width:120px;"/>
-                </td>
-                <td style="width:100px;"></td>
-            </tr>
         </table>
         <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
     </form>
@@ -162,7 +119,7 @@
             <td style="padding:5px;width:130px;">
                 <span id="OrganIdShow"></span>
             </td>
-            <td style="width:70px;">销售人员：</td>
+            <td style="width:70px;">业务经理：</td>
             <td style="padding:5px;width:130px;">
                 <span id="SalesmanShow"></span>
             </td>
@@ -187,45 +144,6 @@
             <td colspan="8" style="height:35px;">
                 <span id="RemarkShow" style="width: 1070px; height:35px;"></span>
             </td>
-        </tr>
-        <tr>
-            <td>优惠率：</td>
-            <td>
-                <span id="DiscountShow" style="width: 110px;"></span>
-                %
-            </td>
-            <td>收款优惠：</td>
-            <td>
-                <span id="DiscountMoneyShow" style="width: 120px;"></span>
-            </td>
-            <td>优惠后金额：</td>
-            <td>
-                <span id="DiscountLastMoneyShow" style="width: 120px;"></span>
-            </td>
-            <td>本次收款：</td>
-            <td style="padding:5px">
-                <span id="ChangeAmountShow"></span>
-            </td>
-            <td style="width:100px;"></td>
-        </tr>
-        <tr>
-            <td>结算账户：</td>
-            <td style="padding:5px">
-                <span id="AccountIdShow"></span>
-            </td>
-            <td>本次欠款：</td>
-            <td style="padding:5px">
-                <span id="DebtShow"></span>
-            </td>
-            <td>销售费用：</td>
-            <td style="padding:5px">
-                <span id="OtherMoneyShow"></span>
-            </td>
-            <td>结算天数：</td>
-            <td style="padding:5px">
-                <span id="AccountDayShow"></span>
-            </td>
-            <td style="width:100px;"></td>
         </tr>
     </table>
 </div>

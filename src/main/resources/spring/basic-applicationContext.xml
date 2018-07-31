@@ -316,6 +316,7 @@
 	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
 	<bean id="depotHeadAction" class="com.jsh.action.materials.DepotHeadAction" scope="prototype">
 		<property name="depotHeadService" ref="depotHeadService"/>
+		<property name="userService" ref="userService"/>
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--仓管通配置结束 -->

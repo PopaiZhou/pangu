@@ -13,7 +13,7 @@ public class DepotHead implements java.io.Serializable {
     private String OperPersonName;
     private Timestamp CreateTime;
     private Timestamp OperTime;
-    private Supplier OrganId;
+    private Customer OrganId;
     private Person HandsPersonId;
     private String Salesman;  //业务员（可以多个）[2][3]
     private Account AccountId;
@@ -42,7 +42,7 @@ public class DepotHead implements java.io.Serializable {
     }
 
     public DepotHead(String type, String subType, Depot projectId, String defaultNumber, String number, String operPersonName, Timestamp createTime,
-                     Timestamp operTime, Supplier organId, Person handsPersonId, String salesman, String accountIdList, String accountMoneyList,
+                     Timestamp operTime, Customer organId, Person handsPersonId, String salesman, String accountIdList, String accountMoneyList,
                      Double discount, Double discountMoney, Double discountLastMoney, Double otherMoney, String otherMoneyItem, Integer accountDay,
                      Account accountId, Double changeAmount, Depot allocationProjectId, Double totalPrice, String payType, Boolean status, String remark) {
         super();
@@ -146,11 +146,11 @@ public class DepotHead implements java.io.Serializable {
         OperTime = operTime;
     }
 
-    public Supplier getOrganId() {
+    public Customer getOrganId() {
         return OrganId;
     }
 
-    public void setOrganId(Supplier organId) {
+    public void setOrganId(Customer organId) {
         OrganId = organId;
     }
 

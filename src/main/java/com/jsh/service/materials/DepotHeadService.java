@@ -52,6 +52,11 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
     }
 
     @Override
+    public void findProductListByHeaderId(PageUtil pageUtil, Long headerId) throws JshException {
+        depotHeadDao.findProductListByHeaderId(pageUtil, headerId);
+    }
+
+    @Override
     public void findStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId, String supType) throws JshException {
         depotHeadDao.findStatementAccount(pageUtil, beginTime, endTime, organId, supType);
     }
@@ -59,5 +64,10 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
     @Override
     public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam, String depotIds) throws JshException {
         depotHeadDao.getHeaderIdByMaterial(pageUtil, materialParam, depotIds);
+    }
+
+    @Override
+    public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam) throws JshException {
+        depotHeadDao.getHeaderIdByMaterial(pageUtil, materialParam);
     }
 }
