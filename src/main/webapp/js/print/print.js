@@ -110,3 +110,37 @@ function CreateFormPage(strPrintName, printDatagrid, path) {
 
     window.open("../../js/print/print.html","location:No;status:No;help:No;dialogWidth:800px;dialogHeight:600px;scroll:auto;");
 }
+
+//新的订单答应
+function CreateNewFormPage(strPrintName, printDatagrid, path) {
+    var companyName = "";
+    //加载公司信息
+    $.ajax({
+        type:"get",
+        url: path + "/systemConfig/findBy.action",
+        dataType: "json",
+        async: false,
+        success: function (res) {
+            if(res && res.rows) {
+                var array = res.rows;
+                for(var i=0; i<array.length; i++){
+                    var name = array[i].name;
+                    if(name === "company_name") {
+                        companyName = array[i].value;
+                    }
+                }
+            }
+        },
+        //此处添加错误处理
+        error:function() {
+            $.messager.alert('查询失败','查询系统配置信息异常，请稍后再试！','error');
+            return;
+        }
+    });
+
+    var tableString = 'ddd';
+
+    localStorage.setItem("tableString",tableString);
+
+    window.open("../../js/print/print.html","location:No;status:No;help:No;dialogWidth:800px;dialogHeight:600px;scroll:auto;");
+}

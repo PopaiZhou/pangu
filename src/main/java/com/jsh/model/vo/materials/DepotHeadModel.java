@@ -56,6 +56,8 @@ public class DepotHeadModel implements Serializable {
     //单位类型，客户、供应商
     private String supType;
 
+    private String searchStatus;
+
 
     /**
      * 分类ID
@@ -400,5 +402,23 @@ public class DepotHeadModel implements Serializable {
 
     public void setSupType(String supType) {
         this.supType = supType;
+    }
+
+    /**
+     * Getter method for property <tt>searchStatus</tt>.
+     *
+     * @return property value of searchStatus
+     */
+    public String getSearchStatus() {
+        return searchStatus;
+    }
+
+    /**
+     * Setter method for property <tt>searchStatus</tt>.
+     *
+     * @param searchStatus value to be assigned to property searchStatus
+     */
+    public void setSearchStatus(String searchStatus) {
+        this.searchStatus = searchStatus;
     }
 }

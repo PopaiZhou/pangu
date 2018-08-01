@@ -892,6 +892,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("Type_s_eq", model.getType());
         condition.put("SubType_s_eq", model.getSubType());
         condition.put("Number_s_like", model.getNumber());
+        condition.put("Status_n_eq", model.getSearchStatus());
         condition.put("Id_s_in", model.getDhIds());
         condition.put("OperTime_s_gteq", model.getBeginTime());
         condition.put("OperTime_s_lteq", model.getEndTime());

@@ -21,6 +21,7 @@
     <script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
     <script src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
     <script src="<%=path %>/js/common/common.js"></script>
+    <script src="<%=path %>/js/print/print.js"></script>
     <script src="<%=path %>/js/common/dataGridUtils.js"></script>
     <script src="<%=path %>/js/pages/materials/sale.js"></script>
     <script>
@@ -38,6 +39,15 @@
             <td>单据编号：</td>
             <td>
                 <input type="text" name="searchNumber" id="searchNumber" style="width:100px;"/>
+            </td>
+            <td>状态:</td>
+            <td>&nbsp;</td>
+            <td>
+                <select name="searchType" id="searchState" style="width:100px; height:20px">
+                    <option value="">全部</option>
+                    <option value="0">未收款</option>
+                    <option value="1">已收款</option>
+                </select>
             </td>
             <td>商品信息：</td>
             <td>
