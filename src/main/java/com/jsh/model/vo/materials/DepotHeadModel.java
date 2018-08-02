@@ -56,7 +56,14 @@ public class DepotHeadModel implements Serializable {
     //单位类型，客户、供应商
     private String supType;
 
+    /**
+     * 收款状态
+     */
     private String searchStatus;
+    /**
+     * 发货状态
+     */
+    private String searchSendStatus;
 
     private Boolean SendStatus = false; //发货状态
     private Double Weight;
@@ -639,5 +646,23 @@ public class DepotHeadModel implements Serializable {
      */
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    /**
+     * Getter method for property <tt>searchSendStatus</tt>.
+     *
+     * @return property value of searchSendStatus
+     */
+    public String getSearchSendStatus() {
+        return searchSendStatus;
+    }
+
+    /**
+     * Setter method for property <tt>searchSendStatus</tt>.
+     *
+     * @param searchSendStatus value to be assigned to property searchSendStatus
+     */
+    public void setSearchSendStatus(String searchSendStatus) {
+        this.searchSendStatus = searchSendStatus;
     }
 }

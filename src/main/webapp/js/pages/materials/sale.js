@@ -19,6 +19,7 @@ var btnEnableList = getBtnStr(); //获取按钮的权限
 var modifyShow = false; //单条编辑按钮是否展示
 var deleteShow = false; //单条删除按钮是否暂时
 var opeWith = 45;
+var mulSelete = false; //是否多选
 
 $(function(){
     //获取角色权限--判断是否是管理员登录
@@ -87,7 +88,21 @@ function initTableData() {
                 handler:function() {
                     print();
                 }
-            }
+            },'-'
+        );
+    }
+    //8是发货
+    if(btnEnableList && btnEnableList.indexOf(8)>-1){
+        mulSelete = true;
+        tableToolBar.push(
+            {
+                id:'ship',
+                text:'发货',
+                iconCls:'icon-redo',
+                handler:function() {
+                    ship();
+                }
+            },'-'
         );
     }
     //改变宽度和高度
@@ -105,10 +120,12 @@ function initTableData() {
         //选中单行
         singleSelect : true,
         collapsible:false,
-        selectOnCheck:false,
         //fitColumns:true,
-        //单击行是否选中
-        checkOnSelect : false,
+
+        //单击行是否选中 这2个控制是否可以多选
+        checkOnSelect : mulSelete,
+        selectOnCheck : mulSelete,
+
         //交替出现背景
         striped : true,
         pagination: true,
@@ -594,9 +611,16 @@ function initCustomerList() {
         valueField:'id',
         textField:'customerName'
     });
-    //初始化 状态搜索 下拉框
+    //初始化 收款状态搜索 下拉框
     $('#searchState').combobox({
         url: path +'/js/pages/manage/orderStatus.json',
+        valueField:'value',
+        textField:'name'
+    });
+
+    //初始化 发货状态搜索 下拉框
+    $('#searchSendStatus').combobox({
+        url: path +'/js/pages/manage/orderSendStatus.json',
         valueField:'value',
         textField:'name'
     });
@@ -842,6 +866,7 @@ function bindEvent(){
             $("#searchNumber").val("");
             $("#searchMaterial").val("");
             $("#searchState").combobox("setValue","");
+            $("#searchSendStatus").combobox("setValue","");
             $("#searchBeginTime").val("");
             $("#searchEndTime").val("");
             //加载完以后重新初始化
@@ -948,6 +973,45 @@ function bindEvent(){
         }
     });
 
+
+    //发货信息 保存按钮
+    $('#saveDepotHeadSendDlg').off("click").on("click", function () {
+        var row = $('#tableData').datagrid('getChecked');
+
+        var express = $("#ExpressSend").val();
+        if(express == ''){
+            $.messager.alert('提示','请填写物流公司！','info');
+            return;
+        }
+        var num = $("#ExpressNumberSend").val();
+        $.ajax({
+            type:"post",
+            url: path + "/depotHead/sendGoods.action",
+            dataType: "json",
+            async :  false,
+            data: ({
+                depotHeadID : row[0].Id,
+                Express : express,
+                ExpressNumber : num,
+                clientIp: clientIp
+            }),
+            success: function (tipInfo)
+            {
+                if(tipInfo){
+                    $('#depotHeadSendDlg').dialog('close');
+                    var opts = $("#tableData").datagrid('options');
+                    showDepotHeadDetails(opts.pageNumber,opts.pageSize);
+                }
+            },
+            //此处添加错误处理
+            error:function()
+            {
+                $.messager.alert('提示','保存信息异常，请稍后再试！','error');
+                return;
+            }
+        });
+    });
+
     //初始化键盘enter事件
     $(document).keydown(function (event) {
         //兼容 IE和firefox 事件
@@ -960,7 +1024,7 @@ function bindEvent(){
             $("#saveDepotHead").click();
         }
         //搜索按钮添加快捷键
-        if (k == "13" && (obj.id == "searchState" || obj.id == "searchNumber" || obj.id == "searchMaterial")) {
+        if (k == "13" && (obj.id == "searchState" || obj.id == "searchSendStatus" || obj.id == "searchNumber" || obj.id == "searchMaterial")) {
             $("#searchBtn").click();
         }
     });
@@ -990,6 +1054,7 @@ function showDepotHeadDetails(pageNo,pageSize){
                             Type: listType,
                             SubType: listSubType,
                             searchStatus: $("#searchState").datebox("getValue"),
+                            searchSendStatus: $("#searchSendStatus").datebox("getValue"),
                             Number: $.trim($("#searchNumber").val()),
                             BeginTime: $("#searchBeginTime").val(),
                             EndTime: $("#searchEndTime").val(),
@@ -1132,7 +1197,13 @@ function showDepotHead(depotHeadTotalInfo){
     $("#RemarkShow").text(depotHeadInfo[4]);//单据备注
     $('#OrganIdShow').text(depotHeadInfo[5]);//客户
     var TotalPrice = depotHeadInfo[6];
-    $("#SalesmanShow").text(depotHeadInfo[7]); //销售人员列表
+    $("#SalesmanShow").text(depotHeadInfo[7]); //销售人员
+
+    $("#ExpressShow").text(depotHeadInfo[9]); //物流公司
+    $("#ExpressNumberShow").text(depotHeadInfo[10]); //运单号码
+    $("#ContactsShow").text(depotHeadInfo[11]); //收货人
+    $("#PhonenumShow").text(depotHeadInfo[12]); //收货号码
+    $("#AddressShow").text(depotHeadInfo[13]+depotHeadInfo[14]+depotHeadInfo[15]+depotHeadInfo[16]); //收货地址
 
     $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看订单明细');
     $(".window-mask").css({ width: webW ,height: webH});
@@ -1356,12 +1427,36 @@ function refund() {
 function print() {
     var row = $('#tableData').datagrid('getChecked');
     if(row.length == 0) {
-        $.messager.alert('打印','没有记录被选中！','info');
+        $.messager.alert('提示','没有记录被选中！','info');
         return;
     }
     if(row.length >= 2) {
-        $.messager.alert('打印','请选择一条单据进行打印！','info');
+        $.messager.alert('提示','请选择一条单据进行打印！','info');
         return;
     }
     CreateNewFormPage('订货单', $('#tableData'), path);
+}
+
+
+//发货功能
+function ship() {
+    var row = $('#tableData').datagrid('getChecked');
+    if(row.length == 0) {
+        $.messager.alert('提示','没有记录被选中！','info');
+        return;
+    }
+    if(row.length >= 2) {
+        $.messager.alert('提示','请选择一条单据进行操作！','info');
+        return;
+    }
+    if(!row[0].Status){
+        $.messager.alert('提示','该单据未收款，不能发货！','info');
+        return;
+    }
+    if(row[0].SendStatus){
+        $.messager.alert('提示','该单据以发货不能重复发货！','info');
+        return;
+    }
+    $("#ExpressSend").val(row[0].Express);
+    $('#depotHeadSendDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/comment.png"/>&nbsp;填写发货信息');
 }

@@ -44,15 +44,19 @@
             <td>
                 <input type="text" name="searchNumber" id="searchNumber" style="width:100px;"/>
             </td>
-            <td>状态:</td>
+            <td>收款状态:</td>
             <td>&nbsp;</td>
             <td>
-                <select name="searchType" id="searchState" style="width:100px; height:20px">
-                    <option value="">全部</option>
-                    <option value="0">未收款</option>
-                    <option value="1">已收款</option>
+                <select name="searchState" id="searchState" style="width:75px; height:20px">
                 </select>
             </td>
+            <td>发货状态:</td>
+            <td>&nbsp;</td>
+            <td>
+                <select name="searchSendStatus" id="searchSendStatus" style="width:75px; height:20px">
+                </select>
+            </td>
+
             <td>商品信息：</td>
             <td>
                 <input type="text" name="searchMaterial" id="searchMaterial" placeholder="名称，型号" style="width:100px;"/>
@@ -193,60 +197,55 @@
                 <span id="RemarkShow" style="width: 1070px; height:35px;"></span>
             </td>
         </tr>
-    </table>
-</div>
-<div id="depotHeadAccountDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px"
-     closed="true" modal="true" buttons="#accountDlgButtons" cache="false" collapsible="false" closable="true">
-    <table class="account-dlg">
-        <tr class="account-head-tmp">
-            <td style="width:30px;"></td>
-            <td style="width:140px; padding:5px;">结算账户</td>
-            <td style="width:100px; padding:5px;">金额</td>
+        <tr>
+            <td style="width:60px;">物流公司：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="ExpressShow"></span>
+            </td>
+            <td style="width:60px;">运单号码：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="ExpressNumberShow"></span>
+            </td>
+            <td style="width:60px;">收货人：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="ContactsShow"></span>
+            </td>
+            <td style="width:60px;">收货号码：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="PhonenumShow"></span>
+            </td>
         </tr>
         <tr>
-            <td style="width:30px;"></td>
-            <td style="width:140px;text-align: center;">合计：</td>
-            <td style="width:100px;"><span id="accountMoneyTotalDlg"></span></td>
-        </tr>
-    </table>
-    <table class="tabs-tmp">
-        <tr class="account-content-tmp">
-            <td style="width:30px;"></td>
-            <td style="width:140px; padding:3px;"><select class="account-id-dlg" style="width:140px;"></select></td>
-            <td style="width:100px; padding:3px;"><input class="account-money-dlg" style="width:100px;"/></td>
+            <td style="width:60px;">收货地址：</td>
+            <td colspan="8" style="height:35px;">
+                <span id="AddressShow" style="width: 1070px; height:35px;"></span>
+            </td>
         </tr>
     </table>
 </div>
-<div id="accountDlgButtons">
-    <a href="javascript:void(0)" id="saveDepotHeadAccountDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-    <a href="javascript:void(0)" id="cancelDepotHeadAccountDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
+<div id="depotHeadSendDlg" class="easyui-dialog" style="width:550px;padding:10px 20px;top:80px"
+     closed="true" modal="true" buttons="#sendDlgButtons" cache="false" collapsible="false" closable="true">
+    <form id="depotHeadSendFM" method="post" novalidate>
+        <table>
+            <tr>
+                <td style="width:60px;">物流公司：</td>
+                <td style="padding:5px">
+                    <input id="ExpressSend" name="ExpressSend" style="width:130px;"/>
+                </td>
+                <td style="width:60px;">运单号码：</td>
+                <td style="padding:5px">
+                    <input id="ExpressNumberSend" name="ExpressNumberSend" style="width:200px;"/>
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
-<div id="otherMoneyDlg" class="easyui-dialog" style="width:380px;padding:10px 20px;top:80px"
-     closed="true" modal="true" buttons="#otherMoneyDlgBtn" cache="false" collapsible="false" closable="true">
-    <table class="money-dlg">
-        <tr class="money-head-tmp">
-            <td style="width:30px;"></td>
-            <td style="width:140px; padding:5px;">结算账户</td>
-            <td style="width:100px; padding:5px;">金额</td>
-        </tr>
-        <tr>
-            <td style="width:30px;"></td>
-            <td style="width:140px;text-align: center;">合计：</td>
-            <td style="width:100px;"><span id="otherMoneyTotalDlg"></span></td>
-        </tr>
-    </table>
-    <table class="tabs-tmp">
-        <tr class="money-content-tmp">
-            <td style="width:30px;"></td>
-            <td style="width:140px; padding:3px;"><select class="money-id-dlg" style="width:140px;"></select></td>
-            <td style="width:100px; padding:3px;"><input class="other-money-dlg" style="width:100px;"/></td>
-        </tr>
-    </table>
+<div id="sendDlgButtons">
+    <a href="javascript:void(0)" id="saveDepotHeadSendDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:void(0)" id="cancelDepotHeadSendDlg" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#depotHeadSendDlg').dialog('close')">取消</a>
 </div>
-<div id="otherMoneyDlgBtn">
-    <a href="javascript:void(0)" id="saveOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
-    <a href="javascript:void(0)" id="cancelOtherMoneyDlg" class="easyui-linkbutton" iconCls="icon-cancel">取消</a>
-</div>
+
 
 </body>
 </html>

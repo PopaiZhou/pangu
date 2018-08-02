@@ -259,6 +259,44 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     }
 
     /**
+     * 发货
+     *
+     * @return
+     */
+    public void sendGoods() {
+        Log.infoFileSync("====================开始调用发货方法sendGoods()================");
+        Boolean flag = false;
+        try {
+            DepotHead depotHead = depotHeadService.get(model.getDepotHeadID());
+            depotHead.setExpress(model.getExpress());
+            depotHead.setExpressNumber(model.getExpressNumber());
+            //发货状态
+            depotHead.setSendStatus(true);
+
+            depotHeadService.update(depotHead);
+
+            flag = true;
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>发货ID为 ： " + model.getDepotHeadID() + "发货失败", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        } finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>发货异常", e);
+            }
+        }
+        logService.create(new Logdetails(getUser(), "发货", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "发货ID为  " + model.getDepotHeadID() + " " + tipMsg + "！", "发货成功" + tipMsg));
+        Log.infoFileSync("====================开始调用发货方法sendGoods()================");
+    }
+
+    /**
      * 批量删除指定ID单据
      *
      * @return
@@ -929,6 +967,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("SubType_s_eq", model.getSubType());
         condition.put("Number_s_like", model.getNumber());
         condition.put("Status_n_eq", model.getSearchStatus());
+        condition.put("SendStatus_n_eq", model.getSearchSendStatus());
         condition.put("Id_s_in", model.getDhIds());
         condition.put("OperTime_s_gteq", model.getBeginTime());
         condition.put("OperTime_s_lteq", model.getEndTime());
