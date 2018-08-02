@@ -6,6 +6,7 @@ import com.jsh.model.po.*;
 import com.jsh.model.vo.materials.DepotItemModel;
 import com.jsh.service.materials.DepotItemIService;
 import com.jsh.service.materials.MaterialIService;
+import com.jsh.service.materials.ProductIService;
 import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
@@ -251,6 +252,146 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
         Log.infoFileSync("==================结束调用保存仓管通明细方法saveDetials()===================");
     }
 
+
+    /**
+     * 保存明细 -- 修改时候保存
+     *
+     * @return
+     */
+    public void saveDetialsByUpdate() {
+        Log.infoFileSync("==================开始调用保存仓管通明细信息方法saveDetialsByUpdate()===================");
+        Boolean flag = false;
+        try {
+            Long headerId = model.getHeaderId();
+            String inserted = model.getInserted();
+
+            //第一步 先删除原来的数据
+            depotItemService.deleteByHeaderId(headerId);
+            //转为json
+            JSONArray insertedJson = JSONArray.fromObject(inserted);
+            if (null != insertedJson) {
+                for (int i = 0; i < insertedJson.size(); i++) {
+                    DepotItem depotItem = new DepotItem();
+                    JSONObject tempInsertedJson = JSONObject.fromObject(insertedJson.get(i));
+                    depotItem.setHeaderId(new DepotHead(headerId));
+                    depotItem.setMaterialId(new Product(tempInsertedJson.getLong("MaterialId")));
+                    depotItem.setMUnit(tempInsertedJson.getString("Unit"));
+                    if (!StringUtils.isEmpty(tempInsertedJson.get("OperNumber").toString())) {
+                        depotItem.setOperNumber(tempInsertedJson.getDouble("OperNumber"));
+                        try {
+                            String Unit = tempInsertedJson.get("Unit").toString();
+                            Double oNumber = tempInsertedJson.getDouble("OperNumber");
+                            Long mId = Long.parseLong(tempInsertedJson.get("MaterialId").toString());
+                            //以下进行单位换算
+                            String UnitName = findUnitName(mId); //查询计量单位名称
+                            if (!UnitName.equals("")) {
+                                String UnitList = UnitName.substring(0, UnitName.indexOf("("));
+                                String RatioList = UnitName.substring(UnitName.indexOf("("));
+                                String basicUnit = UnitList.substring(0, UnitList.indexOf(",")); //基本单位
+                                String otherUnit = UnitList.substring(UnitList.indexOf(",") + 1); //副单位
+                                Integer ratio = Integer.parseInt(RatioList.substring(RatioList.indexOf(":") + 1).replace(")", "")); //比例
+                                if (Unit.equals(basicUnit)) { //如果等于基础单位
+                                    depotItem.setBasicNumber(oNumber); //数量一致
+                                } else if (Unit.equals(otherUnit)) { //如果等于副单位
+                                    depotItem.setBasicNumber(oNumber * ratio); //数量乘以比例
+                                }
+                            } else {
+                                depotItem.setBasicNumber(oNumber); //其他情况
+                            }
+                        } catch (Exception e) {
+                            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>设置基础数量异常", e);
+                        }
+                    }
+                    if (!StringUtils.isEmpty(tempInsertedJson.get("UnitPrice").toString())) {
+                        depotItem.setUnitPrice(tempInsertedJson.getDouble("UnitPrice"));
+                    }
+                    if(tempInsertedJson.containsKey("TaxUnitPrice")){
+                        if (!StringUtils.isEmpty(tempInsertedJson.get("TaxUnitPrice").toString())) {
+                            depotItem.setTaxUnitPrice(tempInsertedJson.getDouble("TaxUnitPrice"));
+                        }
+                    }
+                    if (!StringUtils.isEmpty(tempInsertedJson.get("AllPrice").toString())) {
+                        depotItem.setAllPrice(tempInsertedJson.getDouble("AllPrice"));
+                    }
+                    depotItem.setRemark(tempInsertedJson.getString("Remark"));
+                    if (tempInsertedJson.get("DepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("DepotId").toString())) {
+                        depotItem.setDepotId("0");
+                    }
+                    //对应版本编号
+                    if (tempInsertedJson.get("DepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("DepotId").toString())) {
+                        depotItem.setTemplateId(new Template(tempInsertedJson.getLong("DepotId")));
+                    }
+                    if(tempInsertedJson.containsKey("AnotherDepotId")){
+                        if (tempInsertedJson.get("AnotherDepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("AnotherDepotId").toString())) {
+                            depotItem.setAnotherDepotId(new Depot(tempInsertedJson.getLong("AnotherDepotId")));
+                        }
+                    }
+                    if(tempInsertedJson.containsKey("TaxRate")){
+                        if (!StringUtils.isEmpty(tempInsertedJson.get("TaxRate").toString())) {
+                            depotItem.setTaxRate(tempInsertedJson.getDouble("TaxRate"));
+                        }
+                    }
+                    if(tempInsertedJson.containsKey("TaxMoney")){
+                        if (!StringUtils.isEmpty(tempInsertedJson.get("TaxMoney").toString())) {
+                            depotItem.setTaxMoney(tempInsertedJson.getDouble("TaxMoney"));
+                        }
+                    }
+                    if(tempInsertedJson.containsKey("TaxLastMoney")){
+                        if (!StringUtils.isEmpty(tempInsertedJson.get("TaxLastMoney").toString())) {
+                            depotItem.setTaxLastMoney(tempInsertedJson.getDouble("TaxLastMoney"));
+                        }
+                    }
+                    if (tempInsertedJson.get("OtherField1") != null) {
+                        depotItem.setOtherField1(tempInsertedJson.getString("OtherField1"));
+                    }
+                    if (tempInsertedJson.get("OtherField2") != null) {
+                        depotItem.setOtherField2(tempInsertedJson.getString("OtherField2"));
+                    }
+                    if (tempInsertedJson.get("OtherField3") != null) {
+                        depotItem.setOtherField3(tempInsertedJson.getString("OtherField3"));
+                    }
+                    if (tempInsertedJson.get("OtherField4") != null) {
+                        depotItem.setOtherField4(tempInsertedJson.getString("OtherField4"));
+                    }
+                    if (tempInsertedJson.get("OtherField5") != null) {
+                        depotItem.setOtherField5(tempInsertedJson.getString("OtherField5"));
+                    }
+                    if (tempInsertedJson.get("MType") != null) {
+                        depotItem.setMType(tempInsertedJson.getString("MType"));
+                    }
+                    depotItemService.create(depotItem);
+                }
+            }
+            //========标识位===========
+            flag = true;
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        }
+        catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>保存仓管通明细信息异常", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        } catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>保存仓管通明细信息异常", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        } finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>保存仓管通明细信息回写客户端结果异常", e);
+            }
+        }
+
+        logService.create(new Logdetails(getUser(), "保存仓管通明细", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "保存仓管通明细对应主表编号为  " + model.getHeaderId() + " " + tipMsg + "！", "保存仓管通明细" + tipMsg));
+        Log.infoFileSync("==================结束调用保存仓管通明细方法saveDetials()===================");
+    }
+
     /**
      * 查询计量单位信息
      *
@@ -321,6 +462,13 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     item.put("AllPrice", depotItem.getAllPrice());
                     //备注
                     item.put("Remark", depotItem.getRemark());
+
+                    //批发价
+                    item.put("WholesalePrice", depotItem.getMaterialId().getWholesalePrice());
+                    //零售价
+                    item.put("RetailPrice", depotItem.getMaterialId().getRetailPrice());
+
+
                     item.put("op", 1);
                     dataArray.add(item);
                 }

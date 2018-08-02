@@ -114,6 +114,7 @@ function CreateFormPage(strPrintName, printDatagrid, path) {
 //新的订单答应
 function CreateNewFormPage(strPrintName, printDatagrid, path) {
     var companyName = "";
+    var faxNum = "";
     //加载公司信息
     $.ajax({
         type:"get",
@@ -128,6 +129,9 @@ function CreateNewFormPage(strPrintName, printDatagrid, path) {
                     if(name === "company_name") {
                         companyName = array[i].value;
                     }
+                    if(name === "company_fax") {
+                        faxNum = array[i].value;
+                    }
                 }
             }
         },
@@ -137,8 +141,18 @@ function CreateNewFormPage(strPrintName, printDatagrid, path) {
             return;
         }
     });
+    // 载入内容
+    var rows = printDatagrid.datagrid("getChecked"); // 这段代码是获取当前选中的行
+    var Number = rows[0].Number;
 
-    var tableString = 'ddd';
+    var font = 'font-family:"宋体"';
+    var tableString = '<div align="center"><table style="border-collapse:separate; border-spacing:0px 0px;"><tr><td colspan="4" rowspan="3"><img src="../../upload/images/logo.png" width="308" height="60"></td>' +
+        '<td colspan="5">'+companyName+'</td></tr>' +
+        '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
+        '<tr><td colspan="2">FAX : '+faxNum+'</td><td></td><td colspan="">www.siley.uk</td></tr>' +
+        '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">Kasich&amp;Raatz订货单</div></td></tr>' +
+        '<tr><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
+        '</table></div>';
 
     localStorage.setItem("tableString",tableString);
 

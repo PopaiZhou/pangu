@@ -123,7 +123,9 @@ function initTableData() {
                 formatter:function(value,rec) {
                     var str = '';
                     var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb'
-                        + rec.OrganId+ 'AaBb' + rec.Remark + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId;
+                        + rec.OrganId+ 'AaBb' + rec.Remark + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId
+                        + 'AaBb' + rec.Express + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb'
+                        + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street + 'AaBb' + rec.address;
                     if(1 == value) {
                         var orgId = rec.OrganId? rec.OrganId:0;
                         str += '<img title="查看" src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -139,16 +141,20 @@ function initTableData() {
             },
             { title: '客户名称', field: 'OrganName',width:120},
             { title: '单据编号',field: 'Number',width:130},
-            { title: '商品信息',field: 'MaterialsList',width:330,formatter:function(value){
+            { title: '商品信息',field: 'MaterialsList',width:230,formatter:function(value){
                 return value.replace(/,/g,"，");
             }
             },
             { title: '单据日期 ',field: 'OperTime',width:150},
             { title: '操作员',field: 'OperPersonName',width:120},
             { title: '金额合计',field: 'TotalPrice',width:120},
-            { title: '状态',field: 'Status', width:100,align:"center",formatter:function(value){
+            { title: '收款状态',field: 'Status', width:100,align:"center",formatter:function(value){
                 return value ? "<span style='color:green;'>已收款</span>":"<span style='color:red;'>未收款</span>";
                 }
+            },
+            { title: '发货状态',field: 'SendStatus', width:100,align:"center",formatter:function(value){
+                return value ? "<span style='color:green;'>已发货</span>":"<span style='color:red;'>未发货</span>";
+            }
             }
         ]],
         toolbar:tableToolBar,
@@ -325,11 +331,24 @@ function editDepotHead(depotHeadTotalInfo, status){
     $("#OperTime").val(depotHeadInfo[2]);
     $('#OrganId').combobox('setValue', depotHeadInfo[3]);
     $("#Remark").val(depotHeadInfo[4]);
+
     var TotalPrice = depotHeadInfo[6];
     preTotalPrice = depotHeadInfo[6]; //记录前一次合计金额，用于扣预付款
     oldNumber = depotHeadInfo[1]; //记录编辑前的单据编号
     oldId = depotHeadInfo[0]; //记录单据Id
     Salesman = depotHeadInfo[8];
+
+
+    $("#Express").val(depotHeadInfo[9]); //物流公司
+    $("#ExpressNumber").val(depotHeadInfo[10]); //物流编号
+    $("#Contacts").val(depotHeadInfo[11]); //联系人
+    $("#Phonenum").val(depotHeadInfo[12]); //联系号码
+    $('#state').combobox('setValue', depotHeadInfo[13]);
+    $('#city').combobox('setValue', depotHeadInfo[14]);
+    $('#street').combobox('setValue', depotHeadInfo[15]);
+    $("#address").val(depotHeadInfo[16]); //联系号码
+
+
     $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑订单明细');
     $(".window-mask").css({ width: webW ,height: webH});
     depotHeadID = depotHeadInfo[0];
@@ -597,6 +616,20 @@ function initCustomerList() {
                         customerType = res.rows[0].type;
                         //所属业务员
                         Salesman = res.rows[0].userId;
+
+                        //默认物流公司
+                        $("#Express").val(res.rows[0].express);
+                        //默认收货人
+                        $("#Contacts").val(res.rows[0].contacts);
+                        //默认收货号码
+                        $("#Phonenum").val(res.rows[0].phonenum);
+                        //默认详细地址
+                        $("#address").val(res.rows[0].address);
+
+                        $('#state').combobox('setValue',res.rows[0].state);
+                        $('#city').combobox('setValue',res.rows[0].city);
+                        $('#street').combobox('setValue',res.rows[0].street);
+
                         var rows = $("#materialData").datagrid("getRows"); //这段代码是获取当前页的所有行
                         if(endEditing()){
                             var grid = $('#materialData');
@@ -875,6 +908,14 @@ function bindEvent(){
                     OtherMoneyList: '', //支出项目列表-涉及费用
                     OtherMoneyItem: '', //支出项目金额列表-涉及费用
                     AccountDay: '', //结算天数
+                    Express: $("#Express").val(), //默认物流
+                    ExpressNumber: $("#ExpressNumber").val(), //物流单号
+                    Contacts: $("#Contacts").val(), //联系人
+                    Phonenum: $("#Phonenum").val(), //联系电话
+                    state:$('#state').combobox('getText'),
+                    city:$('#city').combobox('getText'),
+                    street:$('#street').combobox('getText'),
+                    address: $("#address").val(), //详细地址
                     clientIp: clientIp
                 }),
                 success: function (tipInfo)
@@ -893,7 +934,7 @@ function bindEvent(){
                         }
                         else
                         {
-                            accept(depotHeadID,closeDialog); //修改
+                            acceptModify(depotHeadID,closeDialog); //修改
                         }
                     }
                 },
@@ -1014,7 +1055,7 @@ function getMaxId(){
         }
     }
 }
-//保存
+//新增时候--保存
 function accept(accepId,fun) {
     var inserted = $("#materialData").datagrid('getChanges', "inserted");
     var deleted = $("#materialData").datagrid('getChanges', "deleted");
@@ -1050,6 +1091,38 @@ function accept(accepId,fun) {
     }
 }
 
+//新增时候--保存
+function acceptModify(accepId,fun) {
+    var rows = $("#materialData").datagrid('getRows');
+    $.ajax({
+        type: "post",
+        url: path + "/depotItem/saveDetialsByUpdate.action",
+        data: {
+            Inserted : JSON.stringify(rows),
+            HeaderId : accepId,
+            clientIp : clientIp
+        },
+        success: function (tipInfo)
+        {
+            if (tipInfo) {
+                $.messager.alert('提示','保存成功！','info');
+            }
+            else {
+                $.messager.alert('提示', '保存失败！', 'error');
+            }
+            fun && fun();
+        },
+        error: function (XmlHttpRequest, textStatus, errorThrown)
+        {
+            $.messager.alert('提示',XmlHttpRequest.responseText,'error');
+            fun && fun();
+        }
+    });
+    if (endEditing()) {
+        $('#materialData').datagrid('acceptChanges');
+    }
+}
+
 //查看订单明细
 function showDepotHead(depotHeadTotalInfo){
     var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
@@ -1060,6 +1133,7 @@ function showDepotHead(depotHeadTotalInfo){
     $('#OrganIdShow').text(depotHeadInfo[5]);//客户
     var TotalPrice = depotHeadInfo[6];
     $("#SalesmanShow").text(depotHeadInfo[7]); //销售人员列表
+
     $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看订单明细');
     $(".window-mask").css({ width: webW ,height: webH});
     initTableData_material_show(TotalPrice); //商品列表-查看状态

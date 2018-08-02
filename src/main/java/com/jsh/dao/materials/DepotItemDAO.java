@@ -169,6 +169,13 @@ public class DepotItemDAO extends BaseDAO<DepotItem> implements DepotItemIDAO {
         pageUtil.setTotalCount(query.list().size());
         pageUtil.setPageList(query.list());
     }
+
+    @Override
+    public void deleteByHeaderId(Long headerId) throws JshException {
+        String sql = "delete from  jsh_depotitem  where HeaderId = " + headerId;
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
+        query.executeUpdate();
+    }
 }
 
 

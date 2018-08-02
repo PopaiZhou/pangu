@@ -58,6 +58,27 @@ public class DepotHeadModel implements Serializable {
 
     private String searchStatus;
 
+    private Boolean SendStatus = false; //发货状态
+    private Double Weight;
+    private Double Freight;
+    private String Express;
+    private String ExpressNumber;
+    private String Contacts;
+    private String Phonenum;
+    /**
+     * 省
+     */
+    private String state;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String street;
+    private String address;
+
 
     /**
      * 分类ID
@@ -420,5 +441,203 @@ public class DepotHeadModel implements Serializable {
      */
     public void setSearchStatus(String searchStatus) {
         this.searchStatus = searchStatus;
+    }
+
+    /**
+     * Getter method for property <tt>SendStatus</tt>.
+     *
+     * @return property value of SendStatus
+     */
+    public Boolean getSendStatus() {
+        return SendStatus;
+    }
+
+    /**
+     * Setter method for property <tt>SendStatus</tt>.
+     *
+     * @param SendStatus value to be assigned to property SendStatus
+     */
+    public void setSendStatus(Boolean sendStatus) {
+        SendStatus = sendStatus;
+    }
+
+    /**
+     * Getter method for property <tt>Weight</tt>.
+     *
+     * @return property value of Weight
+     */
+    public Double getWeight() {
+        return Weight;
+    }
+
+    /**
+     * Setter method for property <tt>Weight</tt>.
+     *
+     * @param Weight value to be assigned to property Weight
+     */
+    public void setWeight(Double weight) {
+        Weight = weight;
+    }
+
+    /**
+     * Getter method for property <tt>Freight</tt>.
+     *
+     * @return property value of Freight
+     */
+    public Double getFreight() {
+        return Freight;
+    }
+
+    /**
+     * Setter method for property <tt>Freight</tt>.
+     *
+     * @param Freight value to be assigned to property Freight
+     */
+    public void setFreight(Double freight) {
+        Freight = freight;
+    }
+
+    /**
+     * Getter method for property <tt>Express</tt>.
+     *
+     * @return property value of Express
+     */
+    public String getExpress() {
+        return Express;
+    }
+
+    /**
+     * Setter method for property <tt>Express</tt>.
+     *
+     * @param Express value to be assigned to property Express
+     */
+    public void setExpress(String express) {
+        Express = express;
+    }
+
+    /**
+     * Getter method for property <tt>ExpressNumber</tt>.
+     *
+     * @return property value of ExpressNumber
+     */
+    public String getExpressNumber() {
+        return ExpressNumber;
+    }
+
+    /**
+     * Setter method for property <tt>ExpressNumber</tt>.
+     *
+     * @param ExpressNumber value to be assigned to property ExpressNumber
+     */
+    public void setExpressNumber(String expressNumber) {
+        ExpressNumber = expressNumber;
+    }
+
+    /**
+     * Getter method for property <tt>Contacts</tt>.
+     *
+     * @return property value of Contacts
+     */
+    public String getContacts() {
+        return Contacts;
+    }
+
+    /**
+     * Setter method for property <tt>Contacts</tt>.
+     *
+     * @param Contacts value to be assigned to property Contacts
+     */
+    public void setContacts(String contacts) {
+        Contacts = contacts;
+    }
+
+    /**
+     * Getter method for property <tt>Phonenum</tt>.
+     *
+     * @return property value of Phonenum
+     */
+    public String getPhonenum() {
+        return Phonenum;
+    }
+
+    /**
+     * Setter method for property <tt>Phonenum</tt>.
+     *
+     * @param Phonenum value to be assigned to property Phonenum
+     */
+    public void setPhonenum(String phonenum) {
+        Phonenum = phonenum;
+    }
+
+    /**
+     * Getter method for property <tt>state</tt>.
+     *
+     * @return property value of state
+     */
+    public String getState() {
+        return state;
+    }
+
+    /**
+     * Setter method for property <tt>state</tt>.
+     *
+     * @param state value to be assigned to property state
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
+     * Getter method for property <tt>city</tt>.
+     *
+     * @return property value of city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * Setter method for property <tt>city</tt>.
+     *
+     * @param city value to be assigned to property city
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * Getter method for property <tt>street</tt>.
+     *
+     * @return property value of street
+     */
+    public String getStreet() {
+        return street;
+    }
+
+    /**
+     * Setter method for property <tt>street</tt>.
+     *
+     * @param street value to be assigned to property street
+     */
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    /**
+     * Getter method for property <tt>address</tt>.
+     *
+     * @return property value of address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Setter method for property <tt>address</tt>.
+     *
+     * @param address value to be assigned to property address
+     */
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

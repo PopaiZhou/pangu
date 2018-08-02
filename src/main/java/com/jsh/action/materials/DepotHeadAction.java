@@ -11,6 +11,7 @@ import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.DataAccessException;
 
 import java.io.IOException;
@@ -110,7 +111,17 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setTotalPrice(model.getTotalPrice());
             depotHead.setPayType(model.getPayType());
             depotHead.setStatus(false);
+
             depotHead.setRemark(model.getRemark());
+            depotHead.setExpress(model.getExpress());
+            depotHead.setExpressNumber(model.getExpressNumber());
+            depotHead.setContacts(model.getContacts());
+            depotHead.setPhonenum(model.getPhonenum());
+            depotHead.setState(model.getState());
+            depotHead.setCity(model.getCity());
+            depotHead.setStreet(model.getStreet());
+            depotHead.setAddress(model.getAddress());
+            depotHead.setSendStatus(false);//发货状态
             depotHeadService.create(depotHead);
 
             //========标识位===========
@@ -212,6 +223,18 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setPayType(model.getPayType());
             depotHead.setStatus(false);
             depotHead.setRemark(model.getRemark());
+
+            depotHead.setExpress(model.getExpress());
+            depotHead.setExpressNumber(model.getExpressNumber());
+            depotHead.setContacts(model.getContacts());
+            depotHead.setPhonenum(model.getPhonenum());
+            depotHead.setState(model.getState());
+            depotHead.setCity(model.getCity());
+            depotHead.setStreet(model.getStreet());
+            depotHead.setAddress(model.getAddress());
+            //发货状态
+            depotHead.setSendStatus(false);
+
             depotHeadService.update(depotHead);
 
             flag = true;
@@ -380,7 +403,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     allReturn = allReturn + dl.toString() + ",";
                 }
             }
-            allReturn = allReturn.substring(0, allReturn.length() - 1);
+            if(StringUtils.isNotEmpty(allReturn)){
+                allReturn = allReturn.substring(0, allReturn.length() - 1);
+            }
             if (allReturn.equals("null")) {
                 allReturn = "";
             }
@@ -446,7 +471,18 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("TotalPrice", depotHead.getTotalPrice() == null ? "" : Math.abs(depotHead.getTotalPrice()));
                     item.put("payType", depotHead.getPayType() == null ? "" : depotHead.getPayType());
                     item.put("Status", depotHead.getStatus());
+                    item.put("SendStatus", depotHead.getSendStatus());
                     item.put("Remark", depotHead.getRemark());
+
+                    item.put("Express", depotHead.getExpress());
+                    item.put("ExpressNumber", depotHead.getExpressNumber());
+                    item.put("Contacts", depotHead.getContacts());
+                    item.put("Phonenum", depotHead.getPhonenum());
+                    item.put("state", depotHead.getState());
+                    item.put("city", depotHead.getCity());
+                    item.put("street", depotHead.getStreet());
+                    item.put("address", depotHead.getAddress());
+
                     //item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
                     item.put("MaterialsList", findProductListByHeaderId(depotHead.getId()));
                     item.put("op", 1);

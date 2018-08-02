@@ -24,10 +24,14 @@
     <script src="<%=path %>/js/print/print.js"></script>
     <script src="<%=path %>/js/common/dataGridUtils.js"></script>
     <script src="<%=path %>/js/pages/materials/sale.js"></script>
+    <script type="text/javascript" src="<%=path %>/js/pages/manage/city.js"></script>
     <script>
         var kid = ${sessionScope.user.id};
         var path = "<%=path%>";
         var clientIp = "<%=clientIp%>";
+        $(document).ready(function() {
+            initProvince();
+        });
     </script>
 </head>
 <body>
@@ -73,7 +77,7 @@
 </div>
 
 <!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="销售出库列表" iconCls="icon-list"
+<div id="tablePanel" class="easyui-panel" style="padding:1px; top:300px;" title="订单列表" iconCls="icon-list"
      collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
@@ -110,6 +114,40 @@
                 <td colspan="9">
                     <textarea name="Remark" id="Remark" rows="2" cols="2" placeholder="暂无备注信息"
                               style="width: 1130px; height:35px;"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>物流公司：</td>
+                <td style="padding:5px">
+                    <input id="Express" name="Express" class="easyui-validatebox" style="width:120px;"/>
+                </td>
+                <td>运单号码：</td>
+                <td style="padding:5px">
+                    <input id="ExpressNumber" name="ExpressNumber" class="easyui-validatebox" style="width:130px;"/>
+                </td>
+                <td>收货人：</td>
+                <td style="padding:5px">
+                    <input id="Contacts" name="Contacts" class="easyui-validatebox" style="width:120px;"/>
+                </td>
+                <td>收货号码：</td>
+                <td style="padding:5px">
+                    <input id="Phonenum" name="Phonenum" class="easyui-validatebox" style="width:120px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td>所在地址：</td>
+                <td style="padding:1px;width:100px;">
+                    <input id="state" name="state" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择省份',missingMessage:'请选择省份'" />
+                </td>
+                <td style="padding:1px">
+                    <input id="city" name="city" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择城市',missingMessage:'请选择城市'" />
+                </td>
+                <td style="padding:1px">
+                    <input id="street" name="street" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择区县',missingMessage:'请选择区县'" />
+                </td>
+                <td>详细地址：</td>
+                <td style="padding:1px" colspan="3">
+                    <input name="address" id="address" class="easyui-validatebox" style="width: 468px;height: 20px"/>
                 </td>
             </tr>
         </table>
