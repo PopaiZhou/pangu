@@ -198,6 +198,7 @@ public class ProductAction extends BaseAction<ProductModel>{
                     item.put("templateId", product.getTemplateId().getTemplateId());
                     item.put("templateName", product.getTemplateId().getTemplateName());
                     item.put("supplier", product.getSupplierNo().getSupplier());
+                    item.put("supplierNo", product.getSupplierNo().getId());
                     item.put("standard",product.getStandard());
                     item.put("purchasePrice",product.getPurchasePrice());
                     item.put("wholesalePrice",product.getWholesalePrice());

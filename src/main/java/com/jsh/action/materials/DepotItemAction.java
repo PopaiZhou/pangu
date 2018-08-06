@@ -97,16 +97,13 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                         depotItem.setAllPrice(tempInsertedJson.getDouble("AllPrice"));
                     }
                     depotItem.setRemark(tempInsertedJson.getString("Remark"));
-                    if (tempInsertedJson.get("DepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("DepotId").toString())) {
-                        depotItem.setDepotId("0");
-                    }
                     //对应版本编号
                     if (tempInsertedJson.get("DepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("DepotId").toString())) {
                         depotItem.setTemplateId(new Template(tempInsertedJson.getLong("DepotId")));
                     }
                     if(tempInsertedJson.containsKey("AnotherDepotId")){
                         if (tempInsertedJson.get("AnotherDepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("AnotherDepotId").toString())) {
-                            depotItem.setAnotherDepotId(new Depot(tempInsertedJson.getLong("AnotherDepotId")));
+                            depotItem.setDepotId(tempInsertedJson.getString("AnotherDepotId"));
                         }
                     }
                     if(tempInsertedJson.containsKey("TaxRate")){
@@ -199,8 +196,9 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     if (tempUpdatedJson.get("DepotId") != null && !StringUtils.isEmpty(tempUpdatedJson.get("DepotId").toString())) {
                         depotItem.setTemplateId(new Template(tempUpdatedJson.getLong("DepotId")));
                     }
+                    //供应商编号
                     if (tempUpdatedJson.get("AnotherDepotId") != null && !StringUtils.isEmpty(tempUpdatedJson.get("AnotherDepotId").toString())) {
-                        depotItem.setAnotherDepotId(new Depot(tempUpdatedJson.getLong("AnotherDepotId")));
+                        depotItem.setDepotId(tempUpdatedJson.getString("AnotherDepotId"));
                     }
                     if(tempUpdatedJson.containsKey("TaxRate")){
                         if (!StringUtils.isEmpty(tempUpdatedJson.get("TaxRate").toString())) {
@@ -314,16 +312,14 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                         depotItem.setAllPrice(tempInsertedJson.getDouble("AllPrice"));
                     }
                     depotItem.setRemark(tempInsertedJson.getString("Remark"));
-                    if (tempInsertedJson.get("DepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("DepotId").toString())) {
-                        depotItem.setDepotId("0");
-                    }
+
                     //对应版本编号
                     if (tempInsertedJson.get("DepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("DepotId").toString())) {
                         depotItem.setTemplateId(new Template(tempInsertedJson.getLong("DepotId")));
                     }
                     if(tempInsertedJson.containsKey("AnotherDepotId")){
                         if (tempInsertedJson.get("AnotherDepotId") != null && !StringUtils.isEmpty(tempInsertedJson.get("AnotherDepotId").toString())) {
-                            depotItem.setAnotherDepotId(new Depot(tempInsertedJson.getLong("AnotherDepotId")));
+                            depotItem.setDepotId(tempInsertedJson.getString("AnotherDepotId"));
                         }
                     }
                     if(tempInsertedJson.containsKey("TaxRate")){

@@ -31,7 +31,7 @@ public class DepotHead implements java.io.Serializable {
     private Double TotalPrice;
     private String PayType;
     private Boolean Status = false; //单据状态
-    private Boolean Check =false;//审核状态
+    private Boolean CheckStatus =false;//审核状态
     private String CheckOperName;//审核人名字
     private String Remark;
     private Boolean SendStatus = false; //发货状态
@@ -531,30 +531,11 @@ public class DepotHead implements java.io.Serializable {
     /**
      * Setter method for property <tt>SendPersonName</tt>.
      *
-     * @param SendPersonName value to be assigned to property SendPersonName
+     * @param sendPersonName value to be assigned to property SendPersonName
      */
     public void setSendPersonName(String sendPersonName) {
         SendPersonName = sendPersonName;
     }
-
-    /**
-     * Getter method for property <tt>Check</tt>.
-     *
-     * @return property value of Check
-     */
-    public Boolean getCheck() {
-        return Check;
-    }
-
-    /**
-     * Setter method for property <tt>Check</tt>.
-     *
-     * @param Check value to be assigned to property Check
-     */
-    public void setCheck(Boolean check) {
-        Check = check;
-    }
-
     /**
      * Getter method for property <tt>CheckOperName</tt>.
      *
@@ -567,9 +548,27 @@ public class DepotHead implements java.io.Serializable {
     /**
      * Setter method for property <tt>CheckOperName</tt>.
      *
-     * @param CheckOperName value to be assigned to property CheckOperName
+     * @param checkOperName value to be assigned to property CheckOperName
      */
     public void setCheckOperName(String checkOperName) {
         CheckOperName = checkOperName;
+    }
+
+    /**
+     * Getter method for property <tt>CheckStatus</tt>.
+     *
+     * @return property value of CheckStatus
+     */
+    public Boolean getCheckStatus() {
+        return CheckStatus;
+    }
+
+    /**
+     * Setter method for property <tt>CheckStatus</tt>.
+     *
+     * @param checkStatus value to be assigned to property CheckStatus
+     */
+    public void setCheckStatus(Boolean checkStatus) {
+        CheckStatus = checkStatus;
     }
 }

@@ -42,7 +42,7 @@ public class DepotHeadModel implements Serializable {
     //单据状态
     private Boolean Status = false;
     //审核状态
-    private Boolean Check = false;
+    private Boolean CheckStatus = false;
     //查询开始时间
     private String BeginTime;
     //查询结束时间
@@ -480,7 +480,7 @@ public class DepotHeadModel implements Serializable {
     /**
      * Setter method for property <tt>SendStatus</tt>.
      *
-     * @param SendStatus value to be assigned to property SendStatus
+     * @param sendStatus value to be assigned to property SendStatus
      */
     public void setSendStatus(Boolean sendStatus) {
         SendStatus = sendStatus;
@@ -498,7 +498,7 @@ public class DepotHeadModel implements Serializable {
     /**
      * Setter method for property <tt>Weight</tt>.
      *
-     * @param Weight value to be assigned to property Weight
+     * @param weight value to be assigned to property Weight
      */
     public void setWeight(Double weight) {
         Weight = weight;
@@ -516,7 +516,7 @@ public class DepotHeadModel implements Serializable {
     /**
      * Setter method for property <tt>Freight</tt>.
      *
-     * @param Freight value to be assigned to property Freight
+     * @param freight value to be assigned to property Freight
      */
     public void setFreight(Double freight) {
         Freight = freight;
@@ -534,7 +534,7 @@ public class DepotHeadModel implements Serializable {
     /**
      * Setter method for property <tt>Express</tt>.
      *
-     * @param Express value to be assigned to property Express
+     * @param express value to be assigned to property Express
      */
     public void setExpress(String express) {
         Express = express;
@@ -552,7 +552,7 @@ public class DepotHeadModel implements Serializable {
     /**
      * Setter method for property <tt>ExpressNumber</tt>.
      *
-     * @param ExpressNumber value to be assigned to property ExpressNumber
+     * @param expressNumber value to be assigned to property ExpressNumber
      */
     public void setExpressNumber(String expressNumber) {
         ExpressNumber = expressNumber;
@@ -570,7 +570,7 @@ public class DepotHeadModel implements Serializable {
     /**
      * Setter method for property <tt>Contacts</tt>.
      *
-     * @param Contacts value to be assigned to property Contacts
+     * @param contacts value to be assigned to property Contacts
      */
     public void setContacts(String contacts) {
         Contacts = contacts;
@@ -588,7 +588,7 @@ public class DepotHeadModel implements Serializable {
     /**
      * Setter method for property <tt>Phonenum</tt>.
      *
-     * @param Phonenum value to be assigned to property Phonenum
+     * @param phonenum value to be assigned to property Phonenum
      */
     public void setPhonenum(String phonenum) {
         Phonenum = phonenum;
@@ -683,25 +683,6 @@ public class DepotHeadModel implements Serializable {
     public void setSearchSendStatus(String searchSendStatus) {
         this.searchSendStatus = searchSendStatus;
     }
-
-    /**
-     * Getter method for property <tt>Check</tt>.
-     *
-     * @return property value of Check
-     */
-    public Boolean getCheck() {
-        return Check;
-    }
-
-    /**
-     * Setter method for property <tt>Check</tt>.
-     *
-     * @param Check value to be assigned to property Check
-     */
-    public void setCheck(Boolean check) {
-        Check = check;
-    }
-
     /**
      * Getter method for property <tt>searchCheckStatus</tt>.
      *
@@ -772,5 +753,23 @@ public class DepotHeadModel implements Serializable {
      */
     public void setCustomerIds(String customerIds) {
         this.customerIds = customerIds;
+    }
+
+    /**
+     * Getter method for property <tt>CheckStatus</tt>.
+     *
+     * @return property value of CheckStatus
+     */
+    public Boolean getCheckStatus() {
+        return CheckStatus;
+    }
+
+    /**
+     * Setter method for property <tt>CheckStatus</tt>.
+     *
+     * @param checkStatus value to be assigned to property CheckStatus
+     */
+    public void setCheckStatus(Boolean checkStatus) {
+        CheckStatus = checkStatus;
     }
 }

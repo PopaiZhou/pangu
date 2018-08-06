@@ -14,7 +14,7 @@ public class DepotItem implements java.io.Serializable {
     private Double AllPrice;
     private String Remark;
     private String Img;
-    private String DepotId; //仓库ID
+    private String DepotId; //供应商编号
     private Depot AnotherDepotId; //对方仓库Id
     private Double TaxRate; //税率
     private Double TaxMoney; //税额

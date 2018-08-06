@@ -367,7 +367,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      */
     public String batchSetCheck() {
         try {
-            depotHeadService.batchSetCheck(model.getCheck(), model.getDepotHeadIDs(),getUser().getUsername());
+            depotHeadService.batchSetCheck(model.getCheckStatus(), model.getDepotHeadIDs(),getUser().getUsername());
             model.getShowModel().setMsgTip("成功");
             //记录操作日志使用
             tipMsg = "成功";
@@ -571,7 +571,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("SendStatus", depotHead.getSendStatus());
                     item.put("Remark", depotHead.getRemark());
 
-                    item.put("Check", depotHead.getCheck());
+                    item.put("CheckStatus", depotHead.getCheckStatus());
                     item.put("CheckOperName", depotHead.getCheckOperName());
 
                     item.put("Express", depotHead.getExpress());
@@ -945,12 +945,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         String endTime = model.getEndTime();
         Long organId = model.getOrganId();
         String supType = model.getSupType(); //单位类型：客户、供应商
-        int j = 1;
-        if (supType.equals("客户")) { //客户
-            j = 1;
-        } else if (supType.equals("供应商")) { //供应商
-            j = -1;
-        }
         try {
             depotHeadService.findStatementAccount(pageUtil, beginTime, endTime, organId, supType);
             List dataList = pageUtil.getPageList();
@@ -1000,7 +994,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     }
                     item.put("discountLastMoney", p1); //金额
                     item.put("changeAmount", p2); //金额
-                    item.put("allPrice", String.format("%.2f", allPrice * j)); //计算后的金额
+                    item.put("allPrice", String.format("%.2f", allPrice)); //计算后的金额
                     item.put("supplierName", arr[4]); //供应商
                     item.put("operTime", arr[5]); //入库出库日期
                     dataArray.add(item);

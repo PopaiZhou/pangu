@@ -51,7 +51,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
 
     @Override
     public void batchSetCheck(Boolean status, String depotHeadIDs, String checkOperName) {
-        String sql = "update jsh_depothead d set d.Check=" + status + ",d.CheckOperName='"+checkOperName+"' where d.id in (" + depotHeadIDs + ")";
+        String sql = "update jsh_depothead d set d.CheckStatus=" + status + ",d.CheckOperName='"+checkOperName+"' where d.id in (" + depotHeadIDs + ")";
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
         query.executeUpdate();
     }
@@ -175,7 +175,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         StringBuffer queryString = new StringBuffer();
         queryString.append("select dh.Number,concat(dh.SubType,dh.Type) as newType,dh.DiscountLastMoney,dh.ChangeAmount,s.supplier,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh " +
                 "inner join jsh_supplier s on s.id=dh.OrganId where s.type='" + supType + "' and dh.SubType!='其它' " +
-                "and dh.OperTime >='" + beginTime + "' and dh.OperTime<='" + endTime + "' ");
+                "and dh.OperTime >='" + beginTime + "' and dh.OperTime<='" + endTime + "' and dh.SendStatus = 1 ");
         if (organId != null && !organId.equals("")) {
             queryString.append(" and dh.OrganId='" + organId + "' ");
         }

@@ -137,8 +137,8 @@
    <comment>单据状态(0未收款、1收款)</comment>
   </column>
  </property>
-  <property generated="never" lazy="false" name="Check" type="boolean">
-   <column length="1" name="Check">
+  <property generated="never" lazy="false" name="CheckStatus" type="boolean">
+   <column length="1" name="CheckStatus">
     <comment>审核状态(0未审核，1审核)</comment>
    </column>
   </property>

@@ -191,7 +191,7 @@ function initTableData() {
                 return value ? "<span style='color:green;'>已收款</span>":"<span style='color:red;'>未收款</span>";
                 }
             },
-            { title: '审核状态',field: 'Check', width:100,align:"center",formatter:function(value){
+            { title: '审核状态',field: 'CheckStatus', width:100,align:"center",formatter:function(value){
                 return value ? "<span style='color:green;'>已审核</span>":"<span style='color:red;'>未审核</span>";
                 }
             },
@@ -498,6 +498,8 @@ function initTableData_material(type,TotalPrice){
 
                                         var wholesalePrice = res.rows[0].wholesalePrice;//批发价
                                         var retailPrice = res.rows[0].retailPrice;//零售价
+                                        var purchasePrice = res.rows[0].purchasePrice;//进货价
+                                        var supplierNo = res.rows[0].supplierNo;//供应商编号
                                         //版本编号下拉框赋值
                                         target.combobox('setValue',tId);
                                         //规格赋值
@@ -506,6 +508,10 @@ function initTableData_material(type,TotalPrice){
                                         body.find("[field='WholesalePrice']").find(input).val(wholesalePrice);
                                         //零售价赋值
                                         body.find("[field='RetailPrice']").find(input).val(retailPrice);
+                                        //进货价
+                                        body.find("[field='TaxUnitPrice']").find(input).val(purchasePrice);
+                                        //供应商编号
+                                        body.find("[field='AnotherDepotId']").find(input).val(supplierNo);
                                         //获取数量
                                         var OperNumber = body.find("[field='OperNumber']").find(input).val();
 
@@ -541,7 +547,9 @@ function initTableData_material(type,TotalPrice){
             { title: '总价',field: 'AllPrice',editor:'validatebox',width:75},
             { title: '备注',field: 'Remark',editor:'validatebox',width:360},
             { title: '批发价',field: 'WholesalePrice',editor:'validatebox',width:120,hidden:true},
-            { title: '零售价',field: 'RetailPrice',editor:'validatebox',width:120,hidden:true}
+            { title: '零售价',field: 'RetailPrice',editor:'validatebox',width:120,hidden:true},
+            { title: '进货价',field: 'TaxUnitPrice',editor:'validatebox',width:120,hidden:true},
+            { title: '供应商编号',field: 'AnotherDepotId',editor:'validatebox',width:120,hidden:true}
         ]],
         toolbar:[
             {
@@ -1571,7 +1579,7 @@ function setStatusFun() {
                     dataType: "json",
                     async :  false,
                     data: ({
-                        Check: true,
+                        CheckStatus: true,
                         DepotHeadIDs : ids,
                         clientIp: clientIp
                     }),
@@ -1633,7 +1641,7 @@ function setUnStatusFun() {
                     dataType: "json",
                     async :  false,
                     data: ({
-                        Check: false,
+                        CheckStatus: false,
                         DepotHeadIDs : ids,
                         clientIp: clientIp
                     }),
