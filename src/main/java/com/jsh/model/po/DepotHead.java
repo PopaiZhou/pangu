@@ -31,6 +31,8 @@ public class DepotHead implements java.io.Serializable {
     private Double TotalPrice;
     private String PayType;
     private Boolean Status = false; //单据状态
+    private Boolean Check =false;//审核状态
+    private String CheckOperName;//审核人名字
     private String Remark;
     private Boolean SendStatus = false; //发货状态
     private Double Weight;
@@ -39,6 +41,7 @@ public class DepotHead implements java.io.Serializable {
     private String ExpressNumber;
     private String Contacts;
     private String Phonenum;
+    private String SendPersonName;
     /**
      * 省
      */
@@ -514,5 +517,59 @@ public class DepotHead implements java.io.Serializable {
      */
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    /**
+     * Getter method for property <tt>SendPersonName</tt>.
+     *
+     * @return property value of SendPersonName
+     */
+    public String getSendPersonName() {
+        return SendPersonName;
+    }
+
+    /**
+     * Setter method for property <tt>SendPersonName</tt>.
+     *
+     * @param SendPersonName value to be assigned to property SendPersonName
+     */
+    public void setSendPersonName(String sendPersonName) {
+        SendPersonName = sendPersonName;
+    }
+
+    /**
+     * Getter method for property <tt>Check</tt>.
+     *
+     * @return property value of Check
+     */
+    public Boolean getCheck() {
+        return Check;
+    }
+
+    /**
+     * Setter method for property <tt>Check</tt>.
+     *
+     * @param Check value to be assigned to property Check
+     */
+    public void setCheck(Boolean check) {
+        Check = check;
+    }
+
+    /**
+     * Getter method for property <tt>CheckOperName</tt>.
+     *
+     * @return property value of CheckOperName
+     */
+    public String getCheckOperName() {
+        return CheckOperName;
+    }
+
+    /**
+     * Setter method for property <tt>CheckOperName</tt>.
+     *
+     * @param CheckOperName value to be assigned to property CheckOperName
+     */
+    public void setCheckOperName(String checkOperName) {
+        CheckOperName = checkOperName;
     }
 }

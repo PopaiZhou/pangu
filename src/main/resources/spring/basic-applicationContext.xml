@@ -317,6 +317,7 @@
 	<bean id="depotHeadAction" class="com.jsh.action.materials.DepotHeadAction" scope="prototype">
 		<property name="depotHeadService" ref="depotHeadService"/>
 		<property name="userService" ref="userService"/>
+		<property name="customerService" ref="customerService" />
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--仓管通配置结束 -->

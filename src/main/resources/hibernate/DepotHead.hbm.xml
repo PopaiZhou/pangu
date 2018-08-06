@@ -133,8 +133,18 @@
    </column>
   </property>
   <property generated="never" lazy="false" name="Status" type="boolean">
-   <column length="1" name="Status">
-    <comment>单据状态(未审核、已审核)</comment>
+  <column length="1" name="Status">
+   <comment>单据状态(0未收款、1收款)</comment>
+  </column>
+ </property>
+  <property generated="never" lazy="false" name="Check" type="boolean">
+   <column length="1" name="Check">
+    <comment>审核状态(0未审核，1审核)</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="CheckOperName" type="java.lang.String">
+   <column length="50" name="CheckOperName">
+    <comment>审核人名字</comment>
    </column>
   </property>
   <property generated="never" lazy="false" name="Remark" type="java.lang.String">
@@ -195,6 +205,11 @@
   <property name="address" type="java.lang.String">
    <column name="address" length="128">
     <comment>地址</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="SendPersonName" type="java.lang.String">
+   <column length="50" name="SendPersonName">
+    <comment>发货员名称</comment>
    </column>
   </property>
  </class>

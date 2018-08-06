@@ -37,6 +37,11 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
     }
 
     @Override
+    public void batchSetCheck(Boolean status, String depotHeadIDs,String checkOperName) {
+        depotHeadDao.batchSetCheck(status, depotHeadIDs,checkOperName);
+    }
+
+    @Override
     public void findInDetail(PageUtil pageUtil, String beginTime, String endTime, String type, Long pid, String dids, Long oId) throws JshException {
         depotHeadDao.findInDetail(pageUtil, beginTime, endTime, type, pid, dids, oId);
     }

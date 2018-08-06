@@ -50,6 +50,13 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     }
 
     @Override
+    public void batchSetCheck(Boolean status, String depotHeadIDs, String checkOperName) {
+        String sql = "update jsh_depothead d set d.Check=" + status + ",d.CheckOperName='"+checkOperName+"' where d.id in (" + depotHeadIDs + ")";
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
+        query.executeUpdate();
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public void findInDetail(PageUtil pageUtil, String beginTime, String endTime, String type, Long pid, String dids, Long oId) throws JshException {
         StringBuffer queryString = new StringBuffer();

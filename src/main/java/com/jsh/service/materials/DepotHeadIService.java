@@ -15,6 +15,8 @@ public interface DepotHeadIService extends BaseIService<DepotHead> {
 
     void batchSetStatus(Boolean status, String depotHeadIDs);
 
+    void batchSetCheck(Boolean status, String depotHeadIDs,String checkOperName);
+
     void findInDetail(PageUtil pageUtil, String beginTime, String endTime, String type, Long pid, String dids, Long oId) throws JshException;
 
     void findInOutMaterialCount(PageUtil pageUtil, String beginTime, String endTime, String type, Long pid, String dids, Long oId) throws JshException;

@@ -20,6 +20,7 @@ var modifyShow = false; //单条编辑按钮是否展示
 var deleteShow = false; //单条删除按钮是否暂时
 var opeWith = 45;
 var mulSelete = false; //是否多选
+var priceHidden = false; //是否隐藏价格
 
 $(function(){
     //获取角色权限--判断是否是管理员登录
@@ -78,6 +79,21 @@ function initTableData() {
             },'-'
         );
     }
+    //8是发货
+    if(btnEnableList && btnEnableList.indexOf(8)>-1){
+        mulSelete = true;
+        priceHidden = true;
+        tableToolBar.push(
+            {
+                id:'ship',
+                text:'发货',
+                iconCls:'icon-redo',
+                handler:function() {
+                    ship();
+                }
+            },'-'
+        );
+    }
     //4是打印
     if(btnEnableList && btnEnableList.indexOf(4)>-1){
         tableToolBar.push(
@@ -91,20 +107,26 @@ function initTableData() {
             },'-'
         );
     }
-    //8是发货
-    if(btnEnableList && btnEnableList.indexOf(8)>-1){
-        mulSelete = true;
-        tableToolBar.push(
-            {
-                id:'ship',
-                text:'发货',
-                iconCls:'icon-redo',
+    //如果允许的按钮列表中存在就显示，3-代表审核|反审核的权限
+    if(btnEnableList && btnEnableList.indexOf(3)>-1){
+        tableToolBar.push({
+                id:'okDepotHead',
+                text:'审核',
+                iconCls:'icon-ok',
                 handler:function() {
-                    ship();
+                    setStatusFun();
                 }
-            },'-'
-        );
+            },'-',
+            {
+                id:'undoDepotHead',
+                text:'反审核',
+                iconCls:'icon-undo',
+                handler:function() {
+                    setUnStatusFun();
+                }
+            },'-');
     }
+
     //改变宽度和高度
     $("#searchPanel").panel({width:webW-2});
     $("#tablePanel").panel({width:webW-2});
@@ -164,15 +186,21 @@ function initTableData() {
             },
             { title: '单据日期 ',field: 'OperTime',width:150},
             { title: '操作员',field: 'OperPersonName',width:120},
-            { title: '金额合计',field: 'TotalPrice',width:120},
+            { title: '金额合计',field: 'TotalPrice',width:120,hidden : priceHidden},
             { title: '收款状态',field: 'Status', width:100,align:"center",formatter:function(value){
                 return value ? "<span style='color:green;'>已收款</span>":"<span style='color:red;'>未收款</span>";
                 }
             },
+            { title: '审核状态',field: 'Check', width:100,align:"center",formatter:function(value){
+                return value ? "<span style='color:green;'>已审核</span>":"<span style='color:red;'>未审核</span>";
+                }
+            },
+            { title: '审核员',field: 'CheckOperName',width:100},
             { title: '发货状态',field: 'SendStatus', width:100,align:"center",formatter:function(value){
                 return value ? "<span style='color:green;'>已发货</span>":"<span style='color:red;'>未发货</span>";
-            }
-            }
+                }
+            },
+            { title: '发货员',field: 'SendPersonName',width:100}
         ]],
         toolbar:tableToolBar,
         onLoadError:function()
@@ -617,6 +645,12 @@ function initCustomerList() {
         valueField:'value',
         textField:'name'
     });
+    //初始化 审核状态搜索 下拉框
+    $('#searchCheck').combobox({
+        url: path +'/js/pages/manage/checkStatus.json',
+        valueField:'value',
+        textField:'name'
+    });
 
     //初始化 发货状态搜索 下拉框
     $('#searchSendStatus').combobox({
@@ -864,9 +898,12 @@ function bindEvent(){
     $("#searchResetBtn").unbind().bind({
         click:function(){
             $("#searchNumber").val("");
+            $("#searchCustomerNo").val("");
+            $("#searchCustomerName").val("");
             $("#searchMaterial").val("");
             $("#searchState").combobox("setValue","");
             $("#searchSendStatus").combobox("setValue","");
+            $("#searchCheck").combobox("setValue","");
             $("#searchBeginTime").val("");
             $("#searchEndTime").val("");
             //加载完以后重新初始化
@@ -991,8 +1028,11 @@ function bindEvent(){
             async :  false,
             data: ({
                 depotHeadID : row[0].Id,
-                Express : express,
-                ExpressNumber : num,
+                Express : express,//物流公司
+                ExpressNumber : num,//物流单号
+                Weight : $("#Weight").val(),//重量
+                Freight : $("#Freight").val(),//运费预估
+                OperTime : getNowFormatDateTime(),
                 clientIp: clientIp
             }),
             success: function (tipInfo)
@@ -1024,7 +1064,8 @@ function bindEvent(){
             $("#saveDepotHead").click();
         }
         //搜索按钮添加快捷键
-        if (k == "13" && (obj.id == "searchState" || obj.id == "searchSendStatus" || obj.id == "searchNumber" || obj.id == "searchMaterial")) {
+        if (k == "13" && (obj.id == "searchState" || obj.id == "searchSendStatus" || obj.id == "searchNumber" || obj.id == "searchMaterial" || obj.id == "searchCustomerNo"
+            || obj.id == "searchCustomerName"|| obj.id == "searchCheck" )) {
             $("#searchBtn").click();
         }
     });
@@ -1055,6 +1096,11 @@ function showDepotHeadDetails(pageNo,pageSize){
                             SubType: listSubType,
                             searchStatus: $("#searchState").datebox("getValue"),
                             searchSendStatus: $("#searchSendStatus").datebox("getValue"),
+                            searchCheckStatus : $("#searchCheck").datebox("getValue"),
+
+                            customerName: $.trim($("#searchCustomerName").val()),
+                            customerNo: $.trim($("#searchCustomerNo").val()),
+
                             Number: $.trim($("#searchNumber").val()),
                             BeginTime: $("#searchBeginTime").val(),
                             EndTime: $("#searchEndTime").val(),
@@ -1234,11 +1280,10 @@ function initTableData_material_show(TotalPrice){
             { title: '版本名称',field: 'TemplateName',width:230},
             { title: '型号',field: 'ProductName',width:230},
             { title: '规格',field: 'Unit',editor:'validatebox',width:60},
-            { title: '单价',field: 'UnitPrice',editor:'validatebox',width:60},
+            { title: '单价',field: 'UnitPrice',editor:'validatebox',width:60,hidden : priceHidden },
             { title: '数量',field: 'OperNumber',editor:'validatebox',width:60},
-            { title: '总价',field: 'AllPrice',editor:'validatebox',width:75},
-            { title: '备注',field: 'Remark',editor:'validatebox',width:120},
-
+            { title: '总价',field: 'AllPrice',editor:'validatebox',width:75,hidden : priceHidden},
+            { title: '备注',field: 'Remark',editor:'validatebox',width:120}
         ]],
         onLoadError:function() {
             $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
@@ -1434,7 +1479,18 @@ function print() {
         $.messager.alert('提示','请选择一条单据进行打印！','info');
         return;
     }
-    CreateNewFormPage('订货单', $('#tableData'), path);
+    //如果是需要隐藏价格的。那么订货单不能让他打印，不然就看到价格了
+    if(priceHidden && !row[0].SendStatus){
+        $.messager.alert('提示','未收款的订单暂时不能打印！','info');
+        return;
+    }
+    //如果是发货单
+    if(row[0].SendStatus){
+        CreateNewFormPageSend('发货单', $('#tableData'), path,systemName);
+    }else{
+        CreateNewFormPageOrder('订货单', $('#tableData'), path,systemName);
+    }
+
 }
 
 
@@ -1458,5 +1514,150 @@ function ship() {
         return;
     }
     $("#ExpressSend").val(row[0].Express);
-    $('#depotHeadSendDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/comment.png"/>&nbsp;填写发货信息');
+
+    //重量 = 总量 * 0.8
+    $.ajax({
+        type:"post",
+        url: path + '/depotItem/findBy.action?HeaderId=' + row[0].Id,
+        data: {
+
+        },
+        dataType: "json",
+        success: function (res) {
+            var sumOperNum = 0 ;
+            if(res.rows.length > 0){
+                for(var i = 0 ; i < res.rows.length; i ++){
+                    sumOperNum = sumOperNum + res.rows[i].OperNumber;
+                }
+            }
+            $("#Weight").val((sumOperNum * 0.8).toFixed(2));
+            $('#depotHeadSendDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/comment.png"/>&nbsp;填写发货信息');
+        },
+        error:function() {
+            $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
+        }
+    });
+}
+
+//批量审核
+function setStatusFun() {
+    var row = $('#tableData').datagrid('getChecked');
+    if(row.length == 0) {
+        $.messager.alert('审核提示','没有记录被选中！','info');
+        return;
+    }
+    if(row.length > 0) {
+        $.messager.confirm('审核确认','确定要审核选中的' + row.length + '条信息吗？',function(r)
+        {
+            if (r)
+            {
+                var ids = "";
+                for(var i = 0;i < row.length; i ++)
+                {
+                    if(!row[i].Status){
+                        $.messager.alert('提示','未收款的单子无法进行审核！','info');
+                        return;
+                    }
+                    if(i == row.length-1)
+                    {
+                        ids += row[i].Id;
+                        break;
+                    }
+                    ids += row[i].Id + ",";
+                }
+                $.ajax({
+                    type:"post",
+                    url: path + "/depotHead/batchSetCheck.action",
+                    dataType: "json",
+                    async :  false,
+                    data: ({
+                        Check: true,
+                        DepotHeadIDs : ids,
+                        clientIp: clientIp
+                    }),
+                    success: function (tipInfo)
+                    {
+                        var msg = tipInfo.showModel.msgTip;
+                        if(msg == '成功')
+                        {
+                            //加载完以后重新初始化
+                            $("#searchBtn").click();
+                            $(":checkbox").attr("checked",false);
+                        }
+                        else
+                            $.messager.alert('审核提示','审核信息失败，请稍后再试！','error');
+                    },
+                    //此处添加错误处理
+                    error:function()
+                    {
+                        $.messager.alert('审核提示','审核信息异常，请稍后再试！','error');
+                        return;
+                    }
+                });
+            }
+        });
+    }
+}
+
+//批量反审核
+function setUnStatusFun() {
+    var row = $('#tableData').datagrid('getChecked');
+    if(row.length == 0)
+    {
+        $.messager.alert('反审核提示','没有记录被选中！','info');
+        return;
+    }
+    if(row.length > 0)
+    {
+        $.messager.confirm('反审核确认','确定要反审核选中的' + row.length + '条信息吗？',function(r)
+        {
+            if (r)
+            {
+                var ids = "";
+                for(var i = 0;i < row.length; i ++)
+                {
+                    if(row[i].SendStatus){
+                        $.messager.alert('提示','已发货不能反审核！','info');
+                        return;
+                    }
+                    if(i == row.length-1)
+                    {
+                        ids += row[i].Id;
+                        break;
+                    }
+                    ids += row[i].Id + ",";
+                }
+                $.ajax({
+                    type:"post",
+                    url: path + "/depotHead/batchSetCheck.action",
+                    dataType: "json",
+                    async :  false,
+                    data: ({
+                        Check: false,
+                        DepotHeadIDs : ids,
+                        clientIp: clientIp
+                    }),
+                    success: function (tipInfo)
+                    {
+                        var msg = tipInfo.showModel.msgTip;
+                        if(msg == '成功')
+                        {
+                            //加载完以后重新初始化
+                            $("#searchBtn").click();
+                            $(":checkbox").attr("checked",false);
+                        }
+                        else{
+                            $.messager.alert('反审核提示','反审核信息失败，请稍后再试！','error');
+                        }
+                    },
+                    //此处添加错误处理
+                    error:function()
+                    {
+                        $.messager.alert('反审核提示','反审核信息异常，请稍后再试！','error');
+                        return;
+                    }
+                });
+            }
+        });
+    }
 }

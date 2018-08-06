@@ -41,6 +41,8 @@ public class DepotHeadModel implements Serializable {
     private Integer AccountDay;
     //单据状态
     private Boolean Status = false;
+    //审核状态
+    private Boolean Check = false;
     //查询开始时间
     private String BeginTime;
     //查询结束时间
@@ -64,6 +66,22 @@ public class DepotHeadModel implements Serializable {
      * 发货状态
      */
     private String searchSendStatus;
+
+    /**
+     * 审核状态
+     */
+    private String searchCheckStatus;
+
+    /**
+     * 客户名称
+     */
+    private String customerName;
+    /**
+     * 客户编号
+     */
+    private String customerNo;
+
+    private String customerIds;
 
     private Boolean SendStatus = false; //发货状态
     private Double Weight;
@@ -664,5 +682,95 @@ public class DepotHeadModel implements Serializable {
      */
     public void setSearchSendStatus(String searchSendStatus) {
         this.searchSendStatus = searchSendStatus;
+    }
+
+    /**
+     * Getter method for property <tt>Check</tt>.
+     *
+     * @return property value of Check
+     */
+    public Boolean getCheck() {
+        return Check;
+    }
+
+    /**
+     * Setter method for property <tt>Check</tt>.
+     *
+     * @param Check value to be assigned to property Check
+     */
+    public void setCheck(Boolean check) {
+        Check = check;
+    }
+
+    /**
+     * Getter method for property <tt>searchCheckStatus</tt>.
+     *
+     * @return property value of searchCheckStatus
+     */
+    public String getSearchCheckStatus() {
+        return searchCheckStatus;
+    }
+
+    /**
+     * Setter method for property <tt>searchCheckStatus</tt>.
+     *
+     * @param searchCheckStatus value to be assigned to property searchCheckStatus
+     */
+    public void setSearchCheckStatus(String searchCheckStatus) {
+        this.searchCheckStatus = searchCheckStatus;
+    }
+
+    /**
+     * Getter method for property <tt>customerName</tt>.
+     *
+     * @return property value of customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * Setter method for property <tt>customerName</tt>.
+     *
+     * @param customerName value to be assigned to property customerName
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    /**
+     * Getter method for property <tt>customerNo</tt>.
+     *
+     * @return property value of customerNo
+     */
+    public String getCustomerNo() {
+        return customerNo;
+    }
+
+    /**
+     * Setter method for property <tt>customerNo</tt>.
+     *
+     * @param customerNo value to be assigned to property customerNo
+     */
+    public void setCustomerNo(String customerNo) {
+        this.customerNo = customerNo;
+    }
+
+    /**
+     * Getter method for property <tt>customerIds</tt>.
+     *
+     * @return property value of customerIds
+     */
+    public String getCustomerIds() {
+        return customerIds;
+    }
+
+    /**
+     * Setter method for property <tt>customerIds</tt>.
+     *
+     * @param customerIds value to be assigned to property customerIds
+     */
+    public void setCustomerIds(String customerIds) {
+        this.customerIds = customerIds;
     }
 }

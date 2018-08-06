@@ -425,6 +425,7 @@ public class UserAction extends BaseAction<UserModel> {
          * 拼接搜索条件
          */
         Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("id_n_neq", model.getUserID());
         condition.put("username_s_like", model.getUsername());
         condition.put("loginame_s_like", model.getLoginame());
         condition.put("id_s_order", "asc");

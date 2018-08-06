@@ -5,6 +5,7 @@ import com.jsh.base.Log;
 import com.jsh.model.po.*;
 import com.jsh.model.vo.materials.DepotHeadModel;
 import com.jsh.service.basic.UserIService;
+import com.jsh.service.materials.CustomerIService;
 import com.jsh.service.materials.DepotHeadIService;
 import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
@@ -24,12 +25,13 @@ import java.util.Map;
 
 /*
  * 单据表头管理
- * @author jishenghua  qq:752718920
+ * @author
  */
 @SuppressWarnings("serial")
 public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     private DepotHeadIService depotHeadService;
     private UserIService userService;
+    private CustomerIService customerService;
     private DepotHeadModel model = new DepotHeadModel();
 
     /*
@@ -268,10 +270,24 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         Boolean flag = false;
         try {
             DepotHead depotHead = depotHeadService.get(model.getDepotHeadID());
+            //物流公司
             depotHead.setExpress(model.getExpress());
+            //物流编号
             depotHead.setExpressNumber(model.getExpressNumber());
             //发货状态
             depotHead.setSendStatus(true);
+            //发货员
+            depotHead.setSendPersonName(getUser().getUsername());
+            //重量
+            depotHead.setWeight(model.getWeight());
+            //运费预估
+            depotHead.setFreight(model.getFreight());
+            //操作时间
+            try {
+                depotHead.setOperTime(new Timestamp(Tools.parse(model.getOperTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
+            } catch (ParseException e) {
+                Log.errorFileSync(">>>>>>>>>>>>>>>解析入库时间格式异常", e);
+            }
 
             depotHeadService.update(depotHead);
 
@@ -321,13 +337,37 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     }
 
     /**
-     * 批量设置状态-审核或者反审核
+     * 批量设置状态-已收款-未收款
      *
      * @return
      */
     public String batchSetStatus() {
         try {
             depotHeadService.batchSetStatus(model.getStatus(), model.getDepotHeadIDs());
+            model.getShowModel().setMsgTip("成功");
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>批量修改状态，单据ID为：" + model.getDepotHeadIDs() + "信息异常", e);
+            tipMsg = "失败";
+            tipType = 1;
+        }
+
+        logService.create(new Logdetails(getUser(), "批量修改单据状态", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "批量修改状态，单据ID为  " + model.getDepotHeadIDs() + " " + tipMsg + "！", "批量修改单据状态" + tipMsg));
+        return SUCCESS;
+    }
+
+    /**
+     * 批量审核-反审核
+     *
+     * @return
+     */
+    public String batchSetCheck() {
+        try {
+            depotHeadService.batchSetCheck(model.getCheck(), model.getDepotHeadIDs(),getUser().getUsername());
             model.getShowModel().setMsgTip("成功");
             //记录操作日志使用
             tipMsg = "成功";
@@ -464,6 +504,25 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      */
     public void findBy() {
         try {
+            String customerIds = "";
+            Map<String, Object> customerCondition = new HashMap<String, Object>();
+            customerCondition.put("customerNo_s_like", model.getCustomerNo());
+            customerCondition.put("customerName_s_like", model.getCustomerName());
+
+            PageUtil<Customer> customerPageUtil = new PageUtil<Customer>();
+            customerPageUtil.setAdvSearch(customerCondition);
+            customerService.find(customerPageUtil);
+            List<Customer> customerList = customerPageUtil.getPageList();
+            if(null != customerList){
+                for(Customer customer : customerList){
+                    customerIds += customer.getId() + ",";
+                }
+            }
+            if(StringUtils.isNotEmpty(customerIds)){
+                customerIds = customerIds.substring(0, customerIds.lastIndexOf(","));
+                model.setCustomerIds(customerIds);
+            }
+
             PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
             pageUtil.setPageSize(model.getPageSize());
             pageUtil.setCurPage(model.getPageNo());
@@ -512,6 +571,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("SendStatus", depotHead.getSendStatus());
                     item.put("Remark", depotHead.getRemark());
 
+                    item.put("Check", depotHead.getCheck());
+                    item.put("CheckOperName", depotHead.getCheckOperName());
+
                     item.put("Express", depotHead.getExpress());
                     item.put("ExpressNumber", depotHead.getExpressNumber());
                     item.put("Contacts", depotHead.getContacts());
@@ -520,6 +582,13 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("city", depotHead.getCity());
                     item.put("street", depotHead.getStreet());
                     item.put("address", depotHead.getAddress());
+
+                    //重量
+                    item.put("Weight", depotHead.getWeight());
+                    //运费预估
+                    item.put("Freight", depotHead.getFreight());
+                    //发货员
+                    item.put("SendPersonName", depotHead.getSendPersonName());
 
                     //item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
                     item.put("MaterialsList", findProductListByHeaderId(depotHead.getId()));
@@ -967,6 +1036,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("SubType_s_eq", model.getSubType());
         condition.put("Number_s_like", model.getNumber());
         condition.put("Status_n_eq", model.getSearchStatus());
+        condition.put("Check_n_eq", model.getSearchCheckStatus());
+        condition.put("OrganId_s_in", model.getCustomerIds());
         condition.put("SendStatus_n_eq", model.getSearchSendStatus());
         condition.put("Id_s_in", model.getDhIds());
         condition.put("OperTime_s_gteq", model.getBeginTime());
@@ -1027,5 +1098,14 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      */
     public void setUserService(UserIService userService) {
         this.userService = userService;
+    }
+
+    /**
+     * Setter method for property <tt>customerService</tt>.
+     *
+     * @param customerService value to be assigned to property customerService
+     */
+    public void setCustomerService(CustomerIService customerService) {
+        this.customerService = customerService;
     }
 }

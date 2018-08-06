@@ -27,6 +27,7 @@
     <script type="text/javascript" src="<%=path %>/js/pages/manage/city.js"></script>
     <script>
         var kid = ${sessionScope.user.id};
+        var systemName = "${sessionScope.user.username}";
         var path = "<%=path%>";
         var clientIp = "<%=clientIp%>";
         $(document).ready(function() {
@@ -44,22 +45,35 @@
             <td>
                 <input type="text" name="searchNumber" id="searchNumber" style="width:100px;"/>
             </td>
-            <td>收款状态:</td>
-            <td>&nbsp;</td>
+            <td>客户编号：</td>
             <td>
-                <select name="searchState" id="searchState" style="width:75px; height:20px">
-                </select>
+                <input type="text" name="searchCustomerNo" id="searchCustomerNo" style="width:100px;"/>
             </td>
-            <td>发货状态:</td>
-            <td>&nbsp;</td>
+            <td>客户名称：</td>
             <td>
-                <select name="searchSendStatus" id="searchSendStatus" style="width:75px; height:20px">
-                </select>
+                <input type="text" name="searchCustomerName" id="searchCustomerName" style="width:100px;"/>
             </td>
-
             <td>商品信息：</td>
             <td>
                 <input type="text" name="searchMaterial" id="searchMaterial" placeholder="名称，型号" style="width:100px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td>收款状态:</td>
+            <td>
+                <select name="searchState" id="searchState" style="width:100px; height:20px">
+                </select>
+            </td>
+            <td>审核状态:</td>
+            <td>
+                <select name="searchCheck" id="searchCheck" style="width:100px; height:20px">
+                </select>
+            </td>
+            <td>发货状态:</td>
+
+            <td>
+                <select name="searchSendStatus" id="searchSendStatus" style="width:100px; height:20px">
+                </select>
             </td>
             <td>单据日期：</td>
             <td>
@@ -235,6 +249,16 @@
                 <td style="width:60px;">运单号码：</td>
                 <td style="padding:5px">
                     <input id="ExpressNumberSend" name="ExpressNumberSend" style="width:200px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:60px;">重量：</td>
+                <td style="padding:5px">
+                    <input id="Weight" name="Weight" style="width:130px;"/>
+                </td>
+                <td style="width:60px;">运费预估：</td>
+                <td style="padding:5px">
+                    <input id="Freight" name="Freight" style="width:200px;"/>
                 </td>
             </tr>
         </table>
