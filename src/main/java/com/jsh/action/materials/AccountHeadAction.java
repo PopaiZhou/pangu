@@ -10,11 +10,14 @@ import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
+import org.apache.xpath.operations.Or;
 import org.springframework.dao.DataAccessException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,10 +62,10 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             AccountHead accountHead = new AccountHead();
             accountHead.setType(model.getType());
             if (model.getOrganId() != null) {
-                accountHead.setOrganId(new Supplier(model.getOrganId()));
+                accountHead.setOrganId(new Customer(model.getOrganId()));
             }
             if (model.getHandsPersonId() != null) {
-                accountHead.setHandsPersonId(new Person(model.getHandsPersonId()));
+                accountHead.setHandsPersonId(new Basicuser(model.getHandsPersonId()));
             }
             accountHead.setChangeAmount(model.getChangeAmount() == null ? 0 : model.getChangeAmount());
             accountHead.setTotalPrice(model.getTotalPrice());
@@ -137,10 +140,10 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             AccountHead accountHead = accountHeadService.get(model.getAccountHeadID());
             accountHead.setType(model.getType());
             if (model.getOrganId() != null) {
-                accountHead.setOrganId(new Supplier(model.getOrganId()));
+                accountHead.setOrganId(new Customer(model.getOrganId()));
             }
             if (model.getHandsPersonId() != null) {
-                accountHead.setHandsPersonId(new Person(model.getHandsPersonId()));
+                accountHead.setHandsPersonId(new Basicuser(model.getHandsPersonId()));
             }
             accountHead.setChangeAmount(model.getChangeAmount() == null ? 0 : model.getChangeAmount());
             accountHead.setTotalPrice(model.getTotalPrice());
@@ -223,9 +226,9 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                     JSONObject item = new JSONObject();
                     item.put("Id", accountHead.getId());
                     item.put("OrganId", accountHead.getOrganId() == null ? "" : accountHead.getOrganId().getId());
-                    item.put("OrganName", accountHead.getOrganId() == null ? "" : accountHead.getOrganId().getSupplier());
+                    item.put("OrganName", accountHead.getOrganId() == null ? "" : accountHead.getOrganId().getCustomerName());
                     item.put("HandsPersonId", accountHead.getHandsPersonId() == null ? "" : accountHead.getHandsPersonId().getId());
-                    item.put("HandsPersonName", accountHead.getHandsPersonId() == null ? "" : accountHead.getHandsPersonId().getName());
+                    item.put("HandsPersonName", accountHead.getHandsPersonId() == null ? "" : accountHead.getHandsPersonId().getUsername());
                     item.put("AccountId", accountHead.getAccountId() == null ? "" : accountHead.getAccountId().getId());
                     item.put("AccountName", accountHead.getAccountId() == null ? "" : accountHead.getAccountId().getName());
                     item.put("BillNo", accountHead.getBillNo());
@@ -263,9 +266,9 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                 AccountHead accountHead = dataList.get(0);
                 item.put("Id", accountHead.getId());
                 item.put("OrganId", accountHead.getOrganId() == null ? "" : accountHead.getOrganId().getId());
-                item.put("OrganName", accountHead.getOrganId() == null ? "" : accountHead.getOrganId().getSupplier());
+                item.put("OrganName", accountHead.getOrganId() == null ? "" : accountHead.getOrganId().getCustomerName());
                 item.put("HandsPersonId", accountHead.getHandsPersonId() == null ? "" : accountHead.getHandsPersonId().getId());
-                item.put("HandsPersonName", accountHead.getHandsPersonId() == null ? "" : accountHead.getHandsPersonId().getName());
+                item.put("HandsPersonName", accountHead.getHandsPersonId() == null ? "" : accountHead.getHandsPersonId().getUsername());
                 item.put("AccountId", accountHead.getAccountId() == null ? "" : accountHead.getAccountId().getId());
                 item.put("AccountName", accountHead.getAccountId() == null ? "" : accountHead.getAccountId().getName());
                 item.put("BillNo", accountHead.getBillNo());
@@ -312,6 +315,58 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
         } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询结果异常", e);
         }
+    }
+
+    /**
+     * 保存收款记录
+     */
+    public void saveAccountDetails(){
+        Log.infoFileSync("==================开始调用保存收款记录方法saveAccountDetails()===================");
+        Boolean flag = false;
+        try {
+            if(StringUtils.isNotEmpty(model.getOrganIds())){
+                List<String> OrganIds = Arrays.asList(model.getOrganIds().split(","));
+                List<String> TotalPrice = Arrays.asList(model.getTotalPrices().split(","));
+                List<String> BillNo = Arrays.asList(model.getBillNo().split(","));
+                for(int i = 0 ; i < OrganIds.size() ; i ++){
+                    AccountHead accountHead = new AccountHead();
+                    accountHead.setType(model.getType());
+                    accountHead.setOrganId(new Customer(Long.parseLong(OrganIds.get(i))));
+                    accountHead.setHandsPersonId(new Basicuser(getUser().getId()));
+                    accountHead.setChangeAmount(0.00);
+                    accountHead.setTotalPrice(Double.parseDouble(TotalPrice.get(i)));
+                    accountHead.setAccountId(new Account(model.getAccountId()));
+                    accountHead.setBillNo(BillNo.get(i));
+                    try {
+                        accountHead.setBillTime(new Timestamp(Tools.parse(model.getBillTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
+                    } catch (ParseException e) {
+                        Log.errorFileSync(">>>>>>>>>>>>>>>解析入库时间格式异常", e);
+                    }
+                    accountHeadService.create(accountHead);
+                }
+            }
+            //========标识位===========
+            flag = true;
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加财务信息异常", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        } finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>增加财务信息回写客户端结果异常", e);
+            }
+        }
+
+        logService.create(new Logdetails(getUser(), "增加财务", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "增加财务编号为  " + model.getBillNo() + " " + tipMsg + "！", "增加财务" + tipMsg));
+        Log.infoFileSync("==================开始调用保存收款记录方法saveAccountDetails()===================");
     }
 
     /**

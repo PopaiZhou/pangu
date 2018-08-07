@@ -6,8 +6,8 @@ import java.sql.Timestamp;
 public class AccountHead implements java.io.Serializable {
     private Long Id;
     private String Type;
-    private Supplier OrganId;
-    private Person HandsPersonId;
+    private Customer OrganId;
+    private Basicuser HandsPersonId;
     private Double ChangeAmount;
     private Double TotalPrice;
     private Account AccountId;
@@ -23,8 +23,8 @@ public class AccountHead implements java.io.Serializable {
         this.Id = Id;
     }
 
-    public AccountHead(String type, Supplier organId,
-                       Person handsPersonId, Double changeAmount, Double totalPrice,
+    public AccountHead(String type, Customer organId,
+                       Basicuser handsPersonId, Double changeAmount, Double totalPrice,
                        Account accountId, String billNo, Timestamp billTime, String remark) {
         super();
         Type = type;
@@ -54,19 +54,19 @@ public class AccountHead implements java.io.Serializable {
         Type = type;
     }
 
-    public Supplier getOrganId() {
+    public Customer getOrganId() {
         return OrganId;
     }
 
-    public void setOrganId(Supplier organId) {
+    public void setOrganId(Customer organId) {
         OrganId = organId;
     }
 
-    public Person getHandsPersonId() {
+    public Basicuser getHandsPersonId() {
         return HandsPersonId;
     }
 
-    public void setHandsPersonId(Person handsPersonId) {
+    public void setHandsPersonId(Basicuser handsPersonId) {
         HandsPersonId = handsPersonId;
     }
 

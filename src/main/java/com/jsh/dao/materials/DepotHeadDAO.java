@@ -175,7 +175,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         StringBuffer queryString = new StringBuffer();
         queryString.append("select dh.Number,concat(dh.SubType,dh.Type) as newType,dh.DiscountLastMoney,dh.ChangeAmount,s.supplier,date_format(dh.OperTime,'%Y-%m-%d %H:%i:%S') as oTime from jsh_depothead dh " +
                 "inner join jsh_supplier s on s.id=dh.OrganId where s.type='" + supType + "' and dh.SubType!='其它' " +
-                "and dh.OperTime >='" + beginTime + "' and dh.OperTime<='" + endTime + "' and dh.SendStatus = 1 ");
+                "and dh.OperTime >='" + beginTime + "' and dh.OperTime<='" + endTime + "' ");
         if (organId != null && !organId.equals("")) {
             queryString.append(" and dh.OrganId='" + organId + "' ");
         }

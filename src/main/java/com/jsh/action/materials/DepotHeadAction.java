@@ -1036,6 +1036,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("Id_s_in", model.getDhIds());
         condition.put("OperTime_s_gteq", model.getBeginTime());
         condition.put("OperTime_s_lteq", model.getEndTime());
+
+        if(null != model.getSearchTotalPrice()){
+            condition.put("TotalPrice_s_gteq", model.getSearchTotalPrice()-10);
+            condition.put("TotalPrice_s_lteq", model.getSearchTotalPrice()+10);
+        }
+
         condition.put("Id_s_order", "desc");
         return condition;
     }

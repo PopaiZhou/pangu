@@ -58,6 +58,8 @@ public class DepotHeadModel implements Serializable {
     //单位类型，客户、供应商
     private String supType;
 
+    private Double searchTotalPrice;
+
     /**
      * 收款状态
      */
@@ -771,5 +773,23 @@ public class DepotHeadModel implements Serializable {
      */
     public void setCheckStatus(Boolean checkStatus) {
         CheckStatus = checkStatus;
+    }
+
+    /**
+     * Getter method for property <tt>searchTotalPrice</tt>.
+     *
+     * @return property value of searchTotalPrice
+     */
+    public Double getSearchTotalPrice() {
+        return searchTotalPrice;
+    }
+
+    /**
+     * Setter method for property <tt>searchTotalPrice</tt>.
+     *
+     * @param searchTotalPrice value to be assigned to property searchTotalPrice
+     */
+    public void setSearchTotalPrice(Double searchTotalPrice) {
+        this.searchTotalPrice = searchTotalPrice;
     }
 }

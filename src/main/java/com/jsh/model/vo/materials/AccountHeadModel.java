@@ -36,6 +36,15 @@ public class AccountHeadModel implements Serializable {
     private String accountHeadIDs = "";
 
     /**
+     * 账户编号ids
+     */
+    private String OrganIds;
+    /**
+     * 价格数组
+     */
+    private String TotalPrices;
+
+    /**
      * 每页显示的个数
      */
     private int pageSize = 10;
@@ -208,5 +217,41 @@ public class AccountHeadModel implements Serializable {
 
     public void setSupType(String supType) {
         this.supType = supType;
+    }
+
+    /**
+     * Getter method for property <tt>OrganIds</tt>.
+     *
+     * @return property value of OrganIds
+     */
+    public String getOrganIds() {
+        return OrganIds;
+    }
+
+    /**
+     * Setter method for property <tt>OrganIds</tt>.
+     *
+     * @param OrganIds value to be assigned to property OrganIds
+     */
+    public void setOrganIds(String organIds) {
+        OrganIds = organIds;
+    }
+
+    /**
+     * Getter method for property <tt>TotalPrices</tt>.
+     *
+     * @return property value of TotalPrices
+     */
+    public String getTotalPrices() {
+        return TotalPrices;
+    }
+
+    /**
+     * Setter method for property <tt>TotalPrices</tt>.
+     *
+     * @param TotalPrices value to be assigned to property TotalPrices
+     */
+    public void setTotalPrices(String totalPrices) {
+        TotalPrices = totalPrices;
     }
 }

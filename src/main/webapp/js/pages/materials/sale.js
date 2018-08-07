@@ -13,6 +13,7 @@ var listSubType = '销售';
 var preTotalPrice = 0; //前一次加载的金额
 var oldNumber = ""; //编辑前的单据编号
 var oldId = 0; //编辑前的单据Id
+var accountList; //账户列表
 var url;
 var isReadOnly = true;
 var btnEnableList = getBtnStr(); //获取按钮的权限
@@ -28,6 +29,10 @@ $(function(){
     initTableData();
     //初始化客户信息下拉列表
     initCustomerList();
+    //初始化账户信息
+    initSystemData_account();
+    //初始化账户信息
+    initSelectInfo_account();
     //绑定操作事件
     bindEvent();
 });
@@ -60,6 +65,9 @@ function initTableData() {
     }
     //6是收款退款
     if(btnEnableList && btnEnableList.indexOf(6)>-1){
+        //根据订单金额查询
+        $("#spanTotalPrice").show();
+        $("#searchTotalPrice").show();
         tableToolBar.push(
             {
                 id:'receipt',
@@ -667,6 +675,8 @@ function initCustomerList() {
         textField:'name'
     });
 
+    $("#AccountId").attr("data-accountArr");
+
     $('#OrganId').combobox({
         onSelect: function () {
             //获取客户类型  是批发商 还是零售商
@@ -914,6 +924,8 @@ function bindEvent(){
             $("#searchCheck").combobox("setValue","");
             $("#searchBeginTime").val("");
             $("#searchEndTime").val("");
+
+            $("#searchTotalPrice").val("");
             //加载完以后重新初始化
             $("#searchBtn").click();
         }
@@ -1060,6 +1072,97 @@ function bindEvent(){
         });
     });
 
+    //选择收款账户 保存按钮
+    $('#saveReceiptDlg').off("click").on("click", function () {
+        if(!$('#AccountId').val()){
+            $.messager.alert('提示','请选择结算账户！','warning');
+            return;
+        }
+        var row = $('#tableData').datagrid('getChecked');
+        var OrganIds = "";
+        var TotalPrices = "";
+        var BillNo = "";
+        var ids = "";
+        for(var i = 0;i < row.length; i ++)
+        {
+            if(i == row.length-1)
+            {
+                OrganIds += row[i].OrganId;
+                BillNo += row[i].Number;
+                TotalPrices += row[i].TotalPrice;
+                ids += row[i].Id;
+                break;
+            }
+            OrganIds += row[i].OrganId + ",";
+            BillNo += row[i].Number + ",";
+            TotalPrices += row[i].TotalPrice + ",";
+            ids += row[i].Id + ",";
+        }
+        //开始保存收款明细
+        $.ajax({
+            type:"post",
+            url: path + "/accountHead/saveAccountDetails.action",
+            dataType: "json",
+            async :  false,
+            data: ({
+                Type : "收款",
+                OrganIds : OrganIds,//客户编号
+                TotalPrices : TotalPrices,//价格数组
+                AccountId : $('#AccountId').val(),//收款账户
+                BillNo : BillNo,//单据编号
+                BillTime : getNowFormatDateTime(),
+                clientIp : clientIp
+            }),
+            success: function (res)
+            {
+                if(res)
+                {
+                    $.ajax({
+                        type:"post",
+                        url: path + "/depotHead/batchSetStatus.action",
+                        dataType: "json",
+                        async :  false,
+                        data: ({
+                            Status: true,
+                            DepotHeadIDs : ids,
+                            clientIp: clientIp
+                        }),
+                        success: function (tipInfo)
+                        {
+                            var msg = tipInfo.showModel.msgTip;
+                            if(msg == '成功')
+                            {
+                                $.messager.alert('提示','确认收款成功！','info');
+                                //关闭当前对话框
+                                $('#receiptDlg').dialog('close');
+                                //加载完以后重新初始化
+                                $("#searchBtn").click();
+                                $(":checkbox").attr("checked",false);
+                            }
+                            else{
+                                $.messager.alert('提示','确认收款失败，请稍后再试！','error');
+                            }
+                        },
+                        //此处添加错误处理
+                        error:function()
+                        {
+                            $.messager.alert('提示','确认收款异常，请稍后再试！','error');
+                            return;
+                        }
+                    });
+                }
+                else
+                    $.messager.alert('提示','确认收款失败，请稍后再试！','error');
+            },
+            //此处添加错误处理
+            error:function()
+            {
+                $.messager.alert('提示','确认收款异常，请稍后再试！','error');
+                return;
+            }
+        });
+    });
+
     //初始化键盘enter事件
     $(document).keydown(function (event) {
         //兼容 IE和firefox 事件
@@ -1108,6 +1211,8 @@ function showDepotHeadDetails(pageNo,pageSize){
 
                             customerName: $.trim($("#searchCustomerName").val()),
                             customerNo: $.trim($("#searchCustomerNo").val()),
+
+                            searchTotalPrice : $.trim($("#searchTotalPrice").val()),
 
                             Number: $.trim($("#searchNumber").val()),
                             BeginTime: $("#searchBeginTime").val(),
@@ -1368,49 +1473,14 @@ function receipt() {
         {
             if (r)
             {
-                var ids = "";
                 for(var i = 0;i < row.length; i ++)
                 {
                     if(row[i].Status){
                         $.messager.alert('收款提示','存在已收款的订单，不能重复操作！','info');
                         return;
                     }
-                    if(i == row.length-1)
-                    {
-                        ids += row[i].Id;
-                        break;
-                    }
-                    ids += row[i].Id + ",";
                 }
-                $.ajax({
-                    type:"post",
-                    url: path + "/depotHead/batchSetStatus.action",
-                    dataType: "json",
-                    async :  false,
-                    data: ({
-                        Status: true,
-                        DepotHeadIDs : ids,
-                        clientIp: clientIp
-                    }),
-                    success: function (tipInfo)
-                    {
-                        var msg = tipInfo.showModel.msgTip;
-                        if(msg == '成功')
-                        {
-                            //加载完以后重新初始化
-                            $("#searchBtn").click();
-                            $(":checkbox").attr("checked",false);
-                        }
-                        else
-                            $.messager.alert('提示','确认收款失败，请稍后再试！','error');
-                    },
-                    //此处添加错误处理
-                    error:function()
-                    {
-                        $.messager.alert('提示','确认收款异常，请稍后再试！','error');
-                        return;
-                    }
-                });
+                $('#receiptDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/comment.png"/>&nbsp;选择收款账户');
             }
         });
     }
@@ -1667,5 +1737,40 @@ function setUnStatusFun() {
                 });
             }
         });
+    }
+}
+
+//获取账户信息
+function initSystemData_account(){
+    $.ajax({
+        type:"post",
+        url: path + "/account/getAccount.action",
+        //设置为同步
+        async:false,
+        dataType: "json",
+        success: function (systemInfo)
+        {
+            accountList = systemInfo.showModel.map.accountList;
+            var msgTip = systemInfo.showModel.msgTip;
+            if(msgTip == "exceptoin")
+            {
+                $.messager.alert('提示','查找账户信息异常,请与管理员联系！','error');
+                return;
+            }
+        }
+    });
+}
+//获取账户信息
+function initSelectInfo_account(){
+    var options = "";
+    if(accountList !=null){
+        for(var i = 0 ;i < accountList.length;i++) {
+            var account = accountList[i];
+            options += '<option value="' + account.id + '" data-currentAmount="' + account.currentAmount + '">' + account.name + '</option>';
+            if(account.isDefault) {
+                defaultAccountId = account.id; //给账户赋值默认id
+            }
+        }
+        $("#AccountId").empty().append(options);
     }
 }

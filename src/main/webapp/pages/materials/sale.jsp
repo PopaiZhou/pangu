@@ -57,6 +57,10 @@
             <td>
                 <input type="text" name="searchMaterial" id="searchMaterial" placeholder="名称，型号" style="width:100px;"/>
             </td>
+            <td id="spanTotalPrice" hidden>订单金额：</td>
+            <td>
+                <input type="text" class="easyui-numberbox" data-options="min:0,precision:2" name="searchTotalPrice" id="searchTotalPrice" style="width:100px;" hidden/>
+            </td>
         </tr>
         <tr>
             <td>收款状态:</td>
@@ -268,6 +272,28 @@
     <a href="javascript:void(0)" id="saveDepotHeadSendDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
     <a href="javascript:void(0)" id="cancelDepotHeadSendDlg" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#depotHeadSendDlg').dialog('close')">取消</a>
+</div>
+
+<!--收款账户列表 -->
+<div id="receiptDlg" class="easyui-dialog" style="width:550px;padding:10px 20px;top:80px"
+     closed="true" modal="true" buttons="#receiptDlgButtons" cache="false" collapsible="false" closable="true">
+    <form id="receiptFM" method="post" novalidate>
+        <table>
+            <tr>
+                <td>结算账户：</td>
+                <td style="padding:5px">
+                    <select name="AccountId" id="AccountId" style="width:240px;"></select>
+                    <img class="many-account-ico" src="<%=path%>/js/easyui-1.3.5/themes/icons/filelist.jpg"
+                         style="display: none;"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div id="receiptDlgButtons">
+    <a href="javascript:void(0)" id="saveReceiptDlg" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <a href="javascript:void(0)" id="cancelReceiptDlg" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#receiptDlg').dialog('close')">取消</a>
 </div>
 
 
