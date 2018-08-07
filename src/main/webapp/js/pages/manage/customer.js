@@ -127,10 +127,16 @@ function initCustomerInfo(pageNo,pageSize){
         url: path + "/customer/findBy.action",
         dataType: "json",
         data: ({
+            customerNo : $.trim($("#searchCustomerNo").val()),
             customerName : $.trim($("#searchCustomerName").val()),
+            address : $.trim($("#searchAddress").val()),
             phonenum : $.trim($("#searchPhonenum").val()),
             type: $("#searchType").datebox("getValue"),
             userId : $.trim($("#searchBasicuser").datebox("getValue")),
+
+            state : $.trim($("#searchState").datebox("getText")),
+            city : $.trim($("#searchCity").datebox("getText")),
+            
             pageNo:pageNo,
             pageSize:pageSize
         }),
@@ -244,10 +250,16 @@ function bindEvent(){
     //重置按钮
     $("#searchResetBtn").unbind().bind({
         click:function(){
+            $("#searchCustomerNo").val("");
             $("#searchCustomerName").val("");
+            $("#searchAddress").val("");
             $("#searchPhonenum").val("");
             $("#searchType").combobox("setValue","");
             $("#searchBasicuser").combobox("setValue","");
+
+            $("#searchState").combobox("setValue","");
+            $("#searchCity").combobox("setValue","");
+
             //加载完以后重新初始化
             $("#searchBtn").click();
         }

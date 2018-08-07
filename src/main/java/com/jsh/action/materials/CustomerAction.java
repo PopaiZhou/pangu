@@ -596,6 +596,12 @@ public class CustomerAction extends BaseAction<CustomerModel> {
          * 拼接搜索条件
          */
         Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("customerNo_s_like", model.getCustomerNo());
+        condition.put("address_s_like", model.getAddress());
+
+        condition.put("state_s_like", model.getState());
+        condition.put("city_s_like", model.getCity());
+
         condition.put("customerName_s_eq", model.getCustomerName());
         condition.put("phonenum_s_like", model.getPhonenum());
         condition.put("type_s_eq", model.getType());

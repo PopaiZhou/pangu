@@ -28,6 +28,7 @@
 
         $(document).ready(function() {
             initProvince();
+            initSearchProvince();
         });
     </script>
 </head>
@@ -37,16 +38,18 @@
      closable="false">
     <table id="searchTable">
         <tr>
+            <td>编&nbsp;&nbsp;&nbsp;&nbsp;号：</td>
+            <td>
+                <input type="text" name="searchCustomerNo" id="searchCustomerNo" style="width:100px;"/>
+            </td>
             <td>名&nbsp;&nbsp;&nbsp;&nbsp;称：</td>
             <td>
                 <input type="text" name="searchCustomerName" id="searchCustomerName" style="width:100px;"/>
             </td>
-            <td>&nbsp;</td>
             <td>联系电话：</td>
             <td>
                 <input type="text" name="searchPhonenum" id="searchPhonenum" style="width:100px;"/>
             </td>
-            <td>&nbsp;</td>
             <td>客户类型：</td>
             <td>
                 <input type="text" name="searchType" id="searchType" style="width:100px;" editable="false"/>
@@ -55,7 +58,20 @@
             <td>
                 <input type="text" name="searchBasicuser" id="searchBasicuser" style="width:160px;" editable="false"/>
             </td>
-            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>所在省</td>
+            <td style="padding:1px">
+                <input id="searchState" name="searchState" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择省份',missingMessage:'请选择省份'" />
+            </td>
+            <td>所在市</td>
+            <td style="padding:1px">
+                <input id="searchCity" name="searchCity" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择城市',missingMessage:'请选择城市'" />
+            </td>
+            <td>详细地址</td>
+            <td colspan="4">
+                <input type="text" name="searchAddress" id="searchAddress" style="width:300px;"/>
+            </td>
             <td>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" id="searchBtn">查询</a>&nbsp;&nbsp;
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-redo" id="searchResetBtn">重置</a>
