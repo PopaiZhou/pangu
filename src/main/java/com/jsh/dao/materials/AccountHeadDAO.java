@@ -43,4 +43,11 @@ public class AccountHeadDAO extends BaseDAO<AccountHead> implements AccountHeadI
         pageUtil.setTotalCount(query.list().size());
         pageUtil.setPageList(query.list());
     }
+
+    @Override
+    public void batchDeleteByBillNos(String billNos) throws JshException {
+        String sql = "delete from  jsh_accounthead  where BillNo in (" + billNos + ")";
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
+        query.executeUpdate();
+    }
 }

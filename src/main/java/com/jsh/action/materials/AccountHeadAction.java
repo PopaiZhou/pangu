@@ -204,6 +204,30 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
     }
 
     /**
+     * 批量删除指定ID财务
+     *
+     * @return
+     */
+    public String batchDeleteByBillNos() {
+        try {
+            accountHeadService.batchDeleteByBillNos(model.getBillNo());
+            model.getShowModel().setMsgTip("成功");
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException | JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>批量删除财务ID为：" + model.getAccountHeadIDs() + "信息异常", e);
+            tipMsg = "失败";
+            tipType = 1;
+        }
+
+        logService.create(new Logdetails(getUser(), "批量删除财务", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "批量删除财务ID为  " + model.getAccountHeadIDs() + " " + tipMsg + "！", "批量删除财务" + tipMsg));
+        return SUCCESS;
+    }
+
+    /**
      * 查找财务信息
      *
      * @return

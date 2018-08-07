@@ -1499,6 +1499,7 @@ function refund() {
             if (r)
             {
                 var ids = "";
+                var BillNos = "";
                 for(var i = 0;i < row.length; i ++)
                 {
                     if(!row[i].Status){
@@ -1508,9 +1509,11 @@ function refund() {
                     if(i == row.length-1)
                     {
                         ids += row[i].Id;
+                        BillNos += "'"+row[i].Number+"'";
                         break;
                     }
                     ids += row[i].Id + ",";
+                    BillNos += "'"+row[i].Number + "',";
                 }
                 $.ajax({
                     type:"post",
@@ -1527,12 +1530,35 @@ function refund() {
                         var msg = tipInfo.showModel.msgTip;
                         if(msg == '成功')
                         {
-                            //加载完以后重新初始化
-                            $("#searchBtn").click();
-                            $(":checkbox").attr("checked",false);
+                            $.ajax({
+                                type:"post",
+                                url: path + "/accountHead/batchDeleteByBillNos.action",
+                                dataType: "json",
+                                async :  false,
+                                data: ({
+                                    BillNo : BillNos,
+                                    clientIp: clientIp
+                                }),
+                                success: function (res)
+                                {
+                                    if(res)
+                                    {
+                                        //加载完以后重新初始化
+                                        $("#searchBtn").click();
+                                        $(":checkbox").attr("checked",false);
+                                    }
+                                    else{
+                                        $.messager.alert('提示','确认退款失败，请稍后再试！','error');
+                                    }
+                                },
+                                //此处添加错误处理
+                                error:function()
+                                {
+                                    $.messager.alert('提示','确认退款异常，请稍后再试！','error');
+                                    return;
+                                }
+                            });
                         }
-                        else
-                            $.messager.alert('提示','确认退款失败，请稍后再试！','error');
                     },
                     //此处添加错误处理
                     error:function()

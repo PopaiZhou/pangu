@@ -12,4 +12,10 @@ public interface AccountHeadIService extends BaseIService<AccountHead> {
     void find(PageUtil<AccountHead> accountHead, String maxid) throws JshException;
 
     void findAllMoney(PageUtil<AccountHead> accountHead, Integer supplierId, String type, String mode) throws JshException;
+
+    /**
+     * 批量删除信息
+     * 根据订单编号
+     */
+    void batchDeleteByBillNos(String billNos) throws JshException;
 }
