@@ -19,6 +19,9 @@ public class UserModel implements Serializable {
      */
     private String loginame;
 
+
+    private String userno;
+
     /**
      * 职位
      */
@@ -217,4 +220,21 @@ public class UserModel implements Serializable {
         this.orgpwd = orgpwd;
     }
 
+    /**
+     * Getter method for property <tt>userno</tt>.
+     *
+     * @return property value of userno
+     */
+    public String getUserno() {
+        return userno;
+    }
+
+    /**
+     * Setter method for property <tt>userno</tt>.
+     *
+     * @param userno value to be assigned to property userno
+     */
+    public void setUserno(String userno) {
+        this.userno = userno;
+    }
 }

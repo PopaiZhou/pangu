@@ -7,6 +7,11 @@
             <column name="id" />
             <generator class="native" />
         </id>
+        <property name="userno" type="java.lang.String">
+            <column name="userno">
+                <comment>用户编号--XS001</comment>
+            </column>
+        </property>
         <property name="username" type="java.lang.String">
             <column name="username" not-null="true">
                 <comment>用户姓名--例如张三</comment>

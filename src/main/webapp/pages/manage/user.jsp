@@ -65,6 +65,11 @@
      closed="true" buttons="#dlg-buttons" modal="true" collapsible="false" closable="true">
     <form id="usernameFM" method="post" novalidate>
         <div class="fitem" style="padding:5px">
+            <label id="usernoLabel">用户编号&nbsp;&nbsp;</label>
+            <input name="userno" id="userno" class="easyui-validatebox"
+                   data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
+        </div>
+        <div class="fitem" style="padding:5px">
             <label id="usernameLabel">用户名称&nbsp;&nbsp;</label>
             <input name="username" id="username" class="easyui-validatebox"
                    data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
@@ -116,6 +121,7 @@
     //浏览器适配
     function browserFit() {
         if (getOs() == 'MSIE') {
+            $("#usernoLabel").empty().append("用户编号&nbsp;&nbsp;");
             $("#usernameLabel").empty().append("用户名称&nbsp;&nbsp;");
             $("#loginameLabel").empty().append("登录名称&nbsp;&nbsp;");
             $("#departmentLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;&nbsp;");
@@ -128,6 +134,7 @@
             $("#searchDescLabel").empty().append("描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述：");
         }
         else {
+            $("#usernoLabel").empty().append("用户编号&nbsp;");
             $("#usernameLabel").empty().append("用户名称&nbsp;");
             $("#loginameLabel").empty().append("登录名称&nbsp;");
             $("#departmentLabel").empty().append("部&nbsp;&nbsp;&nbsp;&nbsp;门&nbsp;");
@@ -160,6 +167,7 @@
             pageList: initPageNum,
             columns: [[
                 {field: 'id', width: 35, align: "center", checkbox: true},
+                {title: '用户编号', field: 'userno', width: 80},
                 {title: '用户名称', field: 'username', width: 80},
                 {title: '登录名称', field: 'loginame', width: 80, align: "center"},
                 {title: '职位', field: 'position', width: 115, align: "center"},
@@ -173,7 +181,7 @@
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.username + 'AaBb' + rec.loginame + 'AaBb' + rec.position
                             + 'AaBb' + rec.department + 'AaBb' + rec.email + 'AaBb' + rec.phonenum + 'AaBb' + rec.ismanager
-                            + 'AaBb' + rec.isystem + 'AaBb' + rec.description;
+                            + 'AaBb' + rec.isystem + 'AaBb' + rec.description + 'AaBb' + rec.userno;
                         if (1 == value) {
                             str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editUser(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editUser(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                             str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteUser(' + rec.id + ');"/>&nbsp;<a onclick="deleteUser(' + rec.id + ');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
@@ -343,6 +351,7 @@
     var userID = 0;
     //保存编辑前的名称
     var orgusername = "";
+    var orguserno = "";
 
     function addUser() {
         $('#userDlg').dialog('open').dialog('setTitle', '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加用户');
@@ -354,6 +363,7 @@
         $('#usernameFM').form('load', row);
         $("#username").focus();
         orgusername = "";
+        orguserno = "";
         userID = 0;
         url = '<%=path %>/user/create.action';
     }
@@ -390,8 +400,12 @@
     //保存用户信息
     $("#saveusername").unbind().bind({
         click: function () {
-            if (checkusernameName())
+            if (checkuserNo()){
                 return;
+            }
+            if (checkusernameName()){
+                return;
+            }
 
             var reg = /^([0-9])+$/;
             var phonenum = $.trim($("#phonenum").val());
@@ -438,9 +452,11 @@
             email: usernameInfo[5],
             phonenum: usernameInfo[6],
             description: usernameInfo[9],
+            userno: usernameInfo[10].replace("undefined",""),
             clientIp: '<%=clientIp %>'
         };
         orgusername = usernameInfo[1];
+        orguserno = usernameInfo[10];
         $('#userDlg').dialog('open').dialog('setTitle', '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑用户信息');
         $(".window-mask").css({width: webW, height: webH});
         $('#usernameFM').form('load', row);
@@ -482,6 +498,38 @@
                 //此处添加错误处理
                 error: function () {
                     $.messager.alert('提示', '检查用户名称是否存在异常，请稍后再试！', 'error');
+                    return;
+                }
+            });
+        }
+        return flag;
+    }
+
+    function checkuserNo() {
+        var userno = $.trim($("#userno").val());
+        //表示是否存在 true == 存在 false = 不存在
+        var flag = false;
+        //开始ajax名称检验，不能重名
+        if (userno.length > 0 && (orguserno.length == 0 || userno != orguserno)) {
+            $.ajax({
+                type: "post",
+                url: "<%=path %>/user/checkIsNoExist.action",
+                dataType: "json",
+                async: false,
+                data: ({
+                    userID: userID,
+                    userno: userno
+                }),
+                success: function (tipInfo) {
+                    flag = tipInfo;
+                    if (tipInfo) {
+                        $.messager.alert('提示', '用户编号已经存在', 'info');
+                        return;
+                    }
+                },
+                //此处添加错误处理
+                error: function () {
+                    $.messager.alert('提示', '检查用户编号是否存在异常，请稍后再试！', 'error');
                     return;
                 }
             });

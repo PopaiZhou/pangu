@@ -3,6 +3,7 @@ package com.jsh.model.po;
 @SuppressWarnings("serial")
 public class Basicuser implements java.io.Serializable {
     private Long id;
+    private String userno;
     private String username;
     private String loginame;
     private String password;
@@ -26,7 +27,7 @@ public class Basicuser implements java.io.Serializable {
     public Basicuser(String username, String loginame, String password,
                      String position, String department, String email, String phonenum,
                      Short ismanager, Short isystem, Short status, String description,
-                     String remark) {
+                     String remark,String userno) {
         this.username = username;
         this.loginame = loginame;
         this.password = password;
@@ -39,6 +40,7 @@ public class Basicuser implements java.io.Serializable {
         this.status = status;
         this.description = description;
         this.remark = remark;
+        this.userno = userno;
     }
 
     public Long getId() {
@@ -143,5 +145,23 @@ public class Basicuser implements java.io.Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    /**
+     * Getter method for property <tt>userno</tt>.
+     *
+     * @return property value of userno
+     */
+    public String getUserno() {
+        return userno;
+    }
+
+    /**
+     * Setter method for property <tt>userno</tt>.
+     *
+     * @param userno value to be assigned to property userno
+     */
+    public void setUserno(String userno) {
+        this.userno = userno;
     }
 }
