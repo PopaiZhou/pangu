@@ -1585,7 +1585,7 @@ function print() {
     }
     //如果是需要隐藏价格的。那么订货单不能让他打印，不然就看到价格了
     if(priceHidden && !row[0].SendStatus){
-        $.messager.alert('提示','未收款的订单暂时不能打印！','info');
+        $.messager.alert('提示','未发货的订单暂时不能打印！','info');
         return;
     }
     //如果是发货单

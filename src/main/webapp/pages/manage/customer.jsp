@@ -46,7 +46,7 @@
             <td>
                 <input type="text" name="searchCustomerName" id="searchCustomerName" style="width:100px;"/>
             </td>
-            <td>联系电话：</td>
+            <td>收货电话：</td>
             <td>
                 <input type="text" name="searchPhonenum" id="searchPhonenum" style="width:100px;"/>
             </td>
@@ -112,11 +112,11 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 60px;height: 20px">联系电话</td>
+                <td style="width: 60px;height: 20px">收货电话</td>
                 <td style="padding:1px;">
                     <input name="phonenum" id="phonenum" class="easyui-validatebox" style="width: 160px;height: 20px"/>
                 </td>
-                <td style="width: 60px;height: 20px">联系人</td>
+                <td style="width: 60px;height: 20px">收货人</td>
                 <td style="width:180px;padding:1px;">
                     <input name="contacts" id="contacts" class="easyui-validatebox" style="width: 160px;height: 20px"/>
                 </td>
