@@ -66,6 +66,24 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
         depotHeadDao.findStatementAccount(pageUtil, beginTime, endTime, organId, supType);
     }
 
+    /**
+     * 客户对账单查询
+     * @param pageUtil
+     * @param beginTime
+     * @param endTime
+     * @param organId
+     * @throws JshException
+     */
+    @Override
+    public void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        depotHeadDao.findCustomerStatementAccount(pageUtil, beginTime, endTime, organId);
+    }
+
+    @Override
+    public void findCustomerStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        depotHeadDao.findCustomerStatementTemplate(pageUtil, beginTime, endTime, organId);
+    }
+
     @Override
     public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam, String depotIds) throws JshException {
         depotHeadDao.getHeaderIdByMaterial(pageUtil, materialParam, depotIds);

@@ -202,6 +202,33 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
 
     @Override
     @SuppressWarnings("unchecked")
+    public void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT dh.Number,'出货' AS newType,s.customerName,date_format(dh.OperTime,'%Y-%m-%d') AS oTime,c.productName,");
+        queryString.append("d.templateName,b.MUnit,b.OperNumber,b.UnitPrice,b.AllPrice FROM jsh_depothead dh");
+        queryString.append(" inner join jsh_customer s on s.id=dh.OrganId ");
+        queryString.append(" LEFT JOIN jsh_depotitem b on b.HeaderId = dh.Id ");
+        queryString.append(" LEFT JOIN jsh_product c on b.MaterialId = c.id ");
+        queryString.append(" LEFT JOIN jsh_template d on d.id = b.TemplateId ");
+        //我只查已发货的订单
+        queryString.append(" WHERE dh.OrganId='").append(organId).append("' and dh.OperTime >='").append(beginTime).append("' and dh.OperTime<='").append(endTime).append("' and dh.SendStatus=1");
+        queryString.append(" order by oTime ");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findCustomerStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT c.templateName, sum(a.OperNumber) as OperNumber, sum(a.AllPrice) as AllPrice ");
+        queryString.append("FROM jsh_depotitem a LEFT JOIN jsh_depothead b ON a.HeaderId = b.id LEFT JOIN jsh_template c on a.TemplateId = c.id ");
+        queryString.append("WHERE b.OrganId = '").append(organId).append("' GROUP BY templateName,OperNumber,AllPrice");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+    @Override
+    @SuppressWarnings("unchecked")
     public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam, String depotIds) throws JshException {
         StringBuffer queryString = new StringBuffer();
         queryString.append("select dt.HeaderId from jsh_depotitem dt INNER JOIN jsh_material m on dt.MaterialId = m.Id where ( m.`Name` " +

@@ -573,7 +573,7 @@ public class CustomerAction extends BaseAction<CustomerModel> {
                     JSONObject item = new JSONObject();
                     item.put("id", customer.getId());
                     //客户名称
-                    item.put("customerName", customer.getCustomerName());
+                    item.put("customerName", "["+customer.getCustomerNo()+"]"+customer.getCustomerName());
                     dataArray.add(item);
                 }
             }

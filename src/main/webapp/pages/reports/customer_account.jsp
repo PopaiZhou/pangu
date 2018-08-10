@@ -24,6 +24,59 @@
     <script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
     <script>
         var uid = ${sessionScope.user.id};
+
+        jQuery.fn.rowspan = function(colIdx) { //封装的一个JQuery小插件
+            return this.each(function(){
+                var that;
+                $('tr', this).each(function(row) {
+                    $('td:eq('+colIdx+')', this).filter(':visible').each(function(col) {
+                        if (that!=null && $(this).html() == $(that).html()) {
+                            rowspan = $(that).attr("rowSpan");
+                            if (rowspan == undefined) {
+                                $(that).attr("rowSpan",1);
+                                rowspan = $(that).attr("rowSpan");
+                            }
+                            rowspan = Number(rowspan)+1;
+                            $(that).attr("rowSpan",rowspan);
+                            $(this).hide();
+                        } else {
+                            that = this;
+                        }
+                    });
+                });
+            });
+        }
+
+        function autoRowSpan(tb, row, col) {
+            var lastValue = "";
+            var value = "";
+            var pos = 1;
+            var tdSum = 0;
+            var cellValue = 0;
+            for (var i = row; i < tb.rows.length; i++) {
+                value = tb.rows[i].cells[col].innerText;
+                if (lastValue == value) {//判断产品名称是否相同
+                    if (!isNaN(tb.rows[i].cells[6].innerText))//判断是否为数字类型
+                        cellValue =cellValue+ parseFloat(tb.rows[i].cells[6].innerText);
+                    tb.rows[i].deleteCell(col);
+                    tb.rows[i - pos].cells[col].rowSpan = tb.rows[i - pos].cells[col].rowSpan + 1;//设置单元格rowSpan的值
+                    var z = tb.rows[i].cells.length;
+                    tb.rows[i].deleteCell(z - 1);
+                    tb.rows[i - pos].cells[z].rowSpan = tb.rows[i - pos].cells[z].rowSpan + 1//合并标煤合计那一列的单元格
+                    tb.rows[i - pos].cells[7].innerText = cellValue;//进行复制
+                    pos++;
+                } else {//产品名称不同的处理
+                    lastValue = value;
+                    cellValue = parseFloat(tb.rows[i].cells[6].innerText);
+                    if (!isNaN(cellValue))
+                        tb.rows[i].cells[7].innerText = cellValue;
+                    pos = 1;
+                    tdSum = 0;
+                }
+            }
+        }
+
+
     </script>
 </head>
 <body>
@@ -53,11 +106,6 @@
                 &nbsp;&nbsp;
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" id="printBtn">打印</a>
             </td>
-            <td>&nbsp;</td>
-            <td>
-                期初应收：<span class="first-total">0</span>&nbsp;&nbsp;
-                期末应收：<span class="last-total">0</span>
-            </td>
         </tr>
     </table>
 </div>
@@ -65,12 +113,13 @@
 <!-- 数据显示table -->
 <div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="客户对账列表" iconCls="icon-list"
      collapsible="true" closable="false">
-    <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
+    <div id="tableData"></div>
+
 </div>
 
 <script type="text/javascript">
     var path = "<%=path %>";
-    var cusUrl = path + "/supplier/findBySelect_cus.action?UBType=UserCustomer&UBKeyId=" + uid; //客户接口
+    var cusUrl = path + "/customer/findBySelect_sup.action"; //客户接口
     //初始化界面
     $(function () {
         var thisDate = getNowFormatMonth(); //当前月份
@@ -78,10 +127,6 @@
         $("#searchBeginTime").val(thisDate + "-01 00:00:00");
         $("#searchEndTime").val(thisDateTime);
         initSupplier(); //初始化客户信息
-        initTableData();
-        ininPager();
-        search();
-        print();
     });
 
 
@@ -90,47 +135,10 @@
         $('#OrganId').combobox({
             url: cusUrl,
             valueField: 'id',
-            textField: 'supplier',
+            textField: 'customerName',
             filter: function (q, row) {
                 var opts = $(this).combobox('options');
                 return row[opts.textField].indexOf(q) > -1;
-            }
-        });
-    }
-
-    //初始化表格数据
-    function initTableData() {
-        $('#tableData').datagrid({
-            height: heightInfo,
-            nowrap: false,
-            rownumbers: true,
-            //动画效果
-            animate: false,
-            //选中单行
-            singleSelect: true,
-            pagination: true,
-            //交替出现背景
-            striped: true,
-            pageSize: 10,
-            pageList: [10, 50, 100],
-            columns: [[
-                {
-                    title: '单据编号', field: 'number', width: 140,
-                    formatter: function (value, row) {
-                        return "<a class='n-link' onclick=\"newTab('" + row.number + "','../materials/bill_detail.jsp?n=" + row.number + "&type=" + row.type + "','')\">"
-                            + row.number + "</a>";
-                    }
-                },
-                {title: '类型', field: 'type', width: 100},
-                {title: '单位名称', field: 'supplierName', width: 200},
-                {title: '单据金额', field: 'discountLastMoney', width: 80},
-                {title: '实际支付', field: 'changeAmount', width: 80},
-                {title: '本期变化', field: 'allPrice', width: 80},
-                {title: '单据日期', field: 'operTime', width: 140}
-            ]],
-            onLoadError: function () {
-                $.messager.alert('页面加载提示', '页面加载异常，请稍后再试！', 'error');
-                return;
             }
         });
     }
@@ -151,213 +159,122 @@
             $("#searchBtn").click();
         }
     });
+    //打印按钮
+    $("#printBtn").off("click").on("click", function () {
+        localStorage.setItem("tableString",$('#tableData').html());
 
-    //分页信息处理
-    function ininPager() {
-        try {
-            var opts = $("#tableData").datagrid('options');
-            var pager = $("#tableData").datagrid('getPager');
-            pager.pagination({
-                onSelectPage: function (pageNum, pageSize) {
-                    opts.pageNumber = pageNum;
-                    opts.pageSize = pageSize;
-                    pager.pagination('refresh',
-                        {
-                            pageNumber: pageNum,
-                            pageSize: pageSize
-                        });
-                    showDetails(pageNum, pageSize);
-                }
-            });
-        }
-        catch (e) {
-            $.messager.alert('异常处理提示', "分页信息异常 :  " + e.name + ": " + e.message, 'error');
-        }
-    }
-
-    //增加
-    var url;
-    var personID = 0;
-    //保存编辑前的名称
-    var orgPerson = "";
-
-    //搜索处理
-    function search() {
-        showDetails(1, initPageSize);
-        var opts = $("#tableData").datagrid('options');
-        var pager = $("#tableData").datagrid('getPager');
-        opts.pageNumber = 1;
-        opts.pageSize = initPageSize;
-        pager.pagination('refresh',
-            {
-                pageNumber: 1,
-                pageSize: initPageSize
-            });
-    }
+        window.open("../../js/print/print.html","location:No;status:No;help:No;dialogWidth:800px;dialogHeight:600px;scroll:auto;");
+    });
 
     $("#searchBtn").unbind().bind({
         click: function () {
-            search();
+            if($('#OrganId').combobox('getValue') == ""){
+                $.messager.alert('提示', '请选择客户！', 'info');
+                return;
+            }
+            initPage();
         }
     });
 
-    function showDetails(pageNo, pageSize) {
+    function initPage() {
+        var font = 'font-family:"宋体"';
+        var tableString = "";
+        tableString = tableString + '<table style="top:300px;border-bottom-color:#FFFFFF;width: 100%"><tr><td colspan="8"><div align="center" style="font-size:30px;'+font+'">Kasich&amp;Raatz客户对账单</div></td></tr>' +
+                '<tr style="font-size: 16px;"><td colspan="8">对账单时间范围：'+$("#searchBeginTime").val()+' 至 '+$("#searchEndTime").val()+'</td></tr>' +
+                '<tr style="font-size: 16px;"><td colspan="8">来往单位：'+$('#OrganId').combobox('getText');
+        //加载客户信息
         $.ajax({
-            type: "post",
-            url: "<%=path %>/depotHead/findStatementAccount.action",
+            type:"get",
+            url: path + "/customer/findById.action",
             dataType: "json",
-            data: ({
-                pageNo: pageNo,
-                pageSize: pageSize,
-                BeginTime: $("#searchBeginTime").val(),
-                EndTime: $("#searchEndTime").val(),
-                OrganId: $('#OrganId').combobox('getValue'),
-                supType: "客户"
-            }),
+            async: false,
+            data: {
+                "id": $('#OrganId').combobox('getValue')
+            },
             success: function (res) {
-                if (res) {
-                    $("#tableData").datagrid('loadData', res);
-                    //如果选择了单位信息，就进行计算期初和期末
-                    var supplierId = $('#OrganId').combobox('getValue');
-                    if (supplierId) {
-                        //先查找期初信息
-                        var beginNeedGet = 0;
-                        var beginNeedPay = 0;
-                        $.ajax({
-                            type: "post",
-                            url: "<%=path %>/supplier/findById.action",
-                            dataType: "json",
-                            async: false,
-                            data: ({
-                                supplierID: supplierId
-                            }),
-                            success: function (res) {
-                                if (res && res.rows && res.rows[0]) {
-                                    if (res.rows[0].BeginNeedGet) {
-                                        beginNeedGet = res.rows[0].BeginNeedGet;
-                                    }
-                                    if (res.rows[0].BeginNeedPay) {
-                                        beginNeedPay = res.rows[0].BeginNeedPay;
-                                    }
-                                    //显示期初结存
-                                    var searchBeginTime = $("#searchBeginTime").val(); //开始时间
-                                    $.ajax({
-                                        type: "post",
-                                        url: "<%=path %>/depotHead/findTotalPay.action",
-                                        dataType: "json",
-                                        async: false,
-                                        data: ({
-                                            supplierId: supplierId,
-                                            EndTime: searchBeginTime,
-                                            supType: "customer"
-                                        }),
-                                        success: function (res) {
-                                            if (res) {
-                                                var moneyA = res.getAllMoney.toFixed(2) - 0;
-                                                $.ajax({
-                                                    type: "post",
-                                                    url: "<%=path %>/accountHead/findTotalPay.action",
-                                                    dataType: "json",
-                                                    async: false,
-                                                    data: ({
-                                                        supplierId: supplierId,
-                                                        EndTime: searchBeginTime,
-                                                        supType: "customer"
-                                                    }),
-                                                    success: function (res) {
-                                                        if (res) {
-                                                            var moneyB = res.getAllMoney.toFixed(2) - 0;
-                                                            var money = moneyA + moneyB;
-                                                            var moneyBeginNeedGet = beginNeedGet - 0; //期初应收
-                                                            var moneyBeginNeedPay = beginNeedPay - 0; //期初应付
-                                                            money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
-                                                            $(".first-total").text(money); //期初结存
-                                                        }
-                                                    },
-                                                    error: function () {
-                                                        $.messager.alert('提示', '网络异常请稍后再试！', 'error');
-                                                        return;
-                                                    }
-                                                });
-                                            }
-                                        },
-                                        error: function () {
-                                            $.messager.alert('提示', '网络异常请稍后再试！', 'error');
-                                            return;
-                                        }
-                                    })
-
-                                    //显示期末合计
-                                    var searchEndTime = $("#searchEndTime").val(); //结束时间
-                                    $.ajax({
-                                        type: "post",
-                                        url: "<%=path %>/depotHead/findTotalPay.action",
-                                        dataType: "json",
-                                        async: false,
-                                        data: ({
-                                            supplierId: supplierId,
-                                            EndTime: searchEndTime,
-                                            supType: "customer"
-                                        }),
-                                        success: function (res) {
-                                            if (res) {
-                                                var moneyA = res.getAllMoney.toFixed(2) - 0;
-                                                $.ajax({
-                                                    type: "post",
-                                                    url: "<%=path %>/accountHead/findTotalPay.action",
-                                                    dataType: "json",
-                                                    async: false,
-                                                    data: ({
-                                                        supplierId: supplierId,
-                                                        EndTime: searchEndTime,
-                                                        supType: "customer"
-                                                    }),
-                                                    success: function (res) {
-                                                        if (res) {
-                                                            var moneyB = res.getAllMoney.toFixed(2) - 0;
-                                                            var money = moneyA + moneyB;
-                                                            var moneyBeginNeedGet = beginNeedGet - 0; //期初应收
-                                                            var moneyBeginNeedPay = beginNeedPay - 0; //期初应付
-                                                            money = (money + moneyBeginNeedGet - moneyBeginNeedPay).toFixed(2);
-                                                            $(".last-total").text(money); //期末合计
-                                                        }
-                                                    },
-                                                    error: function () {
-                                                        $.messager.alert('提示', '网络异常请稍后再试！', 'error');
-                                                        return;
-                                                    }
-                                                });
-                                            }
-                                        },
-                                        error: function () {
-                                            $.messager.alert('提示', '网络异常请稍后再试！', 'error');
-                                            return;
-                                        }
-                                    })
-                                }
-                            },
-                            error: function () {
-                                $.messager.alert('提示', '网络异常请稍后再试！', 'error');
-                                return;
-                            }
-                        });
-                    }
+                if(res && res.rows && res.rows[0]) {
+                    tableString = tableString + '<tr style="font-size: 16px;"><td align="left" width="80px">联系人：</td><td align="left" width="80px">'+res.rows[0].contacts+'</td><td width="80px">联系电话：</td><td width="80px">'+res.rows[0].phonenum+'</td><td width="80px">客户类型：</td><td width="80px">'+res.rows[0].type+'</td><td></td><td></td></tr>';
                 }
             },
             //此处添加错误处理
-            error: function () {
-                $.messager.alert('查询提示', '查询数据后台异常，请稍后再试！', 'error');
+            error:function() {
+                $.messager.alert('查询失败','查询系统配置信息异常，请稍后再试！','error');
                 return;
             }
         });
-    }
+        //获取订单明细
+        $.ajax({
+            type: "post",
+            url: "<%=path %>/depotHead/findCustomerStatementAccount.action",
+            dataType: "json",
+            async:false,
+            data: ({
+                pageNo: 0,
+                pageSize: 0,
+                BeginTime: $("#searchBeginTime").val(),
+                EndTime: $("#searchEndTime").val(),
+                OrganId: $('#OrganId').combobox('getValue')
+            }),
+            success: function (res) {
+                if (res && res.rows) {
+                    var thisRows = res.rows;
+                    tableString = tableString + '<div><table id="statementTable" width="100%" border="1" bordercolor="#000000" style="border-collapse:collapse;"><tr><th>单号</th><th>日期</th><th>型号</th><th>样本名称</th><th>数量</th><th>单价</th><th>金额</th><th>总金额</th></tr>';
+                    for (var i = 0; i < thisRows.length; i++) {
+                        tableString = tableString + '<tr><td>' + thisRows[i].number + '</td><td>' + thisRows[i].oTime + '</td><td>' + thisRows[i].productName + '</td><td>' + thisRows[i].templateName + '</td><td>' + thisRows[i].operNumber + '</td><td>' + thisRows[i].unitPrice + '</td><td>' + thisRows[i].allPrice + '</td><td id=price' + i + '>' + thisRows[i].allPrice + '</td></tr>';
+                    }
+                    tableString = tableString + '</table></div>';
 
-    //报表打印
-    function print() {
-        $("#printBtn").off("click").on("click", function () {
-            var path = "<%=path %>";
-            CreateFormPage('打印报表', $('#tableData'), path);
+                    //获取版本分类统计
+                    $.ajax({
+                        type: "post",
+                        url: "<%=path %>/depotHead/findCustomerStatementTemplate.action",
+                        dataType: "json",
+                        async:false,
+                        data: ({
+                            pageNo: 0,
+                            pageSize: 0,
+                            BeginTime: $("#searchBeginTime").val(),
+                            EndTime: $("#searchEndTime").val(),
+                            OrganId: $('#OrganId').combobox('getValue')
+                        }),
+                        success: function (res) {
+                            if (res && res.rows) {
+                                var thisRows = res.rows;
+                                tableString = tableString + '<br><br><br>';
+                                tableString = tableString + '<div style="font-size: 16px;">总计版本分类统计：</div>';
+                                tableString = tableString + '<div><table id="templateTable" width="50%" border="1" bordercolor="#000000" style="border-collapse:collapse;"><tr><th>版本种类</th><th>数量（米）</th><th>金额合计（元）</th></tr>';
+
+                                var allNum = 0;
+                                var allPrice = 0;
+                                for (var i = 0; i < thisRows.length; i++) {
+                                    allNum = allNum + thisRows[i].OperNumber;
+                                    allPrice = allPrice + thisRows[i].AllPrice;
+                                    tableString = tableString + '<tr><td>'+thisRows[i].templateName+'</td><td>'+thisRows[i].OperNumber+'</td><td>'+thisRows[i].AllPrice+'</td></tr>';
+                                }
+                                tableString = tableString + '<tr><td colspan="3" align="center">合计数量：'+allNum+'米&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计金额：'+allPrice+'元</td><tr>';
+                                tableString = tableString + '</table></div>';
+                            }
+                        },
+                        error: function () {
+                            $.messager.alert('提示', '网络异常请稍后再试！', 'error');
+                            return;
+                        }
+                    });
+                }
+            },
+            error: function () {
+                $.messager.alert('提示', '网络异常请稍后再试！', 'error');
+                return;
+            }
         });
+
+
+        tableString = tableString + '<br><br><div style="font-size: 20px;">如有对账单有任何问题，请在账单中标注，并在账单生成一个月内通知本公司！</div>';
+        $('#tableData').html(tableString+"</table>");
+        //$("#statementTable").rowspan(0);//传入的参数是对应的列数从0开始  第一列合并相同
+
+        var tab=document.getElementById("statementTable");
+        autoRowSpan(tab,0,0);
     }
 </script>
 </body>

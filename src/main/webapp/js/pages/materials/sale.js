@@ -1,4 +1,4 @@
-var amountNum = "DD"; //单据编号开头字符
+var amountNum = "SLKSQ"; //单据编号开头字符
 var defaultAccountId = 0; //默认账户id
 var mPropertyList = ""; //商品属性列表
 var editIndex = undefined;
@@ -738,6 +738,10 @@ function initCustomerList() {
                     $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
                 }
             });
+        },
+        filter: function(q, row){
+            var opts = $(this).combobox('options');
+            return row[opts.textField].indexOf(q) >-1;
         }
     });
 }
@@ -1611,6 +1615,10 @@ function ship() {
     }
     if(!row[0].Status){
         $.messager.alert('提示','该单据未收款，不能发货！','info');
+        return;
+    }
+    if(!row[0].CheckStatus){
+        $.messager.alert('提示','该单据审核，不能发货！','info');
         return;
     }
     if(row[0].SendStatus){
