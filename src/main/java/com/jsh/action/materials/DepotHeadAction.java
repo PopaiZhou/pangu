@@ -124,6 +124,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setStreet(model.getStreet());
             depotHead.setAddress(model.getAddress());
             depotHead.setSendStatus(false);//发货状态
+            depotHead.setWeight(model.getWeight());
+            depotHead.setFreight(model.getFreight());
             depotHeadService.create(depotHead);
 
             //========标识位===========
@@ -234,6 +236,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setCity(model.getCity());
             depotHead.setStreet(model.getStreet());
             depotHead.setAddress(model.getAddress());
+            depotHead.setWeight(model.getWeight());
+            depotHead.setFreight(model.getFreight());
             //发货状态
             depotHead.setSendStatus(false);
 
@@ -278,10 +282,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setSendStatus(true);
             //发货员
             depotHead.setSendPersonName(getUser().getUsername());
-            //重量
-            depotHead.setWeight(model.getWeight());
-            //运费预估
-            depotHead.setFreight(model.getFreight());
             //操作时间
             try {
                 depotHead.setOperTime(new Timestamp(Tools.parse(model.getOperTime(), "yyyy-MM-dd HH:mm:ss").getTime()));

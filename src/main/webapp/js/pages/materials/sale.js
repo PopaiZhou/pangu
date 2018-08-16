@@ -172,7 +172,7 @@ function initTableData() {
                     var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb'
                         + rec.OrganId+ 'AaBb' + rec.Remark + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId
                         + 'AaBb' + rec.Express + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb'
-                        + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street + 'AaBb' + rec.address;
+                        + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight;
                     if(1 == value) {
                         var orgId = rec.OrganId? rec.OrganId:0;
                         str += '<img title="查看" src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -401,6 +401,9 @@ function editDepotHead(depotHeadTotalInfo, status){
     $('#street').combobox('setValue', depotHeadInfo[15]);
     $("#address").val(depotHeadInfo[16]); //联系号码
 
+    $("#Weight").val(depotHeadInfo[17]); //重量
+    $("#Freight").val(depotHeadInfo[18]); //运费预估
+
 
     $('#depotHeadDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑订单明细');
     $(".window-mask").css({ width: webW ,height: webH});
@@ -433,35 +436,6 @@ function initTableData_material(type,TotalPrice){
         onClickRow: onClickRow,
         columns:[[
             { field: 'Id',width:35,align:"center",checkbox:true},
-            { title: '版本名称', field: 'DepotId', editor: 'validatebox', width: 90,
-                formatter: function (value, row, index) {
-                    return row.DepotName;
-                },
-                editor: {
-                    type: 'combobox',
-                    options: {
-                        valueField: 'id',
-                        textField: 'templateName',
-                        method: 'get',
-                        url: path + "/template/findBySelect_temp.action",
-                        onSelect:function(rec){
-                            var row = $('#materialData').datagrid('getSelected');
-                            var rowIndex = $('#materialData').datagrid('getRowIndex',row);//获取行号
-                            body =$("#depotHeadFM .datagrid-body");
-                            footer =$("#depotHeadFM .datagrid-footer");
-                            input = ".datagrid-editable-input";
-                            var tempId = body.find("[field='DepotId']").find(".combo-value").val();
-
-
-                            var target = $('#materialData').datagrid('getEditor', {'index':rowIndex,'field':'MaterialId'}).target;
-                            target.combobox('clear'); //清除原来的数据
-                            var url = path + "/product/findByTemplateId.action?id="+tempId;
-                            target.combobox('reload', url);//联动下拉列表重载
-
-                        }
-                    }
-                }
-            },
             { title: '型号',field: 'MaterialId',width:230,
                 formatter:function(value,row,index){
                     return row.MaterialName;
@@ -544,6 +518,35 @@ function initTableData_material(type,TotalPrice){
                                     $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
                                 }
                             });
+
+                        }
+                    }
+                }
+            },
+            { title: '版本名称', field: 'DepotId', editor: 'validatebox', width: 90,
+                formatter: function (value, row, index) {
+                    return row.DepotName;
+                },
+                editor: {
+                    type: 'combobox',
+                    options: {
+                        valueField: 'id',
+                        textField: 'templateName',
+                        method: 'get',
+                        url: path + "/template/findBySelect_temp.action",
+                        onSelect:function(rec){
+                            var row = $('#materialData').datagrid('getSelected');
+                            var rowIndex = $('#materialData').datagrid('getRowIndex',row);//获取行号
+                            body =$("#depotHeadFM .datagrid-body");
+                            footer =$("#depotHeadFM .datagrid-footer");
+                            input = ".datagrid-editable-input";
+                            var tempId = body.find("[field='DepotId']").find(".combo-value").val();
+
+
+                            var target = $('#materialData').datagrid('getEditor', {'index':rowIndex,'field':'MaterialId'}).target;
+                            target.combobox('clear'); //清除原来的数据
+                            var url = path + "/product/findByTemplateId.action?id="+tempId;
+                            target.combobox('reload', url);//联动下拉列表重载
 
                         }
                     }
@@ -774,6 +777,7 @@ function removeit(){
     $('#materialData').datagrid('cancelEdit', editIndex)
         .datagrid('deleteRow', editIndex);
     editIndex = undefined;
+
 }
 //结束编辑
 function endEditing() {
@@ -825,15 +829,26 @@ function autoReckon() {
 //最底下合计方法
 function statisticsFun(body,UnitPrice,OperNumber,footer){
     var TotalPrice = 0;
+
+    var totalNum = 0;
     //金额的合计
     body.find("[field='AllPrice']").each(function(){
         if($(this).find("div").text()!==""){
             TotalPrice = TotalPrice + parseFloat($(this).find("div").text().toString());
         }
     });
+    body.find("[field='OperNumber']").each(function(){
+        if($(this).find("div").text()!==""){
+            totalNum = totalNum + parseFloat($(this).find("div").text().toString());
+        }
+    });
     TotalPrice = TotalPrice + UnitPrice*OperNumber;
+
+    totalNum = totalNum + OperNumber;
     footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2)); //金额的合计
 
+    //重量赋值
+    $("#Weight").val((totalNum * 0.8).toFixed(2));//赋值
 }
 
 //检查单据编号是否存在
@@ -994,6 +1009,8 @@ function bindEvent(){
                     OtherMoneyList: '', //支出项目列表-涉及费用
                     OtherMoneyItem: '', //支出项目金额列表-涉及费用
                     AccountDay: '', //结算天数
+                    Weight: $("#Weight").val(), //重量
+                    Freight: $("#Freight").val(), //运费预估
                     Express: $("#Express").val(), //默认物流
                     ExpressNumber: $("#ExpressNumber").val(), //物流单号
                     Contacts: $("#Contacts").val(), //联系人
@@ -1366,6 +1383,10 @@ function showDepotHead(depotHeadTotalInfo){
     $("#ExpressNumberShow").text(depotHeadInfo[10]); //运单号码
     $("#ContactsShow").text(depotHeadInfo[11]); //收货人
     $("#PhonenumShow").text(depotHeadInfo[12]); //收货号码
+
+    $("#WeightShow").text(depotHeadInfo[17]); //重量
+    $("#FreightShow").text(depotHeadInfo[18]); //运费预估
+
     $("#AddressShow").text(depotHeadInfo[13]+depotHeadInfo[14]+depotHeadInfo[15]+depotHeadInfo[16]); //收货地址
 
     $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看订单明细');
@@ -1627,28 +1648,9 @@ function ship() {
     }
     $("#ExpressSend").val(row[0].Express);
 
-    //重量 = 总量 * 0.8
-    $.ajax({
-        type:"post",
-        url: path + '/depotItem/findBy.action?HeaderId=' + row[0].Id,
-        data: {
 
-        },
-        dataType: "json",
-        success: function (res) {
-            var sumOperNum = 0 ;
-            if(res.rows.length > 0){
-                for(var i = 0 ; i < res.rows.length; i ++){
-                    sumOperNum = sumOperNum + res.rows[i].OperNumber;
-                }
-            }
-            $("#Weight").val((sumOperNum * 0.8).toFixed(2));
-            $('#depotHeadSendDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/comment.png"/>&nbsp;填写发货信息');
-        },
-        error:function() {
-            $.messager.alert('查询提示','查询数据后台异常，请稍后再试！','error');
-        }
-    });
+    $('#depotHeadSendDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/comment.png"/>&nbsp;填写发货信息');
+
 }
 
 //批量审核

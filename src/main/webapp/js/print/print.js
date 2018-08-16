@@ -228,7 +228,7 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
         '<tr><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td>客户名称：</td><td>'+customerName+'</td></tr>' +
         '<tr><td>收货人：</td><td colspan="2">'+rows[0].Contacts+'</td><td>收货电话：</td><td>'+rows[0].Phonenum+'</td></tr>' +
         '<tr><td width="100">收货地址 ：</td><td colspan="8">'+rows[0].state+rows[0].city+rows[0].street+rows[0].address+'</td></tr>' +
-        '<tr><td width="100">物流公司 ：</td><td colspan="8">'+rows[0].Express+'</td></tr>' +
+        '<tr><td width="100">物流公司 ：</td><td>'+rows[0].Express+'</td><td>重量(KG)：</td><td>'+rows[0].Weight+'</td><td>运费预估(元)：</td><td>'+rows[0].Freight+'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;若运费超出±10请联系本公司</td></tr>' +
         '<tr><td width="100">订单备注 ：</td><td colspan="8">'+rows[0].Remark+'</td></tr>';
 
     tableString = tableString + '<tr><td colspan="9"><table width="100%" border="1" bordercolor="#000000" style="border-collapse:collapse;">' +

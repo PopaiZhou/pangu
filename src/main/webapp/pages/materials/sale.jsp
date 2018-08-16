@@ -157,8 +157,18 @@
                 </td>
             </tr>
             <tr>
+                <td>重量：</td>
+                <td style="padding:5px">
+                    <input id="Weight" name="Weight" class="easyui-validatebox" style="width:130px;"/>
+                </td>
+                <td>运费预估：</td>
+                <td style="padding:5px">
+                    <input id="Freight" name="Freight" data-options="required:true" class="easyui-validatebox" style="width:130px;"/>
+                </td>
+            </tr>
+            <tr>
                 <td>所在地址：</td>
-                <td style="padding:1px;width:100px;">
+                <td style="padding:5px;width:100px;">
                     <input id="state" name="state" class="easyui-combobox" style="width:100px;"  data-options="editable:false,prompt: '请选择省份',missingMessage:'请选择省份'" />
                 </td>
                 <td style="padding:1px">
@@ -172,6 +182,7 @@
                     <input name="address" id="address" class="easyui-validatebox" style="width: 468px;height: 20px"/>
                 </td>
             </tr>
+
         </table>
         <input type="hidden" name="clientIp" id="clientIp" value="<%=clientIp %>"/>
     </form>
@@ -234,6 +245,14 @@
             </td>
         </tr>
         <tr>
+            <td style="width:60px;">重量：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="WeightShow"></span>
+            </td>
+            <td style="width:60px;">运费预估：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="FreightShow"></span>
+            </td>
             <td style="width:60px;">收货地址：</td>
             <td colspan="8" style="height:35px;">
                 <span id="AddressShow" style="width: 1070px; height:35px;"></span>
@@ -253,16 +272,6 @@
                 <td style="width:60px;">运单号码：</td>
                 <td style="padding:5px">
                     <input id="ExpressNumberSend" name="ExpressNumberSend" style="width:200px;"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="width:60px;">重量：</td>
-                <td style="padding:5px">
-                    <input id="Weight" name="Weight" style="width:130px;"/>
-                </td>
-                <td style="width:60px;">运费预估：</td>
-                <td style="padding:5px">
-                    <input id="Freight" name="Freight" style="width:200px;"/>
                 </td>
             </tr>
         </table>
