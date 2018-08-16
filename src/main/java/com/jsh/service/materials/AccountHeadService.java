@@ -35,4 +35,9 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
     public void batchDeleteByBillNos(String billNos) throws JshException {
         accountHeadDao.batchDeleteByBillNos(billNos);
     }
+
+    @Override
+    public void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        accountHeadDao.findCustomerStatementAccount(pageUtil,beginTime,endTime,organId);
+    }
 }

@@ -18,4 +18,6 @@ public interface AccountHeadIService extends BaseIService<AccountHead> {
      * 根据订单编号
      */
     void batchDeleteByBillNos(String billNos) throws JshException;
+
+    void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 }

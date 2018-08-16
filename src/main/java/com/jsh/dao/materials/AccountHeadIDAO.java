@@ -14,4 +14,6 @@ public interface AccountHeadIDAO extends BaseIDAO<AccountHead> {
     void findAllMoney(PageUtil<AccountHead> pageUtil, Integer supplierId, String type, String mode) throws JshException;
 
     void batchDeleteByBillNos(String billNos) throws JshException;
+
+    void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 }

@@ -253,6 +253,43 @@
                                 }
                                 tableString = tableString + '<tr><td colspan="3" align="center">合计数量：'+allNum+'米&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计金额：'+allPrice+'元</td><tr>';
                                 tableString = tableString + '</table></div>';
+
+
+
+                                //银行卡明细查询
+                                $.ajax({
+                                    type: "post",
+                                    url: "<%=path %>/accountHead/findCustomerStatementAccount.action",
+                                    dataType: "json",
+                                    async:false,
+                                    data: ({
+                                        pageNo: 0,
+                                        pageSize: 0,
+                                        BeginTime: $("#searchBeginTime").val(),
+                                        EndTime: $("#searchEndTime").val(),
+                                        OrganId: $('#OrganId').combobox('getValue')
+                                    }),
+                                    success: function (res) {
+                                        if (res && res.rows) {
+                                            var thisRows = res.rows;
+                                            tableString = tableString + '<br><br><br>';
+                                            tableString = tableString + '<div style="font-size: 16px;">本期付款明细：</div>';
+                                            tableString = tableString + '<div><table id="accountTable" width="50%" border="1" bordercolor="#000000" style="border-collapse:collapse;"><tr><th>收款时间</th><th>收款银行</th><th>收款金额</th><th>备注</th></tr>';
+
+                                            var allPrice = 0;
+                                            for (var i = 0; i < thisRows.length; i++) {
+                                                allPrice = allPrice + thisRows[i].TotalPrice;
+                                                tableString = tableString + '<tr><td>'+thisRows[i].BillTime+'</td><td>'+thisRows[i].Name+'</td><td>'+thisRows[i].TotalPrice+'</td><td>'+thisRows[i].Remark+'</td></tr>';
+                                            }
+                                            tableString = tableString + '<tr><td colspan="4" align="center">总计付款：'+allPrice+'元</td><tr>';
+                                            tableString = tableString + '</table></div>';
+                                        }
+                                    },
+                                    error: function () {
+                                        $.messager.alert('提示', '网络异常请稍后再试！', 'error');
+                                        return;
+                                    }
+                                });
                             }
                         },
                         error: function () {

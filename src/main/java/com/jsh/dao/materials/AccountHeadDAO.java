@@ -44,10 +44,22 @@ public class AccountHeadDAO extends BaseDAO<AccountHead> implements AccountHeadI
         pageUtil.setPageList(query.list());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void batchDeleteByBillNos(String billNos) throws JshException {
         String sql = "delete from  jsh_accounthead  where BillNo in (" + billNos + ")";
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
         query.executeUpdate();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("select a.BillTime,b.`Name`,a.TotalPrice,a.Remark ");
+        queryString.append("from jsh_accounthead a LEFT JOIN jsh_account b on a.AccountId = b.Id ");
+        queryString.append("WHERE a.OrganId = '").append(organId).append("' and a.BillTime >='").append(beginTime).append("' and a.BillTime<='").append(endTime).append("' ");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
     }
 }

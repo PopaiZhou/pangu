@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -427,6 +428,47 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             allMoney = -allMoney;
         }
         return allMoney;
+    }
+
+    /**
+     * 客户对账单--银行卡收款明细
+     */
+    public void findCustomerStatementAccount(){
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            accountHeadService.findCustomerStatementAccount(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("BillTime", Tools.getCurrentMonth((Date)arr[0])); //收款日期
+                    item.put("Name", arr[1]); //收款银行
+                    item.put("TotalPrice", arr[2]); //收款金额
+                    item.put("Remark", arr[3] == null ? "" : arr[3]); //备注
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
     }
 
     private Map<String, Object> getConditionByNumber() {
