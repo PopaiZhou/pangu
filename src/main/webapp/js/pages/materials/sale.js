@@ -208,8 +208,15 @@ function initTableData() {
                 return value ? "<span style='color:green;'>已发货</span>":"<span style='color:red;'>未发货</span>";
                 }
             },
-            { title: '发货员',field: 'SendPersonName',width:100}
+            { title: '发货员',field: 'SendPersonName',width:100},
+            { title: '是否过期',field: 'Expired',width:100,hidden:true}
         ]],
+        rowStyler: function (index, row) {
+            if(row.Expired){
+                return 'background-color:#F78181;';
+            }
+
+        },
         toolbar:tableToolBar,
         onLoadError:function()
         {
