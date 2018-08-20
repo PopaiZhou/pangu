@@ -413,6 +413,7 @@ public class UserAction extends BaseAction<UserModel> {
 
                     JSONObject item = new JSONObject();
                     item.put("id", user.getId());
+                    item.put("userno", user.getUserno());
                     item.put("username", user.getUsername());
                     item.put("loginame", Tools.dealNullStr(user.getLoginame()));
                     item.put("password", Tools.dealNullStr(user.getPassword()));

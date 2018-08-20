@@ -29,9 +29,13 @@ public interface DepotHeadIDAO extends BaseIDAO<DepotHead> {
 
     void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
+    void findSalesManStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
+
     void findSupplierStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
     void findCustomerStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
+
+    void findSalesManStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
     void findSupplierStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 

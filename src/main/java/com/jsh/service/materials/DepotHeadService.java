@@ -79,6 +79,11 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
         depotHeadDao.findCustomerStatementAccount(pageUtil, beginTime, endTime, organId);
     }
 
+    @Override
+    public void findSalesManStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        depotHeadDao.findSalesManStatementAccount(pageUtil, beginTime, endTime, organId);
+    }
+
     /**
      * 供应商对账单--订单明细
      * @param pageUtil
@@ -95,6 +100,11 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
     @Override
     public void findCustomerStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
         depotHeadDao.findCustomerStatementTemplate(pageUtil, beginTime, endTime, organId);
+    }
+
+    @Override
+    public void findSalesManStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        depotHeadDao.findSalesManStatementTemplate(pageUtil, beginTime, endTime, organId);
     }
 
     @Override

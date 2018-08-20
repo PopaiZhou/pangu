@@ -29,6 +29,7 @@ public interface DepotHeadIService extends BaseIService<DepotHead> {
 
     void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
+    void findSalesManStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
     /**
      * 供应商对账单--订单明细
      * @param pageUtil
@@ -40,6 +41,8 @@ public interface DepotHeadIService extends BaseIService<DepotHead> {
     void findSupplierStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
     void findCustomerStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
+
+    void findSalesManStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
     void findSupplierStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
