@@ -5,6 +5,7 @@ import com.jsh.model.po.DepotHead;
 import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 import com.jsh.util.SearchConditionUtil;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 
 public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
@@ -283,6 +284,35 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         StringBuffer queryString = new StringBuffer();
         queryString.append("select dt.HeaderId from jsh_depotitem dt INNER JOIN jsh_product m on dt.MaterialId = m.Id where ( m.`productName` " +
                 " like '%" + materialParam + "%' or m.productId like '%" + materialParam + "%') ");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    /**
+     * 客户活跃度统计
+     * @param pageUtil
+     * @param beginTime
+     * @param endTime
+     * @param organId
+     * @param sort
+     * @throws JshException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void sumCustomerActivity(PageUtil pageUtil, String beginTime, String endTime, Long organId, String sort) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("select count(*) as num,a.OrganId,b.customerNo,b.customerName,b.phonenum,b.type from jsh_depothead a ");
+        queryString.append("LEFT JOIN jsh_customer b on a.OrganId = b.id ");
+        queryString.append("WHERE a.OperTime >='").append(beginTime).append("' and a.OperTime<='").append(endTime).append("'");
+        if(organId != null){
+            queryString.append(" and a.OrganId = '").append(organId).append("' ");
+        }
+        queryString.append(" GROUP BY OrganId ");
+
+        if(StringUtils.isNotEmpty(sort)){
+            queryString.append(" ORDER BY num ").append(sort);
+        }
+
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }

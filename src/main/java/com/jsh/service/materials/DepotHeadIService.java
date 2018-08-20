@@ -46,4 +46,6 @@ public interface DepotHeadIService extends BaseIService<DepotHead> {
     void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam, String depotIds) throws JshException;
 
     void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam) throws JshException;
+
+    void sumCustomerActivity(PageUtil pageUtil, String beginTime, String endTime, Long organId,String sort) throws JshException;
 }

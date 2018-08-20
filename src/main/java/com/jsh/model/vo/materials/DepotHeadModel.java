@@ -75,6 +75,11 @@ public class DepotHeadModel implements Serializable {
     private String searchCheckStatus;
 
     /**
+     * 统计客户活跃度 排序
+     */
+    private String Sort;
+
+    /**
      * 客户名称
      */
     private String customerName;
@@ -791,5 +796,23 @@ public class DepotHeadModel implements Serializable {
      */
     public void setSearchTotalPrice(Double searchTotalPrice) {
         this.searchTotalPrice = searchTotalPrice;
+    }
+
+    /**
+     * Getter method for property <tt>Sort</tt>.
+     *
+     * @return property value of Sort
+     */
+    public String getSort() {
+        return Sort;
+    }
+
+    /**
+     * Setter method for property <tt>Sort</tt>.
+     *
+     * @param Sort value to be assigned to property Sort
+     */
+    public void setSort(String sort) {
+        Sort = sort;
     }
 }

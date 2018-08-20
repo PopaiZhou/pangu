@@ -111,4 +111,9 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
     public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam) throws JshException {
         depotHeadDao.getHeaderIdByMaterial(pageUtil, materialParam);
     }
+
+    @Override
+    public void sumCustomerActivity(PageUtil pageUtil, String beginTime, String endTime, Long organId, String sort) throws JshException {
+        depotHeadDao.sumCustomerActivity(pageUtil, beginTime, endTime, organId , sort);
+    }
 }

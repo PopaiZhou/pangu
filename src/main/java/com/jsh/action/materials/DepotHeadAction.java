@@ -2,6 +2,7 @@ package com.jsh.action.materials;
 
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
+import com.jsh.enums.CustomerTypeEnum;
 import com.jsh.model.po.*;
 import com.jsh.model.vo.materials.DepotHeadModel;
 import com.jsh.service.basic.UserIService;
@@ -1168,6 +1169,49 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("operNumber", arr[5]); //数量
                     item.put("taxUnitPrice", arr[6]); //进货价
                     item.put("allPrice", (double)arr[5]*(double)arr[6]); //总价
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 统计客户活跃度
+     */
+    public void sumCustomerActivity(){
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            String sort = model.getSort();
+            depotHeadService.sumCustomerActivity(pageUtil, beginTime, endTime, organId,sort);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("number", arr[0]); //下单数量
+                    item.put("customerNo", arr[2]); //客户编号
+                    item.put("customerName", arr[3]); //客户姓名
+                    item.put("phonenum", arr[4]); //手机号码
+                    item.put("type", CustomerTypeEnum.getSexEnumByCode((String)arr[5]).getName()); //客户类型
 
                     dataArray.add(item);
                 }
