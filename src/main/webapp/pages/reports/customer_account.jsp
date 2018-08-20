@@ -75,8 +75,6 @@
                 }
             }
         }
-
-
     </script>
 </head>
 <body>
@@ -111,7 +109,7 @@
 </div>
 
 <!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="客户对账列表" iconCls="icon-list"
+<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="客户对账单" iconCls="icon-list"
      collapsible="true" closable="false">
     <div id="tableData"></div>
 

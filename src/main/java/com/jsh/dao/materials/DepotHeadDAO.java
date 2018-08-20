@@ -217,17 +217,53 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         pageUtil.setPageList(query.list());
     }
 
+    /**
+     * 供应商对账单--订单明细
+     * @param pageUtil
+     * @param beginTime
+     * @param endTime
+     * @param organId
+     * @throws JshException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findSupplierStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT dh.Number,date_format(dh.OperTime, '%Y-%m-%d') AS oTime,c.productName,d.templateName,a.MUnit,a.OperNumber,a.TaxUnitPrice FROM jsh_depotitem a ");
+        queryString.append("LEFT JOIN jsh_depothead dh on a.HeaderId = dh.Id ");
+        queryString.append("LEFT JOIN jsh_product c ON a.MaterialId = c.id ");
+        queryString.append("LEFT JOIN jsh_template d ON d.id = a.TemplateId ");
+        //我只查已发货的订单 SendStatus=1
+        queryString.append(" WHERE a.DepotId='").append(organId).append("' and dh.OperTime >='").append(beginTime).append("' and dh.OperTime<='").append(endTime).append("' and dh.SendStatus=1");
+        queryString.append(" order by oTime ");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void findCustomerStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
         StringBuilder queryString = new StringBuilder();
         queryString.append("SELECT c.templateName, sum(a.OperNumber) as OperNumber, sum(a.AllPrice) as AllPrice ");
         queryString.append("FROM jsh_depotitem a LEFT JOIN jsh_depothead b ON a.HeaderId = b.id LEFT JOIN jsh_template c on a.TemplateId = c.id ");
-        queryString.append("WHERE b.OrganId = '").append(organId).append("' and b.OperTime >='").append(beginTime).append("' and b.OperTime<='").append(endTime).append("' and b.SendStatus='1'").append(" GROUP BY templateName,OperNumber,AllPrice");
+        queryString.append("WHERE b.OrganId = '").append(organId).append("' and b.OperTime >='").append(beginTime).append("' and b.OperTime<='").append(endTime).append("' and b.SendStatus='1'").append(" GROUP BY templateName");
 
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findSupplierStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT c.templateName,sum(a.OperNumber) AS OperNumber,sum(a.TaxUnitPrice*a.OperNumber) AS AllPrice FROM jsh_depotitem a ");
+        queryString.append("LEFT JOIN jsh_depothead b ON a.HeaderId = b.id ");
+        queryString.append("LEFT JOIN jsh_template c ON a.TemplateId = c.id ");
+        queryString.append("WHERE a.DepotId = '").append(organId).append("' and b.OperTime >='").append(beginTime).append("' and b.OperTime<='").append(endTime).append("' and b.SendStatus='1'").append(" GROUP BY templateName");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam, String depotIds) throws JshException {

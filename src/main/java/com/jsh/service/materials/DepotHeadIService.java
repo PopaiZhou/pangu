@@ -29,7 +29,19 @@ public interface DepotHeadIService extends BaseIService<DepotHead> {
 
     void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
+    /**
+     * 供应商对账单--订单明细
+     * @param pageUtil
+     * @param beginTime
+     * @param endTime
+     * @param organId
+     * @throws JshException
+     */
+    void findSupplierStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
+
     void findCustomerStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
+
+    void findSupplierStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
     void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam, String depotIds) throws JshException;
 

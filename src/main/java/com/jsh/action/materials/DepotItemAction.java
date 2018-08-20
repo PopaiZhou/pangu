@@ -463,7 +463,10 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     item.put("WholesalePrice", depotItem.getMaterialId().getWholesalePrice());
                     //零售价
                     item.put("RetailPrice", depotItem.getMaterialId().getRetailPrice());
-
+                    //进货价
+                    item.put("TaxUnitPrice", depotItem.getMaterialId().getPurchasePrice());
+                    //供应商编号
+                    item.put("AnotherDepotId", depotItem.getDepotId());
 
                     item.put("op", 1);
                     dataArray.add(item);

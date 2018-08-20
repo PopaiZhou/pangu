@@ -1097,6 +1097,91 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         }
     }
 
+    /**
+     * 新的供应商对账单 版本分类统计
+     */
+    public void findSupplierStatementTemplate(){
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            depotHeadService.findSupplierStatementTemplate(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("templateName", arr[0]); //版本种类
+                    item.put("OperNumber", arr[1]); //数量
+                    item.put("AllPrice", arr[2]); //合计金额
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 新的供应商对账单
+     */
+    public void findSupplierStatementAccount() {
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            depotHeadService.findSupplierStatementAccount(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("number", arr[0]); //单据编号
+                    item.put("oTime", arr[1]); //日期
+                    item.put("productName", arr[2]); //产品名称
+                    item.put("templateName", arr[3]); //版本明细
+                    item.put("mUnit", arr[4]); //规格
+                    item.put("operNumber", arr[5]); //数量
+                    item.put("taxUnitPrice", arr[6]); //进货价
+                    item.put("allPrice", (double)arr[5]*(double)arr[6]); //总价
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
     private Map<String, Object> getConditionByNumber() {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("Number_s_eq", model.getNumber());
