@@ -125,6 +125,7 @@
                 {title: '客户编号', field: 'customerNo', width: 200},
                 {title: '客户名称', field: 'customerName', width: 80},
                 {title: '手机号码', field: 'phonenum', width: 80},
+                {title: '客户地址', field: 'address', width: 200},
                 {title: '客户类型', field: 'type', width: 80}
             ]],
             onLoadError: function () {

@@ -1302,6 +1302,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("customerName", arr[3]); //客户姓名
                     item.put("phonenum", arr[4]); //手机号码
                     item.put("type", CustomerTypeEnum.getSexEnumByCode((String)arr[5]).getName()); //客户类型
+                    item.put("address", (String)arr[6]+arr[7]+arr[8]+arr[9]); //手机号码
 
                     dataArray.add(item);
                 }

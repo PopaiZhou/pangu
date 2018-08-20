@@ -330,7 +330,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     @SuppressWarnings("unchecked")
     public void sumCustomerActivity(PageUtil pageUtil, String beginTime, String endTime, Long organId, String sort) throws JshException {
         StringBuilder queryString = new StringBuilder();
-        queryString.append("select count(*) as num,a.OrganId,b.customerNo,b.customerName,b.phonenum,b.type from jsh_depothead a ");
+        queryString.append("select count(*) as num,a.OrganId,b.customerNo,b.customerName,b.phonenum,b.type,b.state,b.city,b.street,b.address from jsh_depothead a ");
         queryString.append("LEFT JOIN jsh_customer b on a.OrganId = b.id ");
         queryString.append("WHERE a.OperTime >='").append(beginTime).append("' and a.OperTime<='").append(endTime).append("'");
         if(organId != null){
