@@ -457,8 +457,9 @@ function initTableData_material(type,TotalPrice){
                         panelWidth: 300, //下拉框的宽度
                         //全面模糊匹配，过滤字段
                         filter: function(q, row){
+                            q = q.toUpperCase();
                             var opts = $(this).combobox('options');
-                            return row[opts.textField].indexOf(q) >-1;
+                            return row[opts.textField].toUpperCase().indexOf(q) >-1;
                         },
                         onBeforeLoad: function(param){
                             param.mpList = mPropertyList; //商品属性
@@ -750,8 +751,9 @@ function initCustomerList() {
             });
         },
         filter: function(q, row){
+            q = q.toUpperCase();
             var opts = $(this).combobox('options');
-            return row[opts.textField].indexOf(q) >-1;
+            return row[opts.textField].toUpperCase().indexOf(q) >-1;
         }
     });
 }
