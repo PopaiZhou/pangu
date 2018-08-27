@@ -151,6 +151,8 @@ public class CustomerAction extends BaseAction<CustomerModel> {
                     item.put("isystem", customer.getIsystem() == (short) 0 ? "是" : "否");
                     item.put("enabled", customer.getEnabled());
                     item.put("op", customer.getIsystem());
+
+                    item.put("fullAddress",customer.getState()+customer.getCity()+customer.getStreet()+customer.getAddress());
                     dataArray.add(item);
                 }
             }

@@ -300,6 +300,23 @@ public class SupplierAction extends BaseAction<SupplierModel> {
             }
         }
     }
+    /**
+     * 检查输入编号是否存在
+     */
+    public void checkIsNoExist() {
+        Boolean flag = false;
+        try {
+            flag = supplierService.checkIsNameExist("supplierNo", model.getSupplierNo(), "id", model.getSupplierID());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>检查供应商编号为：" + model.getSupplierNo() + " ID为： " + model.getSupplierID() + " 是否存在异常！");
+        } finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>回写检查供应商编号为：" + model.getSupplierNo() + " ID为： " + model.getSupplierID() + " 是否存在异常！", e);
+            }
+        }
+    }
 
     /**
      * 查找供应商信息
