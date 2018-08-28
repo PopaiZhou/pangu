@@ -244,7 +244,7 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
             tableString = tableString + '<tr><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
                 '<td align="center">'+depotHeadItem.UnitPrice+'</td><td align="center">'+depotHeadItem.OperNumber+'</td><td align="center">'+depotHeadItem.AllPrice+'</td></tr>';
         }
-        tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum+'</td><td align="center">'+allPrice+'</td></tr>';
+        tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum+'</td><td align="center">'+allPrice.toFixed(0)+'</td></tr>';
     }
 
 

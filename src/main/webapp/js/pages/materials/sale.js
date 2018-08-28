@@ -865,7 +865,7 @@ function statisticsFun(body,UnitPrice,OperNumber,footer){
     TotalPrice = TotalPrice + UnitPrice*OperNumber;
 
     totalNum = totalNum + OperNumber;
-    footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2)); //金额的合计
+    footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(0)); //金额的合计
     footer.find("[field='OperNumber']").find("div").text((totalNum).toFixed(2)); //金额的合计
     footer.find("[field='Unit']").find("div").text("合计"); //金额的合计
 
