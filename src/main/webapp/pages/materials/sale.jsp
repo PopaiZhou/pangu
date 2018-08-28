@@ -74,12 +74,13 @@
                 </select>
             </td>
             <td>发货状态:</td>
-
             <td>
                 <select name="searchSendStatus" id="searchSendStatus" style="width:100px; height:20px">
                 </select>
             </td>
-            <td>单据日期：</td>
+        </tr>
+        <tr>
+            <td>下单日期：</td>
             <td>
                 <input type="text" name="searchBeginTime" id="searchBeginTime"
                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate" style="width:150px;"/>
@@ -87,6 +88,17 @@
             <td>-</td>
             <td>
                 <input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
+                       class="txt Wdate" style="width:150px;"/>
+            </td>
+
+            <td>发货日期：</td>
+            <td>
+                <input type="text" name="searchSendBeginTime" id="searchSendBeginTime"
+                       onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate" style="width:150px;"/>
+            </td>
+            <td>-</td>
+            <td>
+                <input type="text" name="searchSendEndTime" id="searchSendEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
                        class="txt Wdate" style="width:150px;"/>
             </td>
             <td>&nbsp;</td>
@@ -204,7 +216,7 @@
             <td style="padding:5px;width:130px;">
                 <span id="SalesmanShow"></span>
             </td>
-            <td style="width:80px;">单据日期：</td>
+            <td style="width:80px;">下单日期：</td>
             <td style="padding:5px;width:140px;">
                 <span id="OperTimeShow"></span>
             </td>

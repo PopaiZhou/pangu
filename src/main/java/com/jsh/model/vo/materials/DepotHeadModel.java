@@ -43,10 +43,16 @@ public class DepotHeadModel implements Serializable {
     private Boolean Status = false;
     //审核状态
     private Boolean CheckStatus = false;
-    //查询开始时间
+    //查询下单开始时间
     private String BeginTime;
-    //查询结束时间
+    //查询下单结束时间
     private String EndTime;
+
+    //查询发货开始时间
+    private String SendBeginTime;
+    //查询发货结束时间
+    private String SendEndTime;
+
     //查询月份
     private String MonthTime;
     //单位Id，用于查询单位的应收应付
@@ -814,5 +820,41 @@ public class DepotHeadModel implements Serializable {
      */
     public void setSort(String sort) {
         Sort = sort;
+    }
+
+    /**
+     * Getter method for property <tt>SendBeginTime</tt>.
+     *
+     * @return property value of SendBeginTime
+     */
+    public String getSendBeginTime() {
+        return SendBeginTime;
+    }
+
+    /**
+     * Setter method for property <tt>SendBeginTime</tt>.
+     *
+     * @param SendBeginTime value to be assigned to property SendBeginTime
+     */
+    public void setSendBeginTime(String sendBeginTime) {
+        SendBeginTime = sendBeginTime;
+    }
+
+    /**
+     * Getter method for property <tt>SendEndTime</tt>.
+     *
+     * @return property value of SendEndTime
+     */
+    public String getSendEndTime() {
+        return SendEndTime;
+    }
+
+    /**
+     * Setter method for property <tt>SendEndTime</tt>.
+     *
+     * @param SendEndTime value to be assigned to property SendEndTime
+     */
+    public void setSendEndTime(String sendEndTime) {
+        SendEndTime = sendEndTime;
     }
 }

@@ -192,7 +192,8 @@ function initTableData() {
                 return value.replace(/,/g,"，");
             }
             },
-            { title: '单据日期 ',field: 'OperTime',width:150},
+            { title: '下单日期 ',field: 'CreateTime',width:150},
+            { title: '发货日期 ',field: 'OperTime',width:150},
             { title: '操作员',field: 'OperPersonName',width:120},
             { title: '金额合计',field: 'TotalPrice',width:120,hidden : priceHidden},
             { title: '收款状态',field: 'Status', width:100,align:"center",formatter:function(value){
@@ -953,6 +954,9 @@ function bindEvent(){
             $("#searchBeginTime").val("");
             $("#searchEndTime").val("");
 
+            $("#searchSendBeginTime").val("");
+            $("#searchSendEndTime").val("");
+
             $("#searchTotalPrice").val("");
             //加载完以后重新初始化
             $("#searchBtn").click();
@@ -1247,6 +1251,10 @@ function showDepotHeadDetails(pageNo,pageSize){
                             Number: $.trim($("#searchNumber").val()),
                             BeginTime: $("#searchBeginTime").val(),
                             EndTime: $("#searchEndTime").val(),
+
+                            SendBeginTime: $("#searchSendBeginTime").val(),
+                            SendEndTime: $("#searchSendEndTime").val(),
+                            
                             dhIds: ids,
                             pageNo: pageNo,
                             pageSize: pageSize
@@ -1381,8 +1389,8 @@ function acceptModify(accepId,fun) {
 function showDepotHead(depotHeadTotalInfo){
     var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
     depotHeadID = depotHeadInfo[0];
-    $("#NumberShow").text(depotHeadInfo[1]);//单据编号
-    $("#OperTimeShow").text(depotHeadInfo[2]);//单据日期
+    $("#NumberShow").text(depotHeadInfo[1]);//单据编号单据日期
+    $("#OperTimeShow").text(depotHeadInfo[2]);//
     $("#RemarkShow").text(depotHeadInfo[4]);//单据备注
     $('#OrganIdShow').text(depotHeadInfo[5]);//客户
     var TotalPrice = depotHeadInfo[6];

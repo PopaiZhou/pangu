@@ -544,7 +544,11 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("Number", depotHead.getNumber());
                     item.put("OperPersonName", depotHead.getOperPersonName());
                     item.put("CreateTime", Tools.getCenternTime(depotHead.getCreateTime()));
-                    item.put("OperTime", Tools.getCenternTime(depotHead.getOperTime()));
+                    if(depotHead.getSendStatus()){
+                        item.put("OperTime", Tools.getCenternTime(depotHead.getOperTime()));
+                    }else{
+                        item.put("OperTime", null);
+                    }
                     item.put("OrganId", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getId());
                     item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getCustomerName());
                     item.put("HandsPersonId", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getId());
@@ -608,7 +612,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询单据信息结果异常", e);
         }
-
     }
 
     /**
@@ -1337,12 +1340,16 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("SubType_s_eq", model.getSubType());
         condition.put("Number_s_like", model.getNumber());
         condition.put("Status_n_eq", model.getSearchStatus());
-        condition.put("Check_n_eq", model.getSearchCheckStatus());
+        condition.put("CheckStatus_n_eq", model.getSearchCheckStatus());
         condition.put("OrganId_s_in", model.getCustomerIds());
         condition.put("SendStatus_n_eq", model.getSearchSendStatus());
         condition.put("Id_s_in", model.getDhIds());
-        condition.put("OperTime_s_gteq", model.getBeginTime());
-        condition.put("OperTime_s_lteq", model.getEndTime());
+
+        condition.put("CreateTime_s_gteq", model.getBeginTime());
+        condition.put("CreateTime_s_lteq", model.getEndTime());
+
+        condition.put("OperTime_s_gteq", model.getSendBeginTime());
+        condition.put("OperTime_s_lteq", model.getSendEndTime());
 
         if(null != model.getSearchTotalPrice()){
             condition.put("TotalPrice_s_gteq", model.getSearchTotalPrice()-10);
