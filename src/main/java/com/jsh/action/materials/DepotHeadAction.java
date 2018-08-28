@@ -638,7 +638,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 item.put("OrganId", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getId());
                 item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getCustomerName());
                 item.put("HandsPersonId", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getId());
-                item.put("Salesman", depotHead.getSalesman());
+                Basicuser user = userService.get(Long.parseLong(depotHead.getSalesman()));
+                item.put("Salesman", user == null ? "" : user.getUsername());
+                item.put("SalesmanId", user == null ? "" : user.getId());
+                item.put("SalesmanNo", user == null ? "" : user.getUserno());
                 item.put("HandsPersonName", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getName());
                 item.put("AccountId", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getId());
                 item.put("AccountName", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getName());
@@ -657,8 +660,30 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 item.put("TotalPrice", depotHead.getTotalPrice() == null ? "" : Math.abs(depotHead.getTotalPrice()));
                 item.put("payType", depotHead.getPayType() == null ? "" : depotHead.getPayType());
                 item.put("Status", depotHead.getStatus());
+                item.put("SendStatus", depotHead.getSendStatus());
                 item.put("Remark", depotHead.getRemark());
-                item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+
+                item.put("CheckStatus", depotHead.getCheckStatus());
+                item.put("CheckOperName", depotHead.getCheckOperName());
+
+                item.put("Express", depotHead.getExpress());
+                item.put("ExpressNumber", depotHead.getExpressNumber());
+                item.put("Contacts", depotHead.getContacts());
+                item.put("Phonenum", depotHead.getPhonenum());
+                item.put("state", depotHead.getState());
+                item.put("city", depotHead.getCity());
+                item.put("street", depotHead.getStreet());
+                item.put("address", depotHead.getAddress());
+
+                //重量
+                item.put("Weight", depotHead.getWeight());
+                //运费预估
+                item.put("Freight", depotHead.getFreight());
+                //发货员
+                item.put("SendPersonName", depotHead.getSendPersonName());
+
+                //item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+                item.put("MaterialsList", findProductListByHeaderId(depotHead.getId()));
             }
             //回写查询结果
             toClient(item.toString());

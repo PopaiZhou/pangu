@@ -24,6 +24,11 @@ var mulSelete = false; //是否多选
 var priceHidden = false; //是否隐藏价格
 
 $(function(){
+    //显示保存按钮
+    $("#saveDepotHead").show();
+    //隐藏打印按钮
+    $("#printDepotHead").hide();
+    
     //获取角色权限--判断是否是管理员登录
     getRole();
     initTableData();
@@ -87,34 +92,6 @@ function initTableData() {
             },'-'
         );
     }
-    //8是发货
-    if(btnEnableList && btnEnableList.indexOf(8)>-1){
-        mulSelete = true;
-        priceHidden = true;
-        tableToolBar.push(
-            {
-                id:'ship',
-                text:'发货',
-                iconCls:'icon-redo',
-                handler:function() {
-                    ship();
-                }
-            },'-'
-        );
-    }
-    //4是打印
-    if(btnEnableList && btnEnableList.indexOf(4)>-1){
-        tableToolBar.push(
-            {
-                id:'print',
-                text:'打印',
-                iconCls:'icon-print',
-                handler:function() {
-                    print();
-                }
-            },'-'
-        );
-    }
     //如果允许的按钮列表中存在就显示，3-代表审核|反审核的权限
     if(btnEnableList && btnEnableList.indexOf(3)>-1){
         tableToolBar.push({
@@ -134,7 +111,49 @@ function initTableData() {
                 }
             },'-');
     }
-
+    //9是打印出库单
+    if(btnEnableList && btnEnableList.indexOf(8)>-1){
+        mulSelete = true;
+        priceHidden = true;
+        tableToolBar.push(
+            {
+                id:'printOut',
+                text:'打印出库单',
+                iconCls:'icon-print',
+                handler:function() {
+                    printOut();
+                }
+            },'-'
+        );
+    }
+    //8是发货
+    if(btnEnableList && btnEnableList.indexOf(8)>-1){
+        mulSelete = true;
+        priceHidden = true;
+        tableToolBar.push(
+            {
+                id:'ship',
+                text:'发货',
+                iconCls:'icon-send2',
+                handler:function() {
+                    ship();
+                }
+            },'-'
+        );
+    }
+    //4是打印
+    if(btnEnableList && btnEnableList.indexOf(4)>-1){
+        tableToolBar.push(
+            {
+                id:'print',
+                text:'打印',
+                iconCls:'icon-print',
+                handler:function() {
+                    print();
+                }
+            },'-'
+        );
+    }
     //改变宽度和高度
     $("#searchPanel").panel({width:webW-2});
     $("#tablePanel").panel({width:webW-2});
@@ -424,6 +443,11 @@ function editDepotHead(depotHeadTotalInfo, status){
 
 //初始化表格数据-商品列表-编辑状态
 function initTableData_material(type,TotalPrice){
+    //显示保存按钮
+    $("#saveDepotHead").show();
+    //隐藏打印按钮
+    $("#printDepotHead").hide();
+
     var body,footer,input; //定义表格和文本框
     $('#materialData').datagrid({
         height:245,
@@ -937,6 +961,111 @@ function CheckData(type) {
     return true;
 }
 
+
+function funSaveDepotHead() {
+    if (!$('#depotHeadFM').form('validate')) {
+        return;
+    } else {
+        //如果初始编号被修改了，就要判断单据编号是否存在
+        if ($.trim($("#Number").val()) != $('#Number').attr("data-defaultNumber")) {
+            //调用查询单据编号是否重名的方法
+            if (checkDepotHeadNumber()) {
+                return;
+            }
+        }
+        //进行明细的校验
+        if (depotHeadID == 0) {
+            //新增模式下
+            if (!CheckData("add")) {
+                return;
+            }
+        }
+        else {
+            //编辑模式下
+            if (!CheckData("edit")) {
+                return;
+            }
+        }
+        var OrganId = null;
+        if($('#OrganId').length){
+            OrganId = $('#OrganId').combobox('getValue');
+        }
+        var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();
+        $.ajax({
+            type:"post",
+            url: url,
+            dataType: "json",
+            async :  false,
+            data: ({
+                Type : listType,
+                SubType : listSubType,
+                ProjectId : '',
+                AllocationProjectId : '',
+                DefaultNumber: $.trim($("#Number").attr("data-defaultNumber")),//初始编号
+                Number: $.trim($("#Number").val()),
+                OperTime: $("#OperTime").val(),
+                OrganId: OrganId,
+                HandsPersonId: '',
+                Salesman: Salesman, //业务人员
+                AccountId: '',//所属账户编号
+                ChangeAmount: '', //付款/收款
+                TotalPrice: TotalPrice, //合计
+                PayType: '', //现付/预付款
+                Remark: $.trim($("#Remark").val()),
+                AccountIdList: '', //账户列表-多账户
+                AccountMoneyList: '', //账户金额列表-多账户
+                Discount: '',//优惠率
+                DiscountMoney: '',//优惠金额
+                DiscountLastMoney: '',//优惠后金额
+                OtherMoney: '', //采购费用、销售费用
+                OtherMoneyList: '', //支出项目列表-涉及费用
+                OtherMoneyItem: '', //支出项目金额列表-涉及费用
+                AccountDay: '', //结算天数
+                Weight: $("#Weight").val(), //重量
+                Freight: $("#Freight").val(), //运费预估
+                Express: $("#Express").val(), //默认物流
+                ExpressNumber: $("#ExpressNumber").val(), //物流单号
+                Contacts: $("#Contacts").val(), //联系人
+                Phonenum: $("#Phonenum").val(), //联系电话
+                state:$('#state').combobox('getText'),
+                city:$('#city').combobox('getText'),
+                street:$('#street').combobox('getText'),
+                address: $("#address").val(), //详细地址
+                clientIp: clientIp
+            }),
+            success: function (tipInfo)
+            {
+                if(tipInfo){
+                    function closeDialog(){
+                        //$('#depotHeadDlg').dialog('close');
+                        $("#saveDepotHead").hide();
+                        $("#printDepotHead").show();
+                        
+                        var opts = $("#tableData").datagrid('options');
+                        showDepotHeadDetails(opts.pageNumber,opts.pageSize);
+                    }
+                    //保存明细记录
+                    if(depotHeadID ==0)
+                    {
+                        getMaxId(); //查找最大的Id
+                        accept(depotHeadMaxId,closeDialog); //新增
+                    }
+                    else
+                    {
+                        acceptModify(depotHeadID,closeDialog); //修改
+                    }
+                }
+            },
+            //此处添加错误处理
+            error:function()
+            {
+                $.messager.alert('提示','保存信息异常，请稍后再试！','error');
+                return;
+            }
+        });
+    }
+}
+
 //绑定操作事件
 function bindEvent(){
     showDepotHeadDetails(1,initPageSize); //初始化时自动查询
@@ -976,106 +1105,12 @@ function bindEvent(){
     });
     //保存信息
     $('#saveDepotHead').off("click").on("click", function () {
-        if (!$('#depotHeadFM').form('validate')) {
-            return;
-        } else {
-            //如果初始编号被修改了，就要判断单据编号是否存在
-            if ($.trim($("#Number").val()) != $('#Number').attr("data-defaultNumber")) {
-                //调用查询单据编号是否重名的方法
-                if (checkDepotHeadNumber()) {
-                    return;
-                }
-            }
-            //进行明细的校验
-            if (depotHeadID == 0) {
-                //新增模式下
-                if (!CheckData("add")) {
-                    return;
-                }
-            }
-            else {
-                //编辑模式下
-                if (!CheckData("edit")) {
-                    return;
-                }
-            }
-            var OrganId = null;
-            if($('#OrganId').length){
-                OrganId = $('#OrganId').combobox('getValue');
-            }
-            var TotalPrice = $("#depotHeadFM .datagrid-footer [field='AllPrice'] div").text();
-            $.ajax({
-                type:"post",
-                url: url,
-                dataType: "json",
-                async :  false,
-                data: ({
-                    Type : listType,
-                    SubType : listSubType,
-                    ProjectId : '',
-                    AllocationProjectId : '',
-                    DefaultNumber: $.trim($("#Number").attr("data-defaultNumber")),//初始编号
-                    Number: $.trim($("#Number").val()),
-                    OperTime: $("#OperTime").val(),
-                    OrganId: OrganId,
-                    HandsPersonId: '',
-                    Salesman: Salesman, //业务人员
-                    AccountId: '',//所属账户编号
-                    ChangeAmount: '', //付款/收款
-                    TotalPrice: TotalPrice, //合计
-                    PayType: '', //现付/预付款
-                    Remark: $.trim($("#Remark").val()),
-                    AccountIdList: '', //账户列表-多账户
-                    AccountMoneyList: '', //账户金额列表-多账户
-                    Discount: '',//优惠率
-                    DiscountMoney: '',//优惠金额
-                    DiscountLastMoney: '',//优惠后金额
-                    OtherMoney: '', //采购费用、销售费用
-                    OtherMoneyList: '', //支出项目列表-涉及费用
-                    OtherMoneyItem: '', //支出项目金额列表-涉及费用
-                    AccountDay: '', //结算天数
-                    Weight: $("#Weight").val(), //重量
-                    Freight: $("#Freight").val(), //运费预估
-                    Express: $("#Express").val(), //默认物流
-                    ExpressNumber: $("#ExpressNumber").val(), //物流单号
-                    Contacts: $("#Contacts").val(), //联系人
-                    Phonenum: $("#Phonenum").val(), //联系电话
-                    state:$('#state').combobox('getText'),
-                    city:$('#city').combobox('getText'),
-                    street:$('#street').combobox('getText'),
-                    address: $("#address").val(), //详细地址
-                    clientIp: clientIp
-                }),
-                success: function (tipInfo)
-                {
-                    if(tipInfo){
-                        function closeDialog(){
-                            $('#depotHeadDlg').dialog('close');
-                            var opts = $("#tableData").datagrid('options');
-                            showDepotHeadDetails(opts.pageNumber,opts.pageSize);
-                        }
-                        //保存明细记录
-                        if(depotHeadID ==0)
-                        {
-                            getMaxId(); //查找最大的Id
-                            accept(depotHeadMaxId,closeDialog); //新增
-                        }
-                        else
-                        {
-                            acceptModify(depotHeadID,closeDialog); //修改
-                        }
-                    }
-                },
-                //此处添加错误处理
-                error:function()
-                {
-                    $.messager.alert('提示','保存信息异常，请稍后再试！','error');
-                    return;
-                }
-            });
-        }
+        funSaveDepotHead();
     });
-
+    //打印信息
+    $('#printDepotHead').off("click").on("click", function () {
+        PrintOrder($("#Number").val(),path,systemName)
+    });
 
     //发货信息 保存按钮
     $('#saveDepotHeadSendDlg').off("click").on("click", function () {
@@ -1659,6 +1694,19 @@ function print() {
         CreateNewFormPageOrder('订货单', $('#tableData'), path,systemName);
     }
 
+}
+//打印出库单
+function printOut() {
+    var row = $('#tableData').datagrid('getChecked');
+    if(row.length == 0) {
+        $.messager.alert('提示','没有记录被选中！','info');
+        return;
+    }
+    if(row.length >= 2) {
+        $.messager.alert('提示','请选择一条单据进行打印！','info');
+        return;
+    }
+    CreateNewFormPageSend('出库单', $('#tableData'), path,systemName);
 }
 
 

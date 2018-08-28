@@ -203,6 +203,7 @@
     <a href="javascript:void(0)" id="saveDepotHead" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
     <a href="javascript:void(0)" id="cancelDepotHead" class="easyui-linkbutton" iconCls="icon-cancel"
        onclick="javascript:$('#depotHeadDlg').dialog('close')">取消</a>
+    <a href="javascript:void(0)" id="printDepotHead" class="easyui-linkbutton" iconCls="icon-print">打印</a>
 </div>
 <div id="depotHeadDlgShow" class="easyui-dialog" style="width:1200px;padding:10px 20px;top:20px"
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
