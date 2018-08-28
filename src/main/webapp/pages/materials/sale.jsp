@@ -125,7 +125,7 @@
                 <td style="padding:5px">
                     <input id="OrganId" name="OrganId" style="width:130px;"/>
                 </td>
-                <td style="width:80px;">单据日期：</td>
+                <td style="width:80px;">下单日期：</td>
                 <td style="padding:5px">
                     <input type="text" name="OperTime" id="OperTime"
                            onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate"

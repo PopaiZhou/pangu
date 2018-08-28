@@ -172,7 +172,7 @@ function initTableData() {
                     var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb'
                         + rec.OrganId+ 'AaBb' + rec.Remark + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId
                         + 'AaBb' + rec.Express + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb'
-                        + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight;
+                        + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight + 'AaBb' + rec.CreateTime;
                     if(1 == value) {
                         var orgId = rec.OrganId? rec.OrganId:0;
                         str += '<img title="查看" src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -214,7 +214,7 @@ function initTableData() {
         ]],
         rowStyler: function (index, row) {
             if(row.Expired){
-                return 'background-color:yellow;';
+                return 'background-color:#F78181;';
             }
 
         },
@@ -389,7 +389,7 @@ function editDepotHead(depotHeadTotalInfo, status){
     var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
     $("#clientIp").val(clientIp);
     $("#Number").val(depotHeadInfo[1]).attr("data-defaultNumber",depotHeadInfo[1]);
-    $("#OperTime").val(depotHeadInfo[2]);
+    $("#OperTime").val(depotHeadInfo[19]);
     $('#OrganId').combobox('setValue', depotHeadInfo[3]);
     $("#Remark").val(depotHeadInfo[4]);
 
@@ -614,12 +614,22 @@ function initTableData_material(type,TotalPrice){
         },
         dataType: "json",
         success: function (res) {
+            var allOperNum = 0;
+            if(res && res.rows) {
+                var myRows = res.rows;
+                for(var i=0; i<myRows.length; i++){
+                    var num = myRows[i].OperNumber;
+                    allOperNum = allOperNum + num;
+                }
+            }
             var AllPrice = 0;
             if(type === "edit") {
                 AllPrice = TotalPrice;
             }
             var array = [];
             array.push({
+                "Unit" : "合计",
+                "OperNumber" : allOperNum,
                 "AllPrice": AllPrice
             });
             res.footer = array;
@@ -856,6 +866,8 @@ function statisticsFun(body,UnitPrice,OperNumber,footer){
 
     totalNum = totalNum + OperNumber;
     footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(2)); //金额的合计
+    footer.find("[field='OperNumber']").find("div").text((totalNum).toFixed(2)); //金额的合计
+    footer.find("[field='Unit']").find("div").text("合计"); //金额的合计
 
     //重量赋值
     $("#Weight").val((totalNum * 0.8).toFixed(2));//赋值
@@ -1390,7 +1402,7 @@ function showDepotHead(depotHeadTotalInfo){
     var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
     depotHeadID = depotHeadInfo[0];
     $("#NumberShow").text(depotHeadInfo[1]);//单据编号单据日期
-    $("#OperTimeShow").text(depotHeadInfo[2]);//
+    $("#OperTimeShow").text(depotHeadInfo[19]);//下单日期
     $("#RemarkShow").text(depotHeadInfo[4]);//单据备注
     $('#OrganIdShow').text(depotHeadInfo[5]);//客户
     var TotalPrice = depotHeadInfo[6];
@@ -1453,9 +1465,19 @@ function initTableData_material_show(TotalPrice){
         },
         dataType: "json",
         success: function (res) {
+            var allOperNum = 0;
+            if(res && res.rows) {
+                var myRows = res.rows;
+                for(var i=0; i<myRows.length; i++){
+                    var num = myRows[i].OperNumber;
+                    allOperNum = allOperNum + num;
+                }
+            }
             var AllPrice = TotalPrice;
             var array = [];
             array.push({
+                "Unit" : "合计",
+                "OperNumber" : allOperNum,
                 "AllPrice": AllPrice
             });
             res.footer = array;

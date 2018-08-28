@@ -8,7 +8,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>ERP系统</title>
+    <title>思黎ERP系统</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <!-- 指定以IE8的方式来渲染 -->
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
@@ -36,7 +36,7 @@
         </div>
         <p id="copyright">Copyright © 2017-2020 <a style="color:#00458a;"
                                                                    href="#"
-                                                                   target="_blank">华夏ERP_v1.0</a></p>
+                                                                   target="_blank">思黎ERP_v1.0</a></p>
     </div>
 </form>
 <script type="text/javascript">

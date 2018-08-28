@@ -9,7 +9,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>ERP系统</title>
+    <title>思黎ERP系统</title>
     <link href="<%=path%>/js/HoorayOS_mini/js/HoorayLibs/hooraylibs.css" rel="stylesheet"/>
     <link href="<%=path%>/js/HoorayOS_mini/img/ui/index.css" rel="stylesheet"/>
 </head>
