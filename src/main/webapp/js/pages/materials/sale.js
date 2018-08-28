@@ -1593,6 +1593,16 @@ function refund() {
         return;
     }
     if(row.length > 0) {
+        for(var i = 0;i < row.length; i ++){
+            if(!row[i].Status){
+                $.messager.alert('退款提示','存在未收款的订单，请核对！','info');
+                return;
+            }
+            if(row[i].CheckStatus){
+                $.messager.alert('退款提示','存在已审核的订单，不能进行退款操作，请核对！','info');
+                return;
+            }
+        }
         $.messager.confirm('确认退款','确定要确认选中的' + row.length + '条信息吗？',function(r)
         {
             if (r)
@@ -1601,10 +1611,7 @@ function refund() {
                 var BillNos = "";
                 for(var i = 0;i < row.length; i ++)
                 {
-                    if(!row[i].Status){
-                        $.messager.alert('退款提示','存在未收款的订单，请核对！','info');
-                        return;
-                    }
+
                     if(i == row.length-1)
                     {
                         ids += row[i].Id;
