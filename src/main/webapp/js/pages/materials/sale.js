@@ -15,7 +15,7 @@ var oldNumber = ""; //编辑前的单据编号
 var oldId = 0; //编辑前的单据Id
 var accountList; //账户列表
 var url;
-var isReadOnly = true;
+var isChangePrice = false;//是否可以修改价格 true表示可以更改
 var btnEnableList = getBtnStr(); //获取按钮的权限
 var modifyShow = false; //单条编辑按钮是否展示
 var deleteShow = false; //单条删除按钮是否暂时
@@ -30,7 +30,7 @@ $(function(){
     $("#printDepotHead").hide();
     
     //获取角色权限--判断是否是管理员登录
-    getRole();
+    //getRole();
     initTableData();
     //初始化客户信息下拉列表
     initCustomerList();
@@ -153,6 +153,10 @@ function initTableData() {
                 }
             },'-'
         );
+    }
+    //10是更改价格权限
+    if(btnEnableList && btnEnableList.indexOf(10)>-1){
+        isChangePrice = true;
     }
     //改变宽度和高度
     $("#searchPanel").panel({width:webW-2});
@@ -679,7 +683,9 @@ function onClickRow(index) {
             var url = path + "/product/findByTemplateId.action?id="+tempId;
             target.combobox('reload', url);//联动下拉列表重载
 
-            if(isReadOnly){
+            // isChangePrice == true 标识可以更改价格
+            // !isChangePrice == false 标识不可以更改价格
+            if(!isChangePrice){
                 var vareditor = $('#materialData').datagrid('getEditor', { index:index, field:'UnitPrice'});
                 vareditor.target.prop('readonly', true);
             }
@@ -804,6 +810,11 @@ function append(){
         $('#materialData').datagrid('appendRow', {});
         editIndex = $('#materialData').datagrid('getRows').length - 1;
         $('#materialData').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+
+        if(!isChangePrice){
+            var vareditor = $('#materialData').datagrid('getEditor', { index:editIndex, field:'UnitPrice'});
+            vareditor.target.prop('readonly', true);
+        }
         autoReckon();
     }
 }
@@ -857,8 +868,8 @@ function autoReckon() {
             body.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
             statisticsFun(body,UnitPrice,OperNumber,footer);
         });
-        //在可编辑状态下，才会去自动计算
-        if(!isReadOnly){
+        //在可以更改价格状态下，才会去自动计算
+        if(isChangePrice){
             //修改单价，自动计算总价
             body.find("[field='UnitPrice']").find(input).off("keyup").on("keyup",function(){
                 var UnitPrice = body.find("[field='UnitPrice']").find(input).val(); //单价
@@ -1109,7 +1120,7 @@ function bindEvent(){
     });
     //打印信息
     $('#printDepotHead').off("click").on("click", function () {
-        PrintOrder($("#Number").val(),path,systemName)
+        PrintOrder($("#Number").val(),path,systemNo)
     });
 
     //发货信息 保存按钮
@@ -1524,42 +1535,6 @@ function initTableData_material_show(TotalPrice){
     });
 }
 
-//获取角色权限，判断是否是管理员登录
-function getRole() {
-    $.ajax({
-        type: "post",
-        url: path+'/userBusiness/getBasicData.action',
-        data: ({
-            KeyId: kid,
-            Type: "UserRole"
-        }),
-        //设置为同步
-        async: false,
-        dataType: "json",
-        success: function (systemInfo) {
-            if (systemInfo) {
-                var userBusinessList = systemInfo.showModel.map.userBusinessList;
-                var msgTip = systemInfo.showModel.msgTip;
-                if (msgTip == "exceptoin") {
-                    $.messager.alert('提示', '查找UserBusiness异常,请与管理员联系！', 'error');
-                    return;
-                }else{
-                    var roleId = userBusinessList[0].value;
-                    if(roleId.indexOf('[4]') >= 0){
-                        isReadOnly = false;
-                    }else{
-                        isReadOnly = true;
-                    }
-                }
-            }
-        },
-        error: function () {
-            $.messager.alert('提示', '查询数据异常，请稍后再试！', 'error');
-            return;
-        }
-    });
-}
-
 //批量确认收款按钮
 function receipt() {
     var row = $('#tableData').datagrid('getChecked');
@@ -1696,9 +1671,9 @@ function print() {
     }
     //如果是发货单
     if(row[0].SendStatus){
-        CreateNewFormPageSend('发货单', $('#tableData'), path,systemName);
+        CreateNewFormPageSend('发货单', $('#tableData'), path,systemNo);
     }else{
-        CreateNewFormPageOrder('订货单', $('#tableData'), path,systemName);
+        CreateNewFormPageOrder('订货单', $('#tableData'), path,systemNo);
     }
 
 }
@@ -1713,7 +1688,7 @@ function printOut() {
         $.messager.alert('提示','请选择一条单据进行打印！','info');
         return;
     }
-    CreateNewFormPageSend('出库单', $('#tableData'), path,systemName);
+    CreateNewFormPageSend('出库单', $('#tableData'), path,systemNo);
 }
 
 

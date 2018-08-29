@@ -28,6 +28,7 @@
     <script>
         var kid = ${sessionScope.user.id};
         var systemName = "${sessionScope.user.username}";
+        var systemNo = "${sessionScope.user.userno}";
         var path = "<%=path%>";
         var clientIp = "<%=clientIp%>";
         $(document).ready(function() {
@@ -85,8 +86,7 @@
                 <input type="text" name="searchBeginTime" id="searchBeginTime"
                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate" style="width:150px;"/>
             </td>
-            <td>-</td>
-            <td>
+            <td colspan="2">-
                 <input type="text" name="searchEndTime" id="searchEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
                        class="txt Wdate" style="width:150px;"/>
             </td>
@@ -96,8 +96,7 @@
                 <input type="text" name="searchSendBeginTime" id="searchSendBeginTime"
                        onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate" style="width:150px;"/>
             </td>
-            <td>-</td>
-            <td>
+            <td colspan="2">-
                 <input type="text" name="searchSendEndTime" id="searchSendEndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"
                        class="txt Wdate" style="width:150px;"/>
             </td>
