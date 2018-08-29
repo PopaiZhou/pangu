@@ -599,7 +599,11 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     //item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
                     item.put("MaterialsList", findProductListByHeaderId(depotHead.getId()));
                     //是否过期
-                    item.put("Expired",Tools.isExpired(depotHead.getOperTime()));
+                    if(depotHead.getSendStatus()){
+                        item.put("Expired",false);
+                    }else{
+                        item.put("Expired",Tools.isExpired(depotHead.getCreateTime()));
+                    }
                     item.put("op", 1);
                     dataArray.add(item);
                 }

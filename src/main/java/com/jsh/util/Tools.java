@@ -160,7 +160,7 @@ public class Tools {
 
     public static String getPreWeekDate() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -7);
+        cal.add(Calendar.DATE, -5);
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime());
     }
 
