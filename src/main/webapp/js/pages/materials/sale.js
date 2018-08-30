@@ -192,10 +192,11 @@ function initTableData() {
             { title: '操作',field: 'op',align:"center",width:opeWith,
                 formatter:function(value,rec) {
                     var str = '';
-                    var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb'
-                        + rec.OrganId+ 'AaBb' + rec.Remark + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId
-                        + 'AaBb' + rec.Express + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb'
-                        + rec.state + 'AaBb' + rec.city + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight + 'AaBb' + rec.CreateTime;
+                    var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + rec.Remark
+                        + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId + 'AaBb' + rec.Express
+                        + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb' + rec.state + 'AaBb' + rec.city
+                        + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight + 'AaBb' + rec.CreateTime
+                        + 'AaBb' + rec.OrganNo;
                     if(1 == value) {
                         var orgId = rec.OrganId? rec.OrganId:0;
                         str += '<img title="查看" src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -1447,6 +1448,7 @@ function acceptModify(accepId,fun) {
 function showDepotHead(depotHeadTotalInfo){
     var depotHeadInfo = depotHeadTotalInfo.split("AaBb");
     depotHeadID = depotHeadInfo[0];
+    $("#OrganNoShow").text(depotHeadInfo[20]);//客户编号
     $("#NumberShow").text(depotHeadInfo[1]);//单据编号单据日期
     $("#OperTimeShow").text(depotHeadInfo[19]);//下单日期
     $("#RemarkShow").text(depotHeadInfo[4]);//单据备注

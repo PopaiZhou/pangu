@@ -550,6 +550,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                         item.put("OperTime", null);
                     }
                     item.put("OrganId", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getId());
+                    item.put("OrganNo", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getCustomerNo());
                     item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getCustomerName());
                     item.put("HandsPersonId", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getId());
                     Basicuser user = userService.get(Long.parseLong(depotHead.getSalesman()));
