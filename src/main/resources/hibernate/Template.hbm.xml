@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.jsh.model.po.Template" table="jsh_template" schema="jsh_erp">
+        <id name="id">
+            <column name="id" sql-type="bigint(20)"/>
+        </id>
+        <property name="templateId">
+            <column name="templateId" sql-type="varchar(32)" length="32" not-null="true"/>
+        </property>
+        <property name="templateName">
+            <column name="templateName" sql-type="varchar(128)" length="128" not-null="true"/>
+        </property>
+        <property name="listingDate">
+            <column name="listingDate" sql-type="date" not-null="false"/>
+        </property>
+        <property name="remarks">
+            <column name="remarks" sql-type="varchar(512)" length="512" not-null="true"/>
+        </property>
+        <property name="gmtCreate">
+            <column name="gmtCreate" sql-type="timestamp"/>
+        </property>
+        <property name="gmtModify">
+            <column name="gmtModify" sql-type="timestamp"/>
+        </property>
+        <many-to-one name="supplierNo" class="com.jsh.model.po.Supplier" lazy="false">
+            <column name="supplierNo">
+                <comment>供应商Id</comment>
+            </column>
+        </many-to-one>
+    </class>
+</hibernate-mapping>

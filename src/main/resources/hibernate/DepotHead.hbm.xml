@@ -47,7 +47,7 @@
     <comment>出入库时间</comment>
    </column>
   </property>
-  <many-to-one name="OrganId" class="com.jsh.model.po.Supplier" lazy="false">
+  <many-to-one name="OrganId" class="com.jsh.model.po.Customer" lazy="false">
    <column name="OrganId">
     <comment>供应商或客户Id</comment>
    </column>
@@ -133,13 +133,83 @@
    </column>
   </property>
   <property generated="never" lazy="false" name="Status" type="boolean">
-   <column length="1" name="Status">
-    <comment>单据状态(未审核、已审核)</comment>
+  <column length="1" name="Status">
+   <comment>单据状态(0未收款、1收款)</comment>
+  </column>
+ </property>
+  <property generated="never" lazy="false" name="CheckStatus" type="boolean">
+   <column length="1" name="CheckStatus">
+    <comment>审核状态(0未审核，1审核)</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="CheckOperName" type="java.lang.String">
+   <column length="50" name="CheckOperName">
+    <comment>审核人名字</comment>
    </column>
   </property>
   <property generated="never" lazy="false" name="Remark" type="java.lang.String">
    <column length="1000" name="Remark">
     <comment>备注</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="SendStatus" type="boolean">
+   <column length="1" name="SendStatus">
+    <comment>是否发货(0未发货、1已发货)</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Weight" type="java.lang.Double">
+   <column name="Weight" precision="22" scale="3">
+    <comment>重量</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Freight" type="java.lang.Double">
+   <column name="Freight" precision="22" scale="3">
+    <comment>运费预估</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Express" type="java.lang.String">
+   <column length="30" name="Express">
+    <comment>物流公司</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="ExpressNumber" type="java.lang.String">
+   <column length="128" name="ExpressNumber">
+    <comment>运单号码</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Contacts" type="java.lang.String">
+   <column length="100" name="Contacts">
+    <comment>收货人</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="Phonenum" type="java.lang.String">
+   <column length="30" name="Phonenum">
+    <comment>收货号码</comment>
+   </column>
+  </property>
+  <property name="state" type="java.lang.String">
+   <column name="state" length="32">
+    <comment>省</comment>
+   </column>
+  </property>
+  <property name="city" type="java.lang.String">
+   <column name="city" length="32">
+    <comment>市</comment>
+   </column>
+  </property>
+  <property name="street" type="java.lang.String">
+   <column name="street" length="64">
+    <comment>区县</comment>
+   </column>
+  </property>
+  <property name="address" type="java.lang.String">
+   <column name="address" length="128">
+    <comment>地址</comment>
+   </column>
+  </property>
+  <property generated="never" lazy="false" name="SendPersonName" type="java.lang.String">
+   <column length="50" name="SendPersonName">
+    <comment>发货员名称</comment>
    </column>
   </property>
  </class>

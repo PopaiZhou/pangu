@@ -5,6 +5,7 @@ import com.jsh.model.po.DepotHead;
 import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 import com.jsh.util.SearchConditionUtil;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 
 public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
@@ -45,6 +46,13 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
     @Override
     public void batchSetStatus(Boolean status, String depotHeadIDs) {
         String sql = "update jsh_depothead d set d.Status=" + status + " where d.id in (" + depotHeadIDs + ")";
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void batchSetCheck(Boolean status, String depotHeadIDs, String checkOperName) {
+        String sql = "update jsh_depothead d set d.CheckStatus=" + status + ",d.CheckOperName='"+checkOperName+"' where d.id in (" + depotHeadIDs + ")";
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
         query.executeUpdate();
     }
@@ -142,6 +150,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         pageUtil.setPageList(query.list());
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void findMaterialsListByHeaderId(PageUtil pageUtil, Long headerId) throws JshException {
         StringBuffer queryString = new StringBuffer();
@@ -151,6 +160,17 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         pageUtil.setPageList(query.list());
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findProductListByHeaderId(PageUtil pageUtil, Long headerId) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select group_concat(concat(jsh_product.`productId`,' ',jsh_product.productName)) as mName from jsh_depotitem inner join jsh_product " +
+                " on jsh_depotitem.MaterialId = jsh_product.Id where jsh_depotitem.HeaderId =" + headerId);
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public void findStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId, String supType) throws JshException {
         StringBuffer queryString = new StringBuffer();
@@ -183,6 +203,99 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
 
     @Override
     @SuppressWarnings("unchecked")
+    public void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT dh.Number,'出货' AS newType,s.customerName,date_format(dh.OperTime,'%Y-%m-%d') AS oTime,c.productName,");
+        queryString.append("d.templateName,b.MUnit,b.OperNumber,b.UnitPrice,b.AllPrice FROM jsh_depothead dh");
+        queryString.append(" inner join jsh_customer s on s.id=dh.OrganId ");
+        queryString.append(" LEFT JOIN jsh_depotitem b on b.HeaderId = dh.Id ");
+        queryString.append(" LEFT JOIN jsh_product c on b.MaterialId = c.id ");
+        queryString.append(" LEFT JOIN jsh_template d on d.id = b.TemplateId ");
+        //我只查已发货的订单 SendStatus=1
+        queryString.append(" WHERE dh.OrganId='").append(organId).append("' and dh.OperTime >='").append(beginTime).append("' and dh.OperTime<='").append(endTime).append("' and dh.SendStatus=1");
+        queryString.append(" order by DefaultNumber ");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findSalesManStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT dh.Number,'出货' AS newType,s.customerName,date_format(dh.OperTime,'%Y-%m-%d') AS oTime,c.productName,");
+        queryString.append("d.templateName,b.MUnit,b.OperNumber,b.UnitPrice,b.AllPrice FROM jsh_depothead dh");
+        queryString.append(" inner join jsh_customer s on s.id=dh.OrganId ");
+        queryString.append(" LEFT JOIN jsh_depotitem b on b.HeaderId = dh.Id ");
+        queryString.append(" LEFT JOIN jsh_product c on b.MaterialId = c.id ");
+        queryString.append(" LEFT JOIN jsh_template d on d.id = b.TemplateId ");
+        //我只查已发货的订单 SendStatus=1
+        queryString.append(" WHERE dh.Salesman='").append(organId).append("' and dh.OperTime >='").append(beginTime).append("' and dh.OperTime<='").append(endTime).append("' and dh.SendStatus=1");
+        queryString.append(" order by DefaultNumber ");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    /**
+     * 供应商对账单--订单明细
+     * @param pageUtil
+     * @param beginTime
+     * @param endTime
+     * @param organId
+     * @throws JshException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findSupplierStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT dh.Number,date_format(dh.OperTime, '%Y-%m-%d') AS oTime,c.productName,d.templateName,a.MUnit,a.OperNumber,a.TaxUnitPrice FROM jsh_depotitem a ");
+        queryString.append("LEFT JOIN jsh_depothead dh on a.HeaderId = dh.Id ");
+        queryString.append("LEFT JOIN jsh_product c ON a.MaterialId = c.id ");
+        queryString.append("LEFT JOIN jsh_template d ON d.id = a.TemplateId ");
+        //我只查已发货的订单 SendStatus=1
+        queryString.append(" WHERE a.DepotId='").append(organId).append("' and dh.OperTime >='").append(beginTime).append("' and dh.OperTime<='").append(endTime).append("' and dh.SendStatus=1");
+        queryString.append(" order by DefaultNumber ");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findCustomerStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT c.templateName, sum(a.OperNumber) as OperNumber, sum(a.AllPrice) as AllPrice ");
+        queryString.append("FROM jsh_depotitem a LEFT JOIN jsh_depothead b ON a.HeaderId = b.id LEFT JOIN jsh_template c on a.TemplateId = c.id ");
+        queryString.append("WHERE b.OrganId = '").append(organId).append("' and b.OperTime >='").append(beginTime).append("' and b.OperTime<='").append(endTime).append("' and b.SendStatus='1'").append(" GROUP BY templateName");
+
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findSalesManStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT c.templateName, sum(a.OperNumber) as OperNumber, sum(a.AllPrice) as AllPrice ");
+        queryString.append("FROM jsh_depotitem a LEFT JOIN jsh_depothead b ON a.HeaderId = b.id LEFT JOIN jsh_template c on a.TemplateId = c.id ");
+        queryString.append("WHERE b.Salesman = '").append(organId).append("' and b.OperTime >='").append(beginTime).append("' and b.OperTime<='").append(endTime).append("' and b.SendStatus='1'").append(" GROUP BY templateName");
+
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void findSupplierStatementTemplate(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("SELECT c.templateName,sum(a.OperNumber) AS OperNumber,sum(a.TaxUnitPrice*a.OperNumber) AS AllPrice FROM jsh_depotitem a ");
+        queryString.append("LEFT JOIN jsh_depothead b ON a.HeaderId = b.id ");
+        queryString.append("LEFT JOIN jsh_template c ON a.TemplateId = c.id ");
+        queryString.append("WHERE a.DepotId = '").append(organId).append("' and b.OperTime >='").append(beginTime).append("' and b.OperTime<='").append(endTime).append("' and b.SendStatus='1'").append(" GROUP BY templateName");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam, String depotIds) throws JshException {
         StringBuffer queryString = new StringBuffer();
         queryString.append("select dt.HeaderId from jsh_depotitem dt INNER JOIN jsh_material m on dt.MaterialId = m.Id where ( m.`Name` " +
@@ -190,6 +303,45 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         if (!depotIds.equals("")) {
             queryString.append(" and dt.DepotId in (" + depotIds + ") ");
         }
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void getHeaderIdByMaterial(PageUtil pageUtil, String materialParam) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select dt.HeaderId from jsh_depotitem dt INNER JOIN jsh_product m on dt.MaterialId = m.Id where ( m.`productName` " +
+                " like '%" + materialParam + "%' or m.productId like '%" + materialParam + "%') ");
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
+
+    /**
+     * 客户活跃度统计
+     * @param pageUtil
+     * @param beginTime
+     * @param endTime
+     * @param organId
+     * @param sort
+     * @throws JshException
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public void sumCustomerActivity(PageUtil pageUtil, String beginTime, String endTime, Long organId, String sort) throws JshException {
+        StringBuilder queryString = new StringBuilder();
+        queryString.append("select count(*) as num,a.OrganId,b.customerNo,b.customerName,b.phonenum,b.type,b.state,b.city,b.street,b.address from jsh_depothead a ");
+        queryString.append("LEFT JOIN jsh_customer b on a.OrganId = b.id ");
+        queryString.append("WHERE a.OperTime >='").append(beginTime).append("' and a.OperTime<='").append(endTime).append("'");
+        if(organId != null){
+            queryString.append(" and a.OrganId = '").append(organId).append("' ");
+        }
+        queryString.append(" GROUP BY OrganId ");
+
+        if(StringUtils.isNotEmpty(sort)){
+            queryString.append(" ORDER BY num ").append(sort);
+        }
+
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }

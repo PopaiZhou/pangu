@@ -2,14 +2,18 @@ package com.jsh.action.materials;
 
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
+import com.jsh.enums.CustomerTypeEnum;
 import com.jsh.model.po.*;
 import com.jsh.model.vo.materials.DepotHeadModel;
+import com.jsh.service.basic.UserIService;
+import com.jsh.service.materials.CustomerIService;
 import com.jsh.service.materials.DepotHeadIService;
 import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.DataAccessException;
 
 import java.io.IOException;
@@ -22,11 +26,13 @@ import java.util.Map;
 
 /*
  * 单据表头管理
- * @author jishenghua  qq:752718920
+ * @author
  */
 @SuppressWarnings("serial")
 public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     private DepotHeadIService depotHeadService;
+    private UserIService userService;
+    private CustomerIService customerService;
     private DepotHeadModel model = new DepotHeadModel();
 
     /*
@@ -81,7 +87,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 Log.errorFileSync(">>>>>>>>>>>>>>>解析购买日期格式异常", e);
             }
             if (model.getOrganId() != null) {
-                depotHead.setOrganId(new Supplier(model.getOrganId()));
+                depotHead.setOrganId(new Customer(model.getOrganId()));
             }
             if (model.getHandsPersonId() != null) {
                 depotHead.setHandsPersonId(new Person(model.getHandsPersonId()));
@@ -108,7 +114,19 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setTotalPrice(model.getTotalPrice());
             depotHead.setPayType(model.getPayType());
             depotHead.setStatus(false);
+
             depotHead.setRemark(model.getRemark());
+            depotHead.setExpress(model.getExpress());
+            depotHead.setExpressNumber(model.getExpressNumber());
+            depotHead.setContacts(model.getContacts());
+            depotHead.setPhonenum(model.getPhonenum());
+            depotHead.setState(model.getState());
+            depotHead.setCity(model.getCity());
+            depotHead.setStreet(model.getStreet());
+            depotHead.setAddress(model.getAddress());
+            depotHead.setSendStatus(false);//发货状态
+            depotHead.setWeight(model.getWeight());
+            depotHead.setFreight(model.getFreight());
             depotHeadService.create(depotHead);
 
             //========标识位===========
@@ -165,6 +183,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      * @return
      */
     public void update() {
+        Log.infoFileSync("====================开始调用更新单据信息方法update()================");
         Boolean flag = false;
         try {
             DepotHead depotHead = depotHeadService.get(model.getDepotHeadID());
@@ -181,7 +200,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 Log.errorFileSync(">>>>>>>>>>>>>>>解析入库时间格式异常", e);
             }
             if (model.getOrganId() != null) {
-                depotHead.setOrganId(new Supplier(model.getOrganId()));
+                depotHead.setOrganId(new Customer(model.getOrganId()));
             }
             if (model.getHandsPersonId() != null) {
                 depotHead.setHandsPersonId(new Person(model.getHandsPersonId()));
@@ -209,6 +228,20 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setPayType(model.getPayType());
             depotHead.setStatus(false);
             depotHead.setRemark(model.getRemark());
+
+            depotHead.setExpress(model.getExpress());
+            depotHead.setExpressNumber(model.getExpressNumber());
+            depotHead.setContacts(model.getContacts());
+            depotHead.setPhonenum(model.getPhonenum());
+            depotHead.setState(model.getState());
+            depotHead.setCity(model.getCity());
+            depotHead.setStreet(model.getStreet());
+            depotHead.setAddress(model.getAddress());
+            depotHead.setWeight(model.getWeight());
+            depotHead.setFreight(model.getFreight());
+            //发货状态
+            depotHead.setSendStatus(false);
+
             depotHeadService.update(depotHead);
 
             flag = true;
@@ -229,6 +262,55 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         logService.create(new Logdetails(getUser(), "更新单据", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
                 , tipType, "更新单据ID为  " + model.getDepotHeadID() + " " + tipMsg + "！", "更新单据" + tipMsg));
+        Log.infoFileSync("====================结束调用更新单据信息方法update()================");
+    }
+
+    /**
+     * 发货
+     *
+     * @return
+     */
+    public void sendGoods() {
+        Log.infoFileSync("====================开始调用发货方法sendGoods()================");
+        Boolean flag = false;
+        try {
+            DepotHead depotHead = depotHeadService.get(model.getDepotHeadID());
+            //物流公司
+            depotHead.setExpress(model.getExpress());
+            //物流编号
+            depotHead.setExpressNumber(model.getExpressNumber());
+            //发货状态
+            depotHead.setSendStatus(true);
+            //发货员
+            depotHead.setSendPersonName(getUser().getUsername());
+            //操作时间
+            try {
+                depotHead.setOperTime(new Timestamp(Tools.parse(model.getOperTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
+            } catch (ParseException e) {
+                Log.errorFileSync(">>>>>>>>>>>>>>>解析入库时间格式异常", e);
+            }
+
+            depotHeadService.update(depotHead);
+
+            flag = true;
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>发货ID为 ： " + model.getDepotHeadID() + "发货失败", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        } finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>发货异常", e);
+            }
+        }
+        logService.create(new Logdetails(getUser(), "发货", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "发货ID为  " + model.getDepotHeadID() + " " + tipMsg + "！", "发货成功" + tipMsg));
+        Log.infoFileSync("====================开始调用发货方法sendGoods()================");
     }
 
     /**
@@ -256,13 +338,37 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     }
 
     /**
-     * 批量设置状态-审核或者反审核
+     * 批量设置状态-已收款-未收款
      *
      * @return
      */
     public String batchSetStatus() {
         try {
             depotHeadService.batchSetStatus(model.getStatus(), model.getDepotHeadIDs());
+            model.getShowModel().setMsgTip("成功");
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>批量修改状态，单据ID为：" + model.getDepotHeadIDs() + "信息异常", e);
+            tipMsg = "失败";
+            tipType = 1;
+        }
+
+        logService.create(new Logdetails(getUser(), "批量修改单据状态", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "批量修改状态，单据ID为  " + model.getDepotHeadIDs() + " " + tipMsg + "！", "批量修改单据状态" + tipMsg));
+        return SUCCESS;
+    }
+
+    /**
+     * 批量审核-反审核
+     *
+     * @return
+     */
+    public String batchSetCheck() {
+        try {
+            depotHeadService.batchSetCheck(model.getCheckStatus(), model.getDepotHeadIDs(),getUser().getUsername());
             model.getShowModel().setMsgTip("成功");
             //记录操作日志使用
             tipMsg = "成功";
@@ -322,7 +428,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      * @return
      */
     public String buildNumberFun(String type, String subType, String beginTime, String endTime) {
-        String newNumber = "0001"; //新编号
+        String newNumber = "1200"; //新编号
         try {
             PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
             pageUtil.setPageSize(0);
@@ -363,11 +469,10 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     public void getHeaderIdByMaterial() {
         try {
             String materialParam = model.getMaterialParam(); //商品参数
-            String depotIds = model.getDepotIds(); //拥有的仓库信息
             PageUtil pageUtil = new PageUtil();
             pageUtil.setPageSize(0);
             pageUtil.setCurPage(0);
-            depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam, depotIds);
+            depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam);
             JSONObject outer = new JSONObject();
             String allReturn = "";
             List dataList = pageUtil.getPageList();
@@ -377,7 +482,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     allReturn = allReturn + dl.toString() + ",";
                 }
             }
-            allReturn = allReturn.substring(0, allReturn.length() - 1);
+            if(StringUtils.isNotEmpty(allReturn)){
+                allReturn = allReturn.substring(0, allReturn.length() - 1);
+            }
             if (allReturn.equals("null")) {
                 allReturn = "";
             }
@@ -398,6 +505,25 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      */
     public void findBy() {
         try {
+            String customerIds = "";
+            Map<String, Object> customerCondition = new HashMap<String, Object>();
+            customerCondition.put("customerNo_s_like", model.getCustomerNo());
+            customerCondition.put("customerName_s_like", model.getCustomerName());
+
+            PageUtil<Customer> customerPageUtil = new PageUtil<Customer>();
+            customerPageUtil.setAdvSearch(customerCondition);
+            customerService.find(customerPageUtil);
+            List<Customer> customerList = customerPageUtil.getPageList();
+            if(null != customerList){
+                for(Customer customer : customerList){
+                    customerIds += customer.getId() + ",";
+                }
+            }
+            if(StringUtils.isNotEmpty(customerIds)){
+                customerIds = customerIds.substring(0, customerIds.lastIndexOf(","));
+                model.setCustomerIds(customerIds);
+            }
+
             PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
             pageUtil.setPageSize(model.getPageSize());
             pageUtil.setCurPage(model.getPageNo());
@@ -418,11 +544,18 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("Number", depotHead.getNumber());
                     item.put("OperPersonName", depotHead.getOperPersonName());
                     item.put("CreateTime", Tools.getCenternTime(depotHead.getCreateTime()));
-                    item.put("OperTime", Tools.getCenternTime(depotHead.getOperTime()));
+                    if(depotHead.getSendStatus()){
+                        item.put("OperTime", Tools.getCenternTime(depotHead.getOperTime()));
+                    }else{
+                        item.put("OperTime", null);
+                    }
                     item.put("OrganId", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getId());
-                    item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getSupplier());
+                    item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getCustomerName());
                     item.put("HandsPersonId", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getId());
-                    item.put("Salesman", depotHead.getSalesman().toString());
+                    Basicuser user = userService.get(Long.parseLong(depotHead.getSalesman()));
+                    item.put("Salesman", user == null ? "" : user.getUsername());
+                    item.put("SalesmanId", user == null ? "" : user.getId());
+                    item.put("SalesmanNo", user == null ? "" : user.getUserno());
                     item.put("HandsPersonName", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getName());
                     item.put("AccountId", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getId());
                     item.put("AccountName", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getName());
@@ -441,8 +574,36 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("TotalPrice", depotHead.getTotalPrice() == null ? "" : Math.abs(depotHead.getTotalPrice()));
                     item.put("payType", depotHead.getPayType() == null ? "" : depotHead.getPayType());
                     item.put("Status", depotHead.getStatus());
+                    item.put("SendStatus", depotHead.getSendStatus());
                     item.put("Remark", depotHead.getRemark());
-                    item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+
+                    item.put("CheckStatus", depotHead.getCheckStatus());
+                    item.put("CheckOperName", depotHead.getCheckOperName());
+
+                    item.put("Express", depotHead.getExpress());
+                    item.put("ExpressNumber", depotHead.getExpressNumber());
+                    item.put("Contacts", depotHead.getContacts());
+                    item.put("Phonenum", depotHead.getPhonenum());
+                    item.put("state", depotHead.getState());
+                    item.put("city", depotHead.getCity());
+                    item.put("street", depotHead.getStreet());
+                    item.put("address", depotHead.getAddress());
+
+                    //重量
+                    item.put("Weight", depotHead.getWeight());
+                    //运费预估
+                    item.put("Freight", depotHead.getFreight());
+                    //发货员
+                    item.put("SendPersonName", depotHead.getSendPersonName());
+
+                    //item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+                    item.put("MaterialsList", findProductListByHeaderId(depotHead.getId()));
+                    //是否过期
+                    if(depotHead.getSendStatus()){
+                        item.put("Expired",false);
+                    }else{
+                        item.put("Expired",Tools.isExpired(depotHead.getCreateTime()));
+                    }
                     item.put("op", 1);
                     dataArray.add(item);
                 }
@@ -479,9 +640,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 item.put("CreateTime", Tools.getCenternTime(depotHead.getCreateTime()));
                 item.put("OperTime", Tools.getCenternTime(depotHead.getOperTime()));
                 item.put("OrganId", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getId());
-                item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getSupplier());
+                item.put("OrganName", depotHead.getOrganId() == null ? "" : depotHead.getOrganId().getCustomerName());
                 item.put("HandsPersonId", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getId());
-                item.put("Salesman", depotHead.getSalesman().toString());
+                Basicuser user = userService.get(Long.parseLong(depotHead.getSalesman()));
+                item.put("Salesman", user == null ? "" : user.getUsername());
+                item.put("SalesmanId", user == null ? "" : user.getId());
+                item.put("SalesmanNo", user == null ? "" : user.getUserno());
                 item.put("HandsPersonName", depotHead.getHandsPersonId() == null ? "" : depotHead.getHandsPersonId().getName());
                 item.put("AccountId", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getId());
                 item.put("AccountName", depotHead.getAccountId() == null ? "" : depotHead.getAccountId().getName());
@@ -500,8 +664,30 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 item.put("TotalPrice", depotHead.getTotalPrice() == null ? "" : Math.abs(depotHead.getTotalPrice()));
                 item.put("payType", depotHead.getPayType() == null ? "" : depotHead.getPayType());
                 item.put("Status", depotHead.getStatus());
+                item.put("SendStatus", depotHead.getSendStatus());
                 item.put("Remark", depotHead.getRemark());
-                item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+
+                item.put("CheckStatus", depotHead.getCheckStatus());
+                item.put("CheckOperName", depotHead.getCheckOperName());
+
+                item.put("Express", depotHead.getExpress());
+                item.put("ExpressNumber", depotHead.getExpressNumber());
+                item.put("Contacts", depotHead.getContacts());
+                item.put("Phonenum", depotHead.getPhonenum());
+                item.put("state", depotHead.getState());
+                item.put("city", depotHead.getCity());
+                item.put("street", depotHead.getStreet());
+                item.put("address", depotHead.getAddress());
+
+                //重量
+                item.put("Weight", depotHead.getWeight());
+                //运费预估
+                item.put("Freight", depotHead.getFreight());
+                //发货员
+                item.put("SendPersonName", depotHead.getSendPersonName());
+
+                //item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
+                item.put("MaterialsList", findProductListByHeaderId(depotHead.getId()));
             }
             //回写查询结果
             toClient(item.toString());
@@ -748,13 +934,31 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         }
     }
 
-    public String findMaterialsListByHeaderId(Long headerId) {
+    private String findMaterialsListByHeaderId(Long headerId) {
         String allReturn = "";
         PageUtil pageUtil = new PageUtil();
         pageUtil.setPageSize(0);
         pageUtil.setCurPage(0);
         try {
             depotHeadService.findMaterialsListByHeaderId(pageUtil, headerId);
+            allReturn = pageUtil.getPageList().toString();
+            allReturn = allReturn.substring(1, allReturn.length() - 1);
+            if (allReturn.equals("null")) {
+                allReturn = "";
+            }
+        } catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        }
+        return allReturn;
+    }
+
+    public String findProductListByHeaderId(Long headerId) {
+        String allReturn = "";
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try {
+            depotHeadService.findProductListByHeaderId(pageUtil, headerId);
             allReturn = pageUtil.getPageList().toString();
             allReturn = allReturn.substring(1, allReturn.length() - 1);
             if (allReturn.equals("null")) {
@@ -777,12 +981,6 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         String endTime = model.getEndTime();
         Long organId = model.getOrganId();
         String supType = model.getSupType(); //单位类型：客户、供应商
-        int j = 1;
-        if (supType.equals("客户")) { //客户
-            j = 1;
-        } else if (supType.equals("供应商")) { //供应商
-            j = -1;
-        }
         try {
             depotHeadService.findStatementAccount(pageUtil, beginTime, endTime, organId, supType);
             List dataList = pageUtil.getPageList();
@@ -832,7 +1030,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     }
                     item.put("discountLastMoney", p1); //金额
                     item.put("changeAmount", p2); //金额
-                    item.put("allPrice", String.format("%.2f", allPrice * j)); //计算后的金额
+                    item.put("allPrice", String.format("%.2f", allPrice)); //计算后的金额
                     item.put("supplierName", arr[4]); //供应商
                     item.put("operTime", arr[5]); //入库出库日期
                     dataArray.add(item);
@@ -842,6 +1040,309 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             //回写查询结果
             toClient(outer.toString());
         } catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     *  新的客户对账单
+     */
+    public void findCustomerStatementAccount() {
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            depotHeadService.findCustomerStatementAccount(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("number", arr[0]); //单据编号
+                    item.put("type", arr[1]); //类型
+                    item.put("customerName",arr[2]);//客户名称
+                    item.put("oTime", arr[3]); //日期
+                    item.put("productName", arr[4]); //产品名称
+                    item.put("templateName", arr[5]); //版本明细
+                    item.put("mUnit", arr[6]); //规格
+                    item.put("operNumber", arr[7]); //数量
+                    item.put("unitPrice", arr[8]); //单价
+                    item.put("allPrice", arr[9]); //总价
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 业务员对账单--订单明细
+     */
+    public void findSalesManStatementAccount() {
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            depotHeadService.findSalesManStatementAccount(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("number", arr[0]); //单据编号
+                    item.put("type", arr[1]); //类型
+                    item.put("customerName",arr[2]);//客户名称
+                    item.put("oTime", arr[3]); //日期
+                    item.put("productName", arr[4]); //产品名称
+                    item.put("templateName", arr[5]); //版本明细
+                    item.put("mUnit", arr[6]); //规格
+                    item.put("operNumber", arr[7]); //数量
+                    item.put("unitPrice", arr[8]); //单价
+                    item.put("allPrice", arr[9]); //总价
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     *  新的客户对账单 版本分类统计
+     */
+    public void findCustomerStatementTemplate(){
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            depotHeadService.findCustomerStatementTemplate(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("templateName", arr[0]); //版本种类
+                    item.put("OperNumber", arr[1]); //数量
+                    item.put("AllPrice", arr[2]); //合计金额
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 业务员对账单--版本归类
+     */
+    public void findSalesManStatementTemplate(){
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            depotHeadService.findSalesManStatementTemplate(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("templateName", arr[0]); //版本种类
+                    item.put("OperNumber", arr[1]); //数量
+                    item.put("AllPrice", arr[2]); //合计金额
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 新的供应商对账单 版本分类统计
+     */
+    public void findSupplierStatementTemplate(){
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            depotHeadService.findSupplierStatementTemplate(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("templateName", arr[0]); //版本种类
+                    item.put("OperNumber", arr[1]); //数量
+                    item.put("AllPrice", arr[2]); //合计金额
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 新的供应商对账单
+     */
+    public void findSupplierStatementAccount() {
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            depotHeadService.findSupplierStatementAccount(pageUtil, beginTime, endTime, organId);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("number", arr[0]); //单据编号
+                    item.put("oTime", arr[1]); //日期
+                    item.put("productName", arr[2]); //产品名称
+                    item.put("templateName", arr[3]); //版本明细
+                    item.put("mUnit", arr[4]); //规格
+                    item.put("operNumber", arr[5]); //数量
+                    item.put("taxUnitPrice", arr[6]); //进货价
+                    item.put("allPrice", (double)arr[5]*(double)arr[6]); //总价
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 统计客户活跃度
+     */
+    public void sumCustomerActivity(){
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            Long organId = model.getOrganId();
+            String sort = model.getSort();
+            depotHeadService.sumCustomerActivity(pageUtil, beginTime, endTime, organId,sort);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("number", arr[0]); //下单数量
+                    item.put("customerNo", arr[2]); //客户编号
+                    item.put("customerName", arr[3]); //客户姓名
+                    item.put("phonenum", arr[4]); //手机号码
+                    item.put("type", CustomerTypeEnum.getSexEnumByCode((String)arr[5]).getName()); //客户类型
+                    item.put("address", (String)arr[6]+arr[7]+arr[8]+arr[9]); //手机号码
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
         } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
@@ -867,9 +1368,23 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("Type_s_eq", model.getType());
         condition.put("SubType_s_eq", model.getSubType());
         condition.put("Number_s_like", model.getNumber());
+        condition.put("Status_n_eq", model.getSearchStatus());
+        condition.put("CheckStatus_n_eq", model.getSearchCheckStatus());
+        condition.put("OrganId_s_in", model.getCustomerIds());
+        condition.put("SendStatus_n_eq", model.getSearchSendStatus());
         condition.put("Id_s_in", model.getDhIds());
-        condition.put("OperTime_s_gteq", model.getBeginTime());
-        condition.put("OperTime_s_lteq", model.getEndTime());
+
+        condition.put("CreateTime_s_gteq", model.getBeginTime());
+        condition.put("CreateTime_s_lteq", model.getEndTime());
+
+        condition.put("OperTime_s_gteq", model.getSendBeginTime());
+        condition.put("OperTime_s_lteq", model.getSendEndTime());
+
+        if(null != model.getSearchTotalPrice()){
+            condition.put("TotalPrice_s_gteq", model.getSearchTotalPrice()-10);
+            condition.put("TotalPrice_s_lteq", model.getSearchTotalPrice()+10);
+        }
+
         condition.put("Id_s_order", "desc");
         return condition;
     }
@@ -910,11 +1425,30 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     }
 
     //=============以下spring注入以及Model驱动公共方法，与Action处理无关==================
+    @Override
     public DepotHeadModel getModel() {
         return model;
     }
 
     public void setDepotHeadService(DepotHeadIService depotHeadService) {
         this.depotHeadService = depotHeadService;
+    }
+
+    /**
+     * Setter method for property <tt>userService</tt>.
+     *
+     * @param userService value to be assigned to property userService
+     */
+    public void setUserService(UserIService userService) {
+        this.userService = userService;
+    }
+
+    /**
+     * Setter method for property <tt>customerService</tt>.
+     *
+     * @param customerService value to be assigned to property customerService
+     */
+    public void setCustomerService(CustomerIService customerService) {
+        this.customerService = customerService;
     }
 }

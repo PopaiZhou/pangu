@@ -63,6 +63,11 @@ public class DepotItemService extends BaseService<DepotItem> implements DepotIte
         depotItemDao.findGiftByType(pageUtil, subType, ProjectId, MId, type);
     }
 
+    @Override
+    public void deleteByHeaderId(Long headerId) throws JshException{
+        depotItemDao.deleteByHeaderId(headerId);
+    }
+
     /**
      * 导出Excel表格
      */

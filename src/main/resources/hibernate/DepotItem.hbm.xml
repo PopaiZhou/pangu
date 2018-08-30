@@ -12,7 +12,7 @@
     <comment>主表Id</comment>
    </column>
   </many-to-one>
-  <many-to-one name="MaterialId" class="com.jsh.model.po.Material" lazy="false">
+  <many-to-one name="MaterialId" class="com.jsh.model.po.Product" lazy="false">
    <column name="MaterialId" not-null="true">
     <comment>商品Id</comment>
    </column>
@@ -47,11 +47,11 @@
     <comment>金额</comment>
    </column>
   </property>
-  <many-to-one name="DepotId" class="com.jsh.model.po.Depot" lazy="false">
-   <column name="DepotId">
-    <comment>仓库ID（库存是统计出来的）</comment>
+  <property generated="never" lazy="false" name="DepotId" type="java.lang.String">
+   <column length="50" name="DepotId">
+    <comment>仓库名称</comment>
    </column>
-  </many-to-one>
+  </property>
   <many-to-one name="AnotherDepotId" class="com.jsh.model.po.Depot" lazy="false">
    <column name="AnotherDepotId">
     <comment>调拨时，对方仓库Id</comment>
@@ -107,5 +107,10 @@
     <comment>描述</comment>
    </column>
   </property>
+  <many-to-one name="TemplateId" class="com.jsh.model.po.Template" lazy="false">
+   <column name="TemplateId" not-null="true">
+    <comment>模板编号</comment>
+   </column>
+  </many-to-one>
  </class>
 </hibernate-mapping>

@@ -41,10 +41,18 @@ public class DepotHeadModel implements Serializable {
     private Integer AccountDay;
     //单据状态
     private Boolean Status = false;
-    //查询开始时间
+    //审核状态
+    private Boolean CheckStatus = false;
+    //查询下单开始时间
     private String BeginTime;
-    //查询结束时间
+    //查询下单结束时间
     private String EndTime;
+
+    //查询发货开始时间
+    private String SendBeginTime;
+    //查询发货结束时间
+    private String SendEndTime;
+
     //查询月份
     private String MonthTime;
     //单位Id，用于查询单位的应收应付
@@ -55,6 +63,59 @@ public class DepotHeadModel implements Serializable {
     private String dhIds;
     //单位类型，客户、供应商
     private String supType;
+
+    private Double searchTotalPrice;
+
+    /**
+     * 收款状态
+     */
+    private String searchStatus;
+    /**
+     * 发货状态
+     */
+    private String searchSendStatus;
+
+    /**
+     * 审核状态
+     */
+    private String searchCheckStatus;
+
+    /**
+     * 统计客户活跃度 排序
+     */
+    private String Sort;
+
+    /**
+     * 客户名称
+     */
+    private String customerName;
+    /**
+     * 客户编号
+     */
+    private String customerNo;
+
+    private String customerIds;
+
+    private Boolean SendStatus = false; //发货状态
+    private Double Weight;
+    private Double Freight;
+    private String Express;
+    private String ExpressNumber;
+    private String Contacts;
+    private String Phonenum;
+    /**
+     * 省
+     */
+    private String state;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String street;
+    private String address;
 
 
     /**
@@ -400,5 +461,400 @@ public class DepotHeadModel implements Serializable {
 
     public void setSupType(String supType) {
         this.supType = supType;
+    }
+
+    /**
+     * Getter method for property <tt>searchStatus</tt>.
+     *
+     * @return property value of searchStatus
+     */
+    public String getSearchStatus() {
+        return searchStatus;
+    }
+
+    /**
+     * Setter method for property <tt>searchStatus</tt>.
+     *
+     * @param searchStatus value to be assigned to property searchStatus
+     */
+    public void setSearchStatus(String searchStatus) {
+        this.searchStatus = searchStatus;
+    }
+
+    /**
+     * Getter method for property <tt>SendStatus</tt>.
+     *
+     * @return property value of SendStatus
+     */
+    public Boolean getSendStatus() {
+        return SendStatus;
+    }
+
+    /**
+     * Setter method for property <tt>SendStatus</tt>.
+     *
+     * @param sendStatus value to be assigned to property SendStatus
+     */
+    public void setSendStatus(Boolean sendStatus) {
+        SendStatus = sendStatus;
+    }
+
+    /**
+     * Getter method for property <tt>Weight</tt>.
+     *
+     * @return property value of Weight
+     */
+    public Double getWeight() {
+        return Weight;
+    }
+
+    /**
+     * Setter method for property <tt>Weight</tt>.
+     *
+     * @param weight value to be assigned to property Weight
+     */
+    public void setWeight(Double weight) {
+        Weight = weight;
+    }
+
+    /**
+     * Getter method for property <tt>Freight</tt>.
+     *
+     * @return property value of Freight
+     */
+    public Double getFreight() {
+        return Freight;
+    }
+
+    /**
+     * Setter method for property <tt>Freight</tt>.
+     *
+     * @param freight value to be assigned to property Freight
+     */
+    public void setFreight(Double freight) {
+        Freight = freight;
+    }
+
+    /**
+     * Getter method for property <tt>Express</tt>.
+     *
+     * @return property value of Express
+     */
+    public String getExpress() {
+        return Express;
+    }
+
+    /**
+     * Setter method for property <tt>Express</tt>.
+     *
+     * @param express value to be assigned to property Express
+     */
+    public void setExpress(String express) {
+        Express = express;
+    }
+
+    /**
+     * Getter method for property <tt>ExpressNumber</tt>.
+     *
+     * @return property value of ExpressNumber
+     */
+    public String getExpressNumber() {
+        return ExpressNumber;
+    }
+
+    /**
+     * Setter method for property <tt>ExpressNumber</tt>.
+     *
+     * @param expressNumber value to be assigned to property ExpressNumber
+     */
+    public void setExpressNumber(String expressNumber) {
+        ExpressNumber = expressNumber;
+    }
+
+    /**
+     * Getter method for property <tt>Contacts</tt>.
+     *
+     * @return property value of Contacts
+     */
+    public String getContacts() {
+        return Contacts;
+    }
+
+    /**
+     * Setter method for property <tt>Contacts</tt>.
+     *
+     * @param contacts value to be assigned to property Contacts
+     */
+    public void setContacts(String contacts) {
+        Contacts = contacts;
+    }
+
+    /**
+     * Getter method for property <tt>Phonenum</tt>.
+     *
+     * @return property value of Phonenum
+     */
+    public String getPhonenum() {
+        return Phonenum;
+    }
+
+    /**
+     * Setter method for property <tt>Phonenum</tt>.
+     *
+     * @param phonenum value to be assigned to property Phonenum
+     */
+    public void setPhonenum(String phonenum) {
+        Phonenum = phonenum;
+    }
+
+    /**
+     * Getter method for property <tt>state</tt>.
+     *
+     * @return property value of state
+     */
+    public String getState() {
+        return state;
+    }
+
+    /**
+     * Setter method for property <tt>state</tt>.
+     *
+     * @param state value to be assigned to property state
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
+     * Getter method for property <tt>city</tt>.
+     *
+     * @return property value of city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * Setter method for property <tt>city</tt>.
+     *
+     * @param city value to be assigned to property city
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * Getter method for property <tt>street</tt>.
+     *
+     * @return property value of street
+     */
+    public String getStreet() {
+        return street;
+    }
+
+    /**
+     * Setter method for property <tt>street</tt>.
+     *
+     * @param street value to be assigned to property street
+     */
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    /**
+     * Getter method for property <tt>address</tt>.
+     *
+     * @return property value of address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Setter method for property <tt>address</tt>.
+     *
+     * @param address value to be assigned to property address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * Getter method for property <tt>searchSendStatus</tt>.
+     *
+     * @return property value of searchSendStatus
+     */
+    public String getSearchSendStatus() {
+        return searchSendStatus;
+    }
+
+    /**
+     * Setter method for property <tt>searchSendStatus</tt>.
+     *
+     * @param searchSendStatus value to be assigned to property searchSendStatus
+     */
+    public void setSearchSendStatus(String searchSendStatus) {
+        this.searchSendStatus = searchSendStatus;
+    }
+    /**
+     * Getter method for property <tt>searchCheckStatus</tt>.
+     *
+     * @return property value of searchCheckStatus
+     */
+    public String getSearchCheckStatus() {
+        return searchCheckStatus;
+    }
+
+    /**
+     * Setter method for property <tt>searchCheckStatus</tt>.
+     *
+     * @param searchCheckStatus value to be assigned to property searchCheckStatus
+     */
+    public void setSearchCheckStatus(String searchCheckStatus) {
+        this.searchCheckStatus = searchCheckStatus;
+    }
+
+    /**
+     * Getter method for property <tt>customerName</tt>.
+     *
+     * @return property value of customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     * Setter method for property <tt>customerName</tt>.
+     *
+     * @param customerName value to be assigned to property customerName
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    /**
+     * Getter method for property <tt>customerNo</tt>.
+     *
+     * @return property value of customerNo
+     */
+    public String getCustomerNo() {
+        return customerNo;
+    }
+
+    /**
+     * Setter method for property <tt>customerNo</tt>.
+     *
+     * @param customerNo value to be assigned to property customerNo
+     */
+    public void setCustomerNo(String customerNo) {
+        this.customerNo = customerNo;
+    }
+
+    /**
+     * Getter method for property <tt>customerIds</tt>.
+     *
+     * @return property value of customerIds
+     */
+    public String getCustomerIds() {
+        return customerIds;
+    }
+
+    /**
+     * Setter method for property <tt>customerIds</tt>.
+     *
+     * @param customerIds value to be assigned to property customerIds
+     */
+    public void setCustomerIds(String customerIds) {
+        this.customerIds = customerIds;
+    }
+
+    /**
+     * Getter method for property <tt>CheckStatus</tt>.
+     *
+     * @return property value of CheckStatus
+     */
+    public Boolean getCheckStatus() {
+        return CheckStatus;
+    }
+
+    /**
+     * Setter method for property <tt>CheckStatus</tt>.
+     *
+     * @param checkStatus value to be assigned to property CheckStatus
+     */
+    public void setCheckStatus(Boolean checkStatus) {
+        CheckStatus = checkStatus;
+    }
+
+    /**
+     * Getter method for property <tt>searchTotalPrice</tt>.
+     *
+     * @return property value of searchTotalPrice
+     */
+    public Double getSearchTotalPrice() {
+        return searchTotalPrice;
+    }
+
+    /**
+     * Setter method for property <tt>searchTotalPrice</tt>.
+     *
+     * @param searchTotalPrice value to be assigned to property searchTotalPrice
+     */
+    public void setSearchTotalPrice(Double searchTotalPrice) {
+        this.searchTotalPrice = searchTotalPrice;
+    }
+
+    /**
+     * Getter method for property <tt>Sort</tt>.
+     *
+     * @return property value of Sort
+     */
+    public String getSort() {
+        return Sort;
+    }
+
+    /**
+     * Setter method for property <tt>Sort</tt>.
+     *
+     * @param Sort value to be assigned to property Sort
+     */
+    public void setSort(String sort) {
+        Sort = sort;
+    }
+
+    /**
+     * Getter method for property <tt>SendBeginTime</tt>.
+     *
+     * @return property value of SendBeginTime
+     */
+    public String getSendBeginTime() {
+        return SendBeginTime;
+    }
+
+    /**
+     * Setter method for property <tt>SendBeginTime</tt>.
+     *
+     * @param SendBeginTime value to be assigned to property SendBeginTime
+     */
+    public void setSendBeginTime(String sendBeginTime) {
+        SendBeginTime = sendBeginTime;
+    }
+
+    /**
+     * Getter method for property <tt>SendEndTime</tt>.
+     *
+     * @return property value of SendEndTime
+     */
+    public String getSendEndTime() {
+        return SendEndTime;
+    }
+
+    /**
+     * Setter method for property <tt>SendEndTime</tt>.
+     *
+     * @param SendEndTime value to be assigned to property SendEndTime
+     */
+    public void setSendEndTime(String sendEndTime) {
+        SendEndTime = sendEndTime;
     }
 }

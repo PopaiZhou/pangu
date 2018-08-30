@@ -57,3 +57,42 @@ function initDistrict(pid) {
         }
     });
 }
+
+
+
+
+function initSearchProvince(){
+    $('#searchState').combobox({
+        method:'get',
+        url: path + "/regionArea/getAllState.action",
+        valueField:'id',
+        textField:'name',
+        onSelect:function(record){
+            initSearchCity(record.id);
+            $('#searchCity').combobox('clear');
+            $('#searchCity').combobox('setValue','');
+        }
+    });
+}
+
+/**
+ * 获取2级，区域层级
+ * @param pid
+ */
+function initSearchCity(pid) {
+    $('#searchCity').combobox({
+        method:'get',
+        url: path + "/regionArea/getCity.action?parentId="+pid,
+        dataType: "json",
+        valueField:'id',
+        textField:'name',
+        onSelect:function(record){
+        },
+        onLoadSuccess: function () { //加载完成后,设置选中第一项
+            var data= $(this).combobox("getData");
+            if (data.length > 0) {
+                $('#searchCity').combobox('select', data[0].id);
+            }
+        }
+    });
+}

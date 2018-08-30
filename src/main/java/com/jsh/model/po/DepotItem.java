@@ -4,7 +4,8 @@ package com.jsh.model.po;
 public class DepotItem implements java.io.Serializable {
     private Long Id;
     private DepotHead HeaderId;
-    private Material MaterialId;
+    private Product MaterialId;// 对应 productId
+    private Template TemplateId;//对应 templateId
     private String MUnit; //计量单位
     private Double OperNumber;
     private Double BasicNumber;
@@ -13,7 +14,7 @@ public class DepotItem implements java.io.Serializable {
     private Double AllPrice;
     private String Remark;
     private String Img;
-    private Depot DepotId; //仓库ID
+    private String DepotId; //供应商编号
     private Depot AnotherDepotId; //对方仓库Id
     private Double TaxRate; //税率
     private Double TaxMoney; //税额
@@ -34,10 +35,10 @@ public class DepotItem implements java.io.Serializable {
         this.Id = Id;
     }
 
-    public DepotItem(DepotHead headerId, Material materialId, String mUnit,
+    public DepotItem(DepotHead headerId, Product materialId, String mUnit,
                      Double operNumber, Double basicNumber, Double unitPrice, Double taxUnitPrice, Double allPrice, String remark, String img,
-                     Depot depotId, Depot anotherDepotId, Double taxRate, Double taxMoney, Double taxLastMoney,
-                     String otherField1, String otherField2, String otherField3, String otherField4, String otherField5, String mType) {
+                     String depotId, Depot anotherDepotId, Double taxRate, Double taxMoney, Double taxLastMoney,
+                     String otherField1, String otherField2, String otherField3, String otherField4, String otherField5, String mType,Template templateId) {
         super();
         HeaderId = headerId;
         MaterialId = materialId;
@@ -60,6 +61,7 @@ public class DepotItem implements java.io.Serializable {
         OtherField4 = otherField4;
         OtherField5 = otherField5;
         MType = mType;
+        TemplateId = templateId;
     }
 
     public Long getId() {
@@ -78,11 +80,11 @@ public class DepotItem implements java.io.Serializable {
         HeaderId = headerId;
     }
 
-    public Material getMaterialId() {
+    public Product getMaterialId() {
         return MaterialId;
     }
 
-    public void setMaterialId(Material materialId) {
+    public void setMaterialId(Product materialId) {
         MaterialId = materialId;
     }
 
@@ -150,11 +152,11 @@ public class DepotItem implements java.io.Serializable {
         Img = img;
     }
 
-    public Depot getDepotId() {
+    public String getDepotId() {
         return DepotId;
     }
 
-    public void setDepotId(Depot depotId) {
+    public void setDepotId(String depotId) {
         DepotId = depotId;
     }
 
@@ -236,5 +238,24 @@ public class DepotItem implements java.io.Serializable {
 
     public void setMType(String MType) {
         this.MType = MType;
+    }
+
+
+    /**
+     * Getter method for property <tt>TemplateId</tt>.
+     *
+     * @return property value of TemplateId
+     */
+    public Template getTemplateId() {
+        return TemplateId;
+    }
+
+    /**
+     * Setter method for property <tt>TemplateId</tt>.
+     *
+     * @param templateId value to be assigned to property TemplateId
+     */
+    public void setTemplateId(Template templateId) {
+        TemplateId = templateId;
     }
 }

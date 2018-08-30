@@ -316,6 +316,8 @@
 	<!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
 	<bean id="depotHeadAction" class="com.jsh.action.materials.DepotHeadAction" scope="prototype">
 		<property name="depotHeadService" ref="depotHeadService"/>
+		<property name="userService" ref="userService"/>
+		<property name="customerService" ref="customerService" />
 		<property name="logService" ref="logService"/>
 	</bean>
 	<!--仓管通配置结束 -->
@@ -392,5 +394,41 @@
 		<property name="regionAreaService" ref="regionAreaService"/>
 	</bean>
 	<!--区域配置结束 -->
+
+	<!--版本册配置开始 -->
+	<bean id="templateService" class="com.jsh.service.materials.TemplateService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="templateDao" ref="templateDao" />
+	</bean>
+	<bean id="templateAction" class="com.jsh.action.materials.TemplateAction" scope="prototype">
+		<property name="templateService" ref="templateService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--版本册配置结束 -->
+
+	<!--产品型号配置开始 -->
+	<bean id="productService" class="com.jsh.service.materials.ProductService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="productDao" ref="productDao" />
+	</bean>
+	<bean id="productAction" class="com.jsh.action.materials.ProductAction" scope="prototype">
+		<property name="productService" ref="productService"/>
+		<property name="templateService" ref="templateService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--产品型号配置结束 -->
+
+	<!--客户信息配置开始 -->
+	<bean id="customerService" class="com.jsh.service.materials.CustomerService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="customerDao" ref="customerDao" />
+	</bean>
+	<bean id="customerAction" class="com.jsh.action.materials.CustomerAction" scope="prototype">
+		<property name="customerService" ref="customerService"/>
+		<property name="userBusinessService" ref="userBusinessService"/>
+		<property name="userService" ref="userService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--客户信息配置结束 -->
 
 </beans>

@@ -21,6 +21,8 @@ public interface DepotItemIService extends BaseIService<DepotItem> {
 
     void findGiftByType(PageUtil<DepotItem> depotItem, String subType, Integer ProjectId, Long MId, String type) throws JshException;
 
+    void deleteByHeaderId(Long headerId) throws JshException;
+
     /**
      * 导出信息
      *

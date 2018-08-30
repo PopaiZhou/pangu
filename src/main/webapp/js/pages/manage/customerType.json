@@ -1,0 +1,10 @@
+[
+  {
+    "value": "wholesaler",
+    "name": "批发商"
+  },
+  {
+    "value": "trader",
+    "name": "零售商"
+  }
+]

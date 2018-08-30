@@ -60,4 +60,10 @@
 	<bean id="materialPropertyDAO" parent="daoTemplate" class="com.jsh.dao.materials.MaterialPropertyDAO"/>
 	<!-- 配置regionAreaDAO组件 -->
 	<bean id="regionAreaDao" parent="daoTemplate" class="com.jsh.dao.basic.RegionAreaDAO"/>
+	<!-- 配置templateDAO组件 -->
+	<bean id="templateDao" parent="daoTemplate" class="com.jsh.dao.materials.TemplateDAO"/>
+	<!-- 配置productDAO组件 -->
+	<bean id="productDao" parent="daoTemplate" class="com.jsh.dao.materials.ProductDAO"/>
+	<!-- 配置productDAO组件 -->
+	<bean id="customerDao" parent="daoTemplate" class="com.jsh.dao.materials.CustomerDAO"/>
 </beans>

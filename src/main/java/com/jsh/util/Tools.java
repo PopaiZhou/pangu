@@ -10,6 +10,7 @@ import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -155,6 +156,12 @@ public class Tools {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         return new SimpleDateFormat("yyyy-MM").format(cal.getTime());
+    }
+
+    public static String getPreWeekDate() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -5);
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(cal.getTime());
     }
 
     /**
@@ -586,5 +593,14 @@ public class Tools {
         for (int i = 0; i < 100; i++) {
             System.out.print(getRandomChar() + "  ||    ");
         }
+    }
+
+    /**
+     * 判断传入时间是否超过当前之前一礼拜
+     * @return
+     */
+    public static boolean isExpired(Timestamp valueDate){
+        Timestamp compareDate = Timestamp.valueOf(getPreWeekDate());
+        return valueDate.before(compareDate);
     }
 }

@@ -126,6 +126,7 @@ public class UserAction extends BaseAction<UserModel> {
             user.setIsystem((short) 1);
             user.setIsmanager((short) 1);
             user.setLoginame(model.getLoginame());
+            user.setUserno(model.getUserno());
             String password = "123456";
             //因密码用MD5加密，需要对密码进行转化
             try {
@@ -207,6 +208,7 @@ public class UserAction extends BaseAction<UserModel> {
             user.setPhonenum(model.getPhonenum());
             user.setPosition(model.getPosition());
             user.setUsername(model.getUsername());
+            user.setUserno(model.getUserno());
             userService.update(user);
 
             //看是否需要更新seesion中user
@@ -363,6 +365,28 @@ public class UserAction extends BaseAction<UserModel> {
     }
 
     /**
+     * 检查输入名称是否存在
+     */
+    public void checkIsNoExist() {
+        Boolean flag = false;
+        String fieldName = "";
+        String fieldValue = "";
+        try {
+            fieldName = "userno";
+            fieldValue = model.getUserno();
+            flag = userService.checkIsNameExist(fieldName, fieldValue, model.getUserID());
+        } catch (Exception e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>检查用户编号为：" + fieldValue + " ID为： " + model.getUserID() + " 是否存在异常！");
+        } finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>回写检查用户编号为：" + fieldValue + " ID为： " + model.getUserID() + " 是否存在异常！", e);
+            }
+        }
+    }
+
+    /**
      * 查找用户信息
      *
      * @return
@@ -389,6 +413,7 @@ public class UserAction extends BaseAction<UserModel> {
 
                     JSONObject item = new JSONObject();
                     item.put("id", user.getId());
+                    item.put("userno", user.getUserno());
                     item.put("username", user.getUsername());
                     item.put("loginame", Tools.dealNullStr(user.getLoginame()));
                     item.put("password", Tools.dealNullStr(user.getPassword()));
@@ -402,6 +427,7 @@ public class UserAction extends BaseAction<UserModel> {
                     item.put("description", Tools.dealNullStr(user.getDescription()));
                     item.put("remark", user.getRemark());
                     item.put("op", user.getIsystem());
+                    item.put("userno", user.getUserno());
                     dataArray.add(item);
                 }
             }
@@ -425,6 +451,7 @@ public class UserAction extends BaseAction<UserModel> {
          * 拼接搜索条件
          */
         Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("id_n_neq", model.getUserID());
         condition.put("username_s_like", model.getUsername());
         condition.put("loginame_s_like", model.getLoginame());
         condition.put("id_s_order", "asc");

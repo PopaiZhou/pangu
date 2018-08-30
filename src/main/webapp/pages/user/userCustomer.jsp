@@ -24,6 +24,7 @@
 <!-- 数据显示table -->
 <div style="padding-bottom: 10px;">
     <a id="btnOK" class="easyui-linkbutton" iconCls="icon-ok">保存</a>
+    <td>业务经理</td> &nbsp; &nbsp;<input type="text" name="basicUser" id="basicUser" style="width:120px" editable="false"/>
 </div>
 <div>
     <ul id="tt"></ul>
@@ -42,17 +43,17 @@
         for (var i = 0; i < node.length; i++) {
 
             if ($('#tt').tree('isLeaf', node[i].target)) {
-                cnodes += '[' + node[i].id + ']';
+                cnodes += node[i].id + ',';
 
                 var pnode = $('#tt').tree('getParent', node[i].target); //获取当前节点的父节点
                 if (prevNode != pnode.id) //保证当前父节点与上一次父节点不同
                 {
-                    pnodes += '[' + pnode.id + ']';
+                    pnodes +=  pnode.id + ',';
                     prevNode = pnode.id; //保存当前节点
                 }
             }
         }
-        //cnodes = cnodes.substring(0, cnodes.length - 1);
+        cnodes = cnodes.substring(0, cnodes.length - 1);
         pnodes = pnodes.substring(0, pnodes.length - 1);
 
         if (ctype == 'child') {
@@ -64,10 +65,19 @@
         ;
     };
 
-    $(function () {
+    //初始化业务经理列表信息(下拉列表)
+    function initSalesList() {
+        $('#basicUser').combobox({
+            url: '<%=path%>/customer/findBySelect_temp.action',
+            valueField:'id',
+            textField:'sales'
+        });
+    }
 
+    $(function () {
+        initSalesList();
         $('#tt').tree({
-            url: '<%=path%>/supplier/findUserCustomer.action?UBType=' + type + '&UBKeyId=' + url_id,
+            url: '<%=path%>/customer/findUserCustomer.action?userId=' + url_id,
             animate: true,
             checkbox: true
         });
@@ -75,20 +85,25 @@
 
         $("#btnOK").click(
             function () {
-                if (!checkUserDepot()) {
-                    url = '<%=path%>/userBusiness/create.action';
+                var newUserId = $.trim($("#basicUser").datebox("getValue"));
+                if(newUserId == ''){
+                    $.messager.alert('选择提示','请选择需要转移的业务员！','info');
+                    return;
                 }
-                else {
-                    url = '<%=path%>/userBusiness/update.action';
+                if(newUserId == url_id){
+                    $.messager.alert('选择提示','不能进行自身转移！','info');
+                    return;
                 }
-
                 if (confirm("您确定要保存吗？")) {
 
                     $.ajax({
                         type: "post",
-                        url: url,
+                        url: "<%=path %>/customer/batchTransCustomer.action",
                         data: {
-                            Type: type, KeyId: url_id, Value: GetNode('child'), clientIp: '<%=clientIp %>'
+                            oldUserId : url_id,
+                            newUserId : newUserId,
+                            customerIds : GetNode('child'),
+                            clientIp: '<%=clientIp %>'
                         },
                         dataType: "json",
                         async: false,
@@ -106,32 +121,6 @@
         );
 
     });
-
-    //检查记录是否存在
-    function checkUserDepot() {
-        //表示是否存在 true == 存在 false = 不存在
-        var flag = false;
-        //开始ajax名称检验，是否存在
-        $.ajax({
-            type: "post",
-            url: "<%=path %>/userBusiness/checkIsValueExist.action",
-            dataType: "json",
-            async: false,
-            data: ({
-                Type: type,
-                KeyId: url_id
-            }),
-            success: function (tipInfo) {
-                flag = tipInfo;
-            },
-            //此处添加错误处理
-            error: function () {
-                $.messager.alert('提示', '检查用户对应功能是否存在异常，请稍后再试！', 'error');
-                return;
-            }
-        });
-        return flag;
-    }
 </script>
 </body>
 </html>

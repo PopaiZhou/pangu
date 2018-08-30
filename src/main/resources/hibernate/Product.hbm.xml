@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.jsh.model.po.Product" table="jsh_product" schema="jsh_erp">
+        <id name="id" column="id"/>
+        <property name="productId" column="productId"/>
+        <property name="productName" column="productName"/>
+        <many-to-one name="templateId" class="com.jsh.model.po.Template" lazy="false">
+            <column name="templateId">
+                <comment>模板Id</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="supplierNo" class="com.jsh.model.po.Supplier" lazy="false">
+            <column name="supplierNo">
+                <comment>供应商Id</comment>
+            </column>
+        </many-to-one>
+        <property name="standard" column="standard"/>
+        <property name="purchasePrice" column="purchasePrice"/>
+        <property name="wholesalePrice" column="wholesalePrice"/>
+        <property name="retailPrice" column="retailPrice"/>
+        <property name="inventory" column="inventory"/>
+        <property name="enabled" column="enabled"/>
+        <property name="gmtCreate" column="gmtCreate"/>
+        <property name="gmtModify" column="gmtModify"/>
+    </class>
+</hibernate-mapping>

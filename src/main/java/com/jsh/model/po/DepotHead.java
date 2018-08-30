@@ -13,7 +13,7 @@ public class DepotHead implements java.io.Serializable {
     private String OperPersonName;
     private Timestamp CreateTime;
     private Timestamp OperTime;
-    private Supplier OrganId;
+    private Customer OrganId;
     private Person HandsPersonId;
     private String Salesman;  //业务员（可以多个）[2][3]
     private Account AccountId;
@@ -31,7 +31,30 @@ public class DepotHead implements java.io.Serializable {
     private Double TotalPrice;
     private String PayType;
     private Boolean Status = false; //单据状态
+    private Boolean CheckStatus =false;//审核状态
+    private String CheckOperName;//审核人名字
     private String Remark;
+    private Boolean SendStatus = false; //发货状态
+    private Double Weight;
+    private Double Freight;
+    private String Express;
+    private String ExpressNumber;
+    private String Contacts;
+    private String Phonenum;
+    private String SendPersonName;
+    /**
+     * 省
+     */
+    private String state;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String street;
+    private String address = "";
 
     public DepotHead() {
 
@@ -42,7 +65,7 @@ public class DepotHead implements java.io.Serializable {
     }
 
     public DepotHead(String type, String subType, Depot projectId, String defaultNumber, String number, String operPersonName, Timestamp createTime,
-                     Timestamp operTime, Supplier organId, Person handsPersonId, String salesman, String accountIdList, String accountMoneyList,
+                     Timestamp operTime, Customer organId, Person handsPersonId, String salesman, String accountIdList, String accountMoneyList,
                      Double discount, Double discountMoney, Double discountLastMoney, Double otherMoney, String otherMoneyItem, Integer accountDay,
                      Account accountId, Double changeAmount, Depot allocationProjectId, Double totalPrice, String payType, Boolean status, String remark) {
         super();
@@ -146,11 +169,11 @@ public class DepotHead implements java.io.Serializable {
         OperTime = operTime;
     }
 
-    public Supplier getOrganId() {
+    public Customer getOrganId() {
         return OrganId;
     }
 
-    public void setOrganId(Supplier organId) {
+    public void setOrganId(Customer organId) {
         OrganId = organId;
     }
 
@@ -296,5 +319,256 @@ public class DepotHead implements java.io.Serializable {
 
     public void setStatus(Boolean status) {
         Status = status;
+    }
+
+    /**
+     * Getter method for property <tt>SendStatus</tt>.
+     *
+     * @return property value of SendStatus
+     */
+    public Boolean getSendStatus() {
+        return SendStatus;
+    }
+
+    /**
+     * Setter method for property <tt>SendStatus</tt>.
+     *
+     * @param sendStatus value to be assigned to property SendStatus
+     */
+    public void setSendStatus(Boolean sendStatus) {
+        SendStatus = sendStatus;
+    }
+
+    /**
+     * Getter method for property <tt>Weight</tt>.
+     *
+     * @return property value of Weight
+     */
+    public Double getWeight() {
+        return Weight;
+    }
+
+    /**
+     * Setter method for property <tt>Weight</tt>.
+     *
+     * @param weight value to be assigned to property Weight
+     */
+    public void setWeight(Double weight) {
+        Weight = weight;
+    }
+
+    /**
+     * Getter method for property <tt>Freight</tt>.
+     *
+     * @return property value of Freight
+     */
+    public Double getFreight() {
+        return Freight;
+    }
+
+    /**
+     * Setter method for property <tt>Freight</tt>.
+     *
+     * @param freight value to be assigned to property Freight
+     */
+    public void setFreight(Double freight) {
+        Freight = freight;
+    }
+
+    /**
+     * Getter method for property <tt>Express</tt>.
+     *
+     * @return property value of Express
+     */
+    public String getExpress() {
+        return Express;
+    }
+
+    /**
+     * Setter method for property <tt>Express</tt>.
+     *
+     * @param express value to be assigned to property Express
+     */
+    public void setExpress(String express) {
+        Express = express;
+    }
+
+    /**
+     * Getter method for property <tt>ExpressNumber</tt>.
+     *
+     * @return property value of ExpressNumber
+     */
+    public String getExpressNumber() {
+        return ExpressNumber;
+    }
+
+    /**
+     * Setter method for property <tt>ExpressNumber</tt>.
+     *
+     * @param expressNumber value to be assigned to property ExpressNumber
+     */
+    public void setExpressNumber(String expressNumber) {
+        ExpressNumber = expressNumber;
+    }
+
+    /**
+     * Getter method for property <tt>Contacts</tt>.
+     *
+     * @return property value of Contacts
+     */
+    public String getContacts() {
+        return Contacts;
+    }
+
+    /**
+     * Setter method for property <tt>Contacts</tt>.
+     *
+     * @param contacts value to be assigned to property Contacts
+     */
+    public void setContacts(String contacts) {
+        Contacts = contacts;
+    }
+
+    /**
+     * Getter method for property <tt>Phonenum</tt>.
+     *
+     * @return property value of Phonenum
+     */
+    public String getPhonenum() {
+        return Phonenum;
+    }
+
+    /**
+     * Setter method for property <tt>Phonenum</tt>.
+     *
+     * @param phonenum value to be assigned to property Phonenum
+     */
+    public void setPhonenum(String phonenum) {
+        Phonenum = phonenum;
+    }
+
+    /**
+     * Getter method for property <tt>state</tt>.
+     *
+     * @return property value of state
+     */
+    public String getState() {
+        return state;
+    }
+
+    /**
+     * Setter method for property <tt>state</tt>.
+     *
+     * @param state value to be assigned to property state
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    /**
+     * Getter method for property <tt>city</tt>.
+     *
+     * @return property value of city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * Setter method for property <tt>city</tt>.
+     *
+     * @param city value to be assigned to property city
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * Getter method for property <tt>street</tt>.
+     *
+     * @return property value of street
+     */
+    public String getStreet() {
+        return street;
+    }
+
+    /**
+     * Setter method for property <tt>street</tt>.
+     *
+     * @param street value to be assigned to property street
+     */
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    /**
+     * Getter method for property <tt>address</tt>.
+     *
+     * @return property value of address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Setter method for property <tt>address</tt>.
+     *
+     * @param address value to be assigned to property address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    /**
+     * Getter method for property <tt>SendPersonName</tt>.
+     *
+     * @return property value of SendPersonName
+     */
+    public String getSendPersonName() {
+        return SendPersonName;
+    }
+
+    /**
+     * Setter method for property <tt>SendPersonName</tt>.
+     *
+     * @param sendPersonName value to be assigned to property SendPersonName
+     */
+    public void setSendPersonName(String sendPersonName) {
+        SendPersonName = sendPersonName;
+    }
+    /**
+     * Getter method for property <tt>CheckOperName</tt>.
+     *
+     * @return property value of CheckOperName
+     */
+    public String getCheckOperName() {
+        return CheckOperName;
+    }
+
+    /**
+     * Setter method for property <tt>CheckOperName</tt>.
+     *
+     * @param checkOperName value to be assigned to property CheckOperName
+     */
+    public void setCheckOperName(String checkOperName) {
+        CheckOperName = checkOperName;
+    }
+
+    /**
+     * Getter method for property <tt>CheckStatus</tt>.
+     *
+     * @return property value of CheckStatus
+     */
+    public Boolean getCheckStatus() {
+        return CheckStatus;
+    }
+
+    /**
+     * Setter method for property <tt>CheckStatus</tt>.
+     *
+     * @param checkStatus value to be assigned to property CheckStatus
+     */
+    public void setCheckStatus(Boolean checkStatus) {
+        CheckStatus = checkStatus;
     }
 }

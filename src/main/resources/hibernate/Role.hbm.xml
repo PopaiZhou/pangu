@@ -12,5 +12,10 @@
     <comment>角色名称</comment>
    </column>
   </property>
+  <property generated="never" lazy="false" name="isystem" type="java.lang.String">
+   <column length="50" name="isystem">
+    <comment>是否系统自带</comment>
+   </column>
+  </property>
  </class>
 </hibernate-mapping>

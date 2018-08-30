@@ -158,14 +158,6 @@
                     }
                 },'-',
                 {
-                    id:'setInput',
-                    text:'导入',
-                    iconCls:'icon-excel',
-                    handler:function() {
-                        setInputFun();
-                    }
-                },'-',
-                {
                     id:'setOutput',
                     text:'导出',
                     iconCls:'icon-excel',
@@ -228,11 +220,15 @@
                     success: function (tipInfo)
                     {
                         var msg = tipInfo.showModel.msgTip;
-                        if(msg == '成功')
-                        //加载完以后重新初始化
+                        if(msg == '成功'){
+                            //加载完以后重新初始化
+                            $.messager.alert('提示','删除供应商信息成功！','info');
                             $("#searchBtn").click();
-                        else
+                        }
+                        else{
                             $.messager.alert('删除提示','删除信息失败，请稍后再试！','error');
+                        }
+
                     },
                     //此处添加错误处理
                     error:function()
@@ -442,6 +438,7 @@
     var supplierID = 0;
     //保存编辑前的名称
     var orgSupplier = "";
+    var orgSupplierNo = "";
 
     function addSuppler() {
         $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加'+listType+"信息");
@@ -449,6 +446,7 @@
         $("#supplier").focus();
         $('#supplierFM').form('clear');
         orgSupplier = "";
+        orgSupplierNo = "";
         supplierID = 0;
         url = path + '/supplier/create.action';
     }
@@ -490,6 +488,9 @@
         //保存信息
         $("#saveSupplier").off("click").on("click",function() {
             if(!$('#supplierFM').form('validate')){
+                return;
+            }
+            else if(checkSupplierNo()){
                 return;
             }
             else if(checkSupplierName()){
@@ -635,6 +636,7 @@
             clientIp: clientIp
         };
         orgSupplier = supplierInfo[1];
+        orgSupplierNo = supplierInfo[20].replace("undefined","");
         $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑'+listType +"信息");
         $(".window-mask").css({ width: webW ,height: webH});
         $('#supplierFM').form('load',row);
@@ -705,6 +707,43 @@
         })
     }
 
+
+    //检查单位名称是否存在 ++ 重名无法提示问题需要跟进
+    function checkSupplierNo() {
+        var supplierNo = $.trim($("#supplierNo").val());
+        //表示是否存在 true == 存在 false = 不存在
+        var flag = false;
+        //开始ajax名称检验，不能重名
+        if(supplierNo.length > 0 &&( orgSupplier.length ==0 || supplierNo != orgSupplier))
+        {
+            $.ajax({
+                type:"post",
+                url: path + "/supplier/checkIsNoExist.action",
+                dataType: "json",
+                async :  false,
+                data: ({
+                    supplierID : supplierID,
+                    supplierNo : supplierNo
+                }),
+                success: function (tipInfo)
+                {
+                    flag = tipInfo;
+                    if(tipInfo)
+                    {
+                        $.messager.alert('提示','供应商编号已经存在','info');
+                        return;
+                    }
+                },
+                //此处添加错误处理
+                error:function()
+                {
+                    $.messager.alert('提示','检查供应商编号是否存在异常，请稍后再试！','error');
+                    return;
+                }
+            });
+        }
+        return flag;
+    }
 
     //检查单位名称是否存在 ++ 重名无法提示问题需要跟进
     function checkSupplierName() {

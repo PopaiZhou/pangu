@@ -21,11 +21,23 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
         return AccountHead.class;
     }
 
+    @Override
     public void find(PageUtil<AccountHead> pageUtil, String maxid) throws JshException {
         accountHeadDao.find(pageUtil, maxid);
     }
 
+    @Override
     public void findAllMoney(PageUtil<AccountHead> pageUtil, Integer supplierId, String type, String mode) throws JshException {
         accountHeadDao.findAllMoney(pageUtil, supplierId, type, mode);
+    }
+
+    @Override
+    public void batchDeleteByBillNos(String billNos) throws JshException {
+        accountHeadDao.batchDeleteByBillNos(billNos);
+    }
+
+    @Override
+    public void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException {
+        accountHeadDao.findCustomerStatementAccount(pageUtil,beginTime,endTime,organId);
     }
 }
