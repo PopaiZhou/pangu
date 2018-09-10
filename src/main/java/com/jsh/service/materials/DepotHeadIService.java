@@ -27,6 +27,18 @@ public interface DepotHeadIService extends BaseIService<DepotHead> {
 
     void findStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId, String supType) throws JshException;
 
+    /**
+     * 地区统计
+     * @param pageUtil
+     * @param beginTime
+     * @param endTime
+     * @param state
+     * @throws JshException
+     */
+    void findAreaReport(PageUtil pageUtil, String beginTime, String endTime, String state) throws JshException;
+
+    void findAreaReportTemplate(PageUtil pageUtil, String beginTime, String endTime, String state) throws JshException;
+
     void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 
     void findSalesManStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;

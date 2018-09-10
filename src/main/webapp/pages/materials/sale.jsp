@@ -208,6 +208,10 @@
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
     <table>
         <tr>
+            <td style="width:60px;">客户编号：</td>
+            <td style="padding:5px;width:130px;">
+                <span id="OrganNoShow"></span>
+            </td>
             <td style="width:60px;">客户：</td>
             <td style="padding:5px;width:130px;">
                 <span id="OrganIdShow"></span>
@@ -216,15 +220,21 @@
             <td style="padding:5px;width:130px;">
                 <span id="SalesmanShow"></span>
             </td>
-            <td style="width:80px;">下单日期：</td>
-            <td style="padding:5px;width:140px;">
-                <span id="OperTimeShow"></span>
-            </td>
             <td style="width:70px;">单据编号：</td>
             <td style="padding:5px;width:140px;">
                 <span id="NumberShow"></span>
             </td>
-            <td style="width:100px;"></td>
+        </tr>
+        <tr>
+            <td style="width:80px;">下单日期：</td>
+            <td style="padding:5px;width:140px;">
+                <span id="OperTimeShow"></span>
+            </td>
+
+            <td style="width:80px;">发货日期：</td>
+            <td style="padding:5px;width:140px;">
+                <span id="SendTimeShow"></span>
+            </td>
         </tr>
         <tr>
             <td colspan="9" style="width: 1130px;">

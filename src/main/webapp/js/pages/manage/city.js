@@ -18,6 +18,16 @@ function initProvince(){
     });
 }
 
+
+function initProvinceOnly(){
+    $('#state').combobox({
+        method:'get',
+        url: path + "/regionArea/getAllState.action",
+        valueField:'id',
+        textField:'name'
+    });
+}
+
 /**
  * 获取2级，区域层级
  * @param pid
