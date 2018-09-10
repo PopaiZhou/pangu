@@ -1451,6 +1451,7 @@ function showDepotHead(depotHeadTotalInfo){
     $("#OrganNoShow").text(depotHeadInfo[20]);//客户编号
     $("#NumberShow").text(depotHeadInfo[1]);//单据编号单据日期
     $("#OperTimeShow").text(depotHeadInfo[19]);//下单日期
+    $("#SendTimeShow").text(depotHeadInfo[2] == 'undefined' ? "未发货" : depotHeadInfo[2]);//发货日期
     $("#RemarkShow").text(depotHeadInfo[4]);//单据备注
     $('#OrganIdShow').text(depotHeadInfo[5]);//客户
     var TotalPrice = depotHeadInfo[6];
@@ -1462,7 +1463,7 @@ function showDepotHead(depotHeadTotalInfo){
     $("#PhonenumShow").text(depotHeadInfo[12]); //收货号码
 
     $("#WeightShow").text(depotHeadInfo[17]); //重量
-    $("#FreightShow").text(depotHeadInfo[18]); //运费预估
+    $("#FreightShow").text(depotHeadInfo[18]); //运费预估  
 
     $("#AddressShow").text(depotHeadInfo[13]+depotHeadInfo[14]+depotHeadInfo[15]+depotHeadInfo[16]); //收货地址
 

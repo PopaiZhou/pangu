@@ -66,6 +66,16 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
         depotHeadDao.findStatementAccount(pageUtil, beginTime, endTime, organId, supType);
     }
 
+    @Override
+    public void findAreaReport(PageUtil pageUtil, String beginTime, String endTime, String state) throws JshException {
+        depotHeadDao.findAreaReport(pageUtil, beginTime, endTime, state);
+    }
+
+    @Override
+    public void findAreaReportTemplate(PageUtil pageUtil, String beginTime, String endTime, String state) throws JshException {
+        depotHeadDao.findAreaReportTemplate(pageUtil, beginTime, endTime, state);
+    }
+
     /**
      * 客户对账单查询
      * @param pageUtil

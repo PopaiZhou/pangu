@@ -1048,6 +1048,93 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     }
 
     /**
+     * 地区统计
+     */
+    public void findAreaReport() {
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            String state = model.getState();
+            depotHeadService.findAreaReport(pageUtil, beginTime, endTime, state);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("number", arr[0]); //单据编号
+                    item.put("type", arr[1]); //类型
+                    item.put("customerName",arr[2]);//客户名称
+                    item.put("oTime", arr[3]); //日期
+                    item.put("productName", arr[4]); //产品名称
+                    item.put("templateName", arr[5]); //版本明细
+                    item.put("mUnit", arr[6]); //规格
+                    item.put("operNumber", arr[7]); //数量
+                    item.put("unitPrice", arr[8]); //单价
+                    item.put("allPrice", arr[9]); //总价
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 地区统计--版本册
+     */
+    public void findAreaReportTemplate(){
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(model.getPageSize());
+        pageUtil.setCurPage(model.getPageNo());
+        String beginTime = model.getBeginTime();
+        String endTime = model.getEndTime();
+        try{
+            String state = model.getState();
+            depotHeadService.findAreaReportTemplate(pageUtil, beginTime, endTime, state);
+            List dataList = pageUtil.getPageList();
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (dataList != null) {
+                for (Integer i = 0; i < dataList.size(); i++) {
+                    JSONObject item = new JSONObject();
+                    Object dl = dataList.get(i); //获取对象
+                    Object[] arr = (Object[]) dl; //转为数组
+
+                    item.put("templateName", arr[0]); //版本种类
+                    item.put("OperNumber", arr[1]); //数量
+                    item.put("AllPrice", arr[2]); //合计金额
+
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        }catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
      *  新的客户对账单
      */
     public void findCustomerStatementAccount() {
