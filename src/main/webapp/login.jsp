@@ -34,9 +34,9 @@
             <p id="tip_userpwd" style="display: none">密码不能为空</p>
             <input type="button" value=" " id="btn_login"/>
         </div>
-        <p id="copyright">Copyright © 2017-2020 <a style="color:#00458a;"
-                                                                   href="#"
-                                                                   target="_blank">思黎ERP_v1.0</a></p>
+        <p id="copyright">Copyright © 2017-2020  <a style="color:#00458a;"
+                                                                   href="http://www.miibeian.gov.cn/"
+                                                                   target="_blank">浙ICP备18040871号-1</a></p>
     </div>
 </form>
 <script type="text/javascript">
