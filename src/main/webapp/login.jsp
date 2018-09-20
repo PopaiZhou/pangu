@@ -18,10 +18,11 @@
     <script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
 </head>
 <body id="login_body">
+<div style="text-align: right;"><img src="<%=path%>/images/logo_new.png" width="300" height="59" alt="login"/></div>
 <form action="admin.html">
     <div id="login_main">
         <div id="login">
-            <p id="login_signal"><img src="<%=path%>/images/login_tip.jpg" width="108" height="29" alt="login"/></p>
+            <p id="login_signal"><img src="<%=path%>/images/logo2_small.png" width="108" height="29" alt="login"/>
             <p id="txt_username">
                 <label for="user_name">用户名：</label>
             </p>
