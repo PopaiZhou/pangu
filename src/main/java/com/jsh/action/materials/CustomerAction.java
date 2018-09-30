@@ -560,7 +560,7 @@ public class CustomerAction extends BaseAction<CustomerModel> {
              */
             Map<String, Object> condition = new HashMap<String, Object>();
             condition.put("enabled_s_eq", 1);
-            condition.put("id_s_order", "desc");
+            condition.put("customerNo_s_order", "ASC");
 
             PageUtil<Customer> pageUtil = new PageUtil<Customer>();
             pageUtil.setPageSize(0);
