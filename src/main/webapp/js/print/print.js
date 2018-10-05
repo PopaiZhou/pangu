@@ -223,16 +223,16 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
         '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
         '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">www.siley.uk</td></tr>' +
         '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">Kasich&amp;Raatz'+strPrintName+'</div></td></tr>' +
-        '<tr><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
-        '<tr><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
-        '<tr><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td>客户名称：</td><td>'+customerName+'</td></tr>' +
-        '<tr><td>收货人：</td><td colspan="2">'+rows[0].Contacts+'</td><td>收货电话：</td><td>'+rows[0].Phonenum+'</td></tr>' +
-        '<tr><td width="100">收货地址 ：</td><td colspan="8">'+rows[0].state+rows[0].city+rows[0].street+rows[0].address+'</td></tr>' +
-        '<tr><td width="100">物流公司 ：</td><td>'+rows[0].Express+'</td><td>重量(KG)：</td><td>'+rows[0].Weight+'</td><td>运费预估(元)：</td><td>'+rows[0].Freight+'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;若运费超出±10请联系本公司</td></tr>' +
-        '<tr><td width="100">订单备注 ：</td><td colspan="8">'+rows[0].Remark+'</td></tr>';
+        '<tr style="font-size: 17px;"><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td>收货人：</td><td>'+rows[0].Contacts+'</td><td>收货电话：</td><td>'+rows[0].Phonenum+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+rows[0].state+rows[0].city+rows[0].street+rows[0].address+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">物流公司 ：</td><td width="100">'+rows[0].Express+'</td><td width="100">重量(KG)：</td><td>'+rows[0].Weight+'</td><td width="120">运费预估(元)：</td><td>'+rows[0].Freight+'</td><td colspan="3">若运费超出±10请联系本公司</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">订单备注 ：</td><td colspan="8">'+rows[0].Remark+'</td></tr>';
 
     tableString = tableString + '<tr><td colspan="9"><table width="100%" border="1" bordercolor="#000000" style="border-collapse:collapse;">' +
-        '<tr><th>&nbsp;</th><th>版本名称</th><th>型号</th><th>规格</th><th>单价</th><th>数量</th><th>总价(元)</th></tr>';
+        '<tr style="font-size: 17px;"><th>&nbsp;</th><th>版本名称</th><th>型号</th><th>规格</th><th>单价</th><th>数量</th><th>总价(元)</th></tr>';
 
     if(dataList != null){
         var allNum = 0;//数量总计
@@ -241,24 +241,24 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
             var depotHeadItem = dataList[j];
             allNum = allNum + depotHeadItem.OperNumber;
             allPrice = allPrice + depotHeadItem.AllPrice;
-            tableString = tableString + '<tr><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
+            tableString = tableString + '<tr style="font-size: 17px;"><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
                 '<td align="center">'+depotHeadItem.UnitPrice+'</td><td align="center">'+depotHeadItem.OperNumber+'</td><td align="center">'+depotHeadItem.AllPrice+'</td></tr>';
         }
-        tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum+'</td><td align="center">'+allPrice.toFixed(0)+'</td></tr>';
+        tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum.toFixed(2)+'</td><td align="center">'+allPrice.toFixed(2)+'</td></tr>';
     }
 
 
-    tableString = tableString + '</table></td></tr><tr><td>制单：</td><td colspan="5">'+systemName+'</td><td>业务经理:</td><td colspan="3">'+rows[0].SalesmanNo+'</td></tr>' +
-        '<tr><td colspan="9">上海思黎装饰材料有限公司-Kasich&amp;Raatz</td></tr>';
+    tableString = tableString + '</table></td></tr><tr style="font-size: 17px;"><td>制单：</td><td colspan="3">'+systemName+'</td><td colspan="2">业务经理:</td><td colspan="3">'+rows[0].SalesmanNo+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td colspan="9">上海思黎装饰材料有限公司-Kasich&amp;Raatz</td></tr>';
 
     if(accountList != null){
         for (var i = 0; i < accountList.length; i++) {
             var account = accountList[i];
             if (account.name.indexOf('银行') != -1) {
                 if(i == 0){
-                    tableString = tableString +'<tr><td>汇款银行</td><td colspan="3">'+account.serialNo+'</td><td colspan="2">'+account.remark+'</td><td>'+account.name+'</td></tr>';
+                    tableString = tableString +'<tr style="font-size: 17px;"><td>汇款银行</td><td colspan="2">'+account.serialNo+'</td><td>'+account.remark+'</td><td colspan="5">'+account.name+'</td></tr>';
                 }else{
-                    tableString = tableString +'<tr><td>&nbsp;</td><td colspan="3">'+account.serialNo+'</td><td colspan="2">'+account.remark+'</td><td>'+account.name+'</td></tr>';
+                    tableString = tableString +'<tr style="font-size: 17px;"><td>&nbsp;</td><td colspan="2">'+account.serialNo+'</td><td>'+account.remark+'</td><td colspan="5">'+account.name+'</td></tr>';
                 }
 
             }
@@ -372,34 +372,34 @@ function CreateNewFormPageSend(strPrintName, printDatagrid, path,systemName) {
         '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
         '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">www.siley.uk</td></tr>' +
         '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">Kasich&amp;Raatz'+strPrintName+'</div></td></tr>' +
-        '<tr><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
-        '<tr><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
-        '<tr><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td>客户名称：</td><td>'+customerName+'</td></tr>' +
-        '<tr><td>收货人：</td><td colspan="2">'+rows[0].Contacts+'</td><td>收货电话：</td><td>'+rows[0].Phonenum+'</td><td>运单号码：</td><td>'+rows[0].ExpressNumber+'</td></tr>' +
-        '<tr><td width="100">收货地址 ：</td><td colspan="8">'+rows[0].state+rows[0].city+rows[0].street+rows[0].address+'</td></tr>' +
-        '<tr><td width="100">物流公司 ：</td><td>'+rows[0].Express+'</td><td>重量(KG)：</td><td>'+rows[0].Weight+'</td><td>运费预估(元)：</td><td>'+tempFreight+'</td><td>若运费超出±10请联系本公司</td></tr>' +
-        '<tr><td width="100">订单备注 ：</td><td colspan="8">'+rows[0].Remark+'</td></tr>';
+        '<tr style="font-size: 17px;"><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td>客户编号：</td><td>'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td>收货人：</td><td>'+rows[0].Contacts+'</td><td>收货电话：</td><td>'+rows[0].Phonenum+'</td><td colspan="2">&nbsp;&nbsp;运单号码：</td><td>'+rows[0].ExpressNumber+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+rows[0].state+rows[0].city+rows[0].street+rows[0].address+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">物流公司 ：</td><td width="100">'+rows[0].Express+'</td><td width="100">重量(KG)：</td><td>'+rows[0].Weight+'</td><td>运费预估(元)：</td><td width="50">'+tempFreight+'</td><td colspan="3">若运费超出±10请联系本公司</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">订单备注 ：</td><td colspan="8">'+rows[0].Remark+'</td></tr>';
 
     //出货单 删除单价 总价
     tableString = tableString + '<tr><td colspan="9"><table width="100%" border="1" bordercolor="#000000" style="border-collapse:collapse;">' +
-        '<tr><th>&nbsp;</th><th>版本名称</th><th>型号</th><th>规格</th><th>数量</th></tr>';
+        '<tr style="font-size: 17px;"><th>&nbsp;</th><th>版本名称</th><th>型号</th><th>规格</th><th>数量</th></tr>';
 
     if(dataList != null){
         var allNum = 0;//数量总计
         for (var j = 0; j < dataList.length; j++) {
             var depotHeadItem = dataList[j];
             allNum = allNum + depotHeadItem.OperNumber;
-            tableString = tableString + '<tr><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
+            tableString = tableString + '<tr style="font-size: 17px;"><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
                 '<td align="center">'+depotHeadItem.OperNumber+'</td></tr>';
         }
-        tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td align="center">'+allNum+'</td></tr>';
+        tableString = tableString + '<tr style="font-size: 17px;"><td align="center">合计</td><td></td><td></td><td></td><td align="center">'+allNum.toFixed(2)+'</td></tr>';
     }
 
     var SendPersonName = "";
     if(rows[0].SendPersonName != undefined){
         SendPersonName = rows[0].SendPersonName;
     }
-    tableString = tableString + '</table></td></tr><tr><td>制单：</td><td colspan="2">'+systemName+'</td><td>业务经理:</td><td colspan="2">'+rows[0].SalesmanNo+'</td><td>发货员：</td><td>'+SendPersonName+'</td></tr>';
+    tableString = tableString + '</table></td></tr><tr style="font-size: 17px;"><td>制单：</td><td align="center">'+systemName+'</td><td>&nbsp;</td><td>业务经理:</td><td align="center">'+rows[0].SalesmanNo+'</td><td width="20%">&nbsp;&nbsp;发货员：</td><td colspan="2" align="right">'+SendPersonName+'</td></tr>';
 
     tableString = tableString + '</table></div>';
 
@@ -531,16 +531,16 @@ function PrintOrder(orderNo,path,systemName) {
                     '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
                     '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">www.siley.uk</td></tr>' +
                     '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">Kasich&amp;Raatz订货单</div></td></tr>' +
-                    '<tr><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
-                    '<tr><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
-                    '<tr><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td>客户名称：</td><td>'+customerName+'</td></tr>' +
-                    '<tr><td>收货人：</td><td colspan="2">'+res.Contacts+'</td><td>收货电话：</td><td>'+res.Phonenum+'</td></tr>' +
-                    '<tr><td width="100">收货地址 ：</td><td colspan="8">'+res.state+res.city+res.street+res.address+'</td></tr>' +
-                    '<tr><td width="100">物流公司 ：</td><td>'+res.Express+'</td><td>重量(KG)：</td><td>'+res.Weight+'</td><td>运费预估(元)：</td><td>'+res.Freight+'</td><td>&nbsp;&nbsp;&nbsp;&nbsp;若运费超出±10请联系本公司</td></tr>' +
-                    '<tr><td width="100">订单备注 ：</td><td colspan="8">'+res.Remark+'</td></tr>';
+                    '<tr style="font-size: 17px;"><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
+                    '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
+                    '<tr style="font-size: 17px;"><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
+                    '<tr style="font-size: 17px;"><td>收货人：</td><td>'+res.Contacts+'</td><td>收货电话：</td><td>'+res.Phonenum+'</td></tr>' +
+                    '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+res.state+res.city+res.street+res.address+'</td></tr>' +
+                    '<tr style="font-size: 17px;"><td width="100">物流公司 ：</td><td width="100">'+res.Express+'</td><td width="100">重量(KG)：</td><td>'+res.Weight+'</td><td width="120">运费预估(元)：</td><td>'+res.Freight+'</td><td colspan="3">若运费超出±10请联系本公司</td></tr>' +
+                    '<tr style="font-size: 17px;"><td width="100">订单备注 ：</td><td colspan="8">'+res.Remark+'</td></tr>';
 
                 tableString = tableString + '<tr><td colspan="9"><table width="100%" border="1" bordercolor="#000000" style="border-collapse:collapse;">' +
-                    '<tr><th>&nbsp;</th><th>版本名称</th><th>型号</th><th>规格</th><th>单价</th><th>数量</th><th>总价(元)</th></tr>';
+                    '<tr style="font-size: 17px;"><th>&nbsp;</th><th>版本名称</th><th>型号</th><th>规格</th><th>单价</th><th>数量</th><th>总价(元)</th></tr>';
 
                 if(dataList != null){
                     var allNum = 0;//数量总计
@@ -549,26 +549,25 @@ function PrintOrder(orderNo,path,systemName) {
                         var depotHeadItem = dataList[j];
                         allNum = allNum + depotHeadItem.OperNumber;
                         allPrice = allPrice + depotHeadItem.AllPrice;
-                        tableString = tableString + '<tr><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
+                        tableString = tableString + '<tr style="font-size: 17px;"><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
                             '<td align="center">'+depotHeadItem.UnitPrice+'</td><td align="center">'+depotHeadItem.OperNumber+'</td><td align="center">'+depotHeadItem.AllPrice+'</td></tr>';
                     }
-                    tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum+'</td><td align="center">'+allPrice.toFixed(0)+'</td></tr>';
+                    tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum.toFixed(2)+'</td><td align="center">'+allPrice.toFixed(2)+'</td></tr>';
                 }
 
 
-                tableString = tableString + '</table></td></tr><tr><td>制单：</td><td colspan="5">'+systemName+'</td><td>业务经理:</td><td colspan="3">'+res.SalesmanNo+'</td></tr>' +
-                    '<tr><td colspan="9">上海思黎装饰材料有限公司-Kasich&amp;Raatz</td></tr>';
+                tableString = tableString + '</table></td></tr><tr style="font-size: 17px;"><td>制单：</td><td colspan="3">'+systemName+'</td><td colspan="2">业务经理:</td><td colspan="3">'+res.SalesmanNo+'</td></tr>' +
+                    '<tr style="font-size: 17px;"><td colspan="9">上海思黎装饰材料有限公司-Kasich&amp;Raatz</td></tr>';
 
                 if(accountList != null){
                     for (var i = 0; i < accountList.length; i++) {
                         var account = accountList[i];
                         if (account.name.indexOf('银行') != -1) {
                             if(i == 0){
-                                tableString = tableString +'<tr><td>汇款银行</td><td colspan="3">'+account.serialNo+'</td><td colspan="2">'+account.remark+'</td><td>'+account.name+'</td></tr>';
+                                tableString = tableString +'<tr style="font-size: 17px;"><td>汇款银行</td><td colspan="2">'+account.serialNo+'</td><td>'+account.remark+'</td><td colspan="5">'+account.name+'</td></tr>';
                             }else{
-                                tableString = tableString +'<tr><td>&nbsp;</td><td colspan="3">'+account.serialNo+'</td><td colspan="2">'+account.remark+'</td><td>'+account.name+'</td></tr>';
+                                tableString = tableString +'<tr style="font-size: 17px;"><td>&nbsp;</td><td colspan="2">'+account.serialNo+'</td><td>'+account.remark+'</td><td colspan="5">'+account.name+'</td></tr>';
                             }
-
                         }
                     }
                 }

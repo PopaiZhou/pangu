@@ -130,7 +130,7 @@
                            onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="txt Wdate"
                            style="width:140px;"/>
                 </td>
-                <td style="width:70px;">订单编号：</td>
+                <td style="width:70px;" name="NumberLabel" id="NumberLabel">订单编号：</td>
                 <td style="padding:5px">
                     <input name="Number" id="Number" class="easyui-validatebox"
                            data-options="required:true,validType:'length[2,30]'" style="width: 140px;"/>

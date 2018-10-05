@@ -40,6 +40,7 @@ $(function(){
     initSelectInfo_account();
     //绑定操作事件
     bindEvent();
+    ininPager();
 });
 
 //初始化表格数据
@@ -192,7 +193,7 @@ function initTableData() {
             { title: '操作',field: 'op',align:"center",width:opeWith,
                 formatter:function(value,rec) {
                     var str = '';
-                    var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + rec.Remark
+                    var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + encodeURI(rec.Remark)
                         + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId + 'AaBb' + rec.Express
                         + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb' + rec.state + 'AaBb' + rec.city
                         + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight + 'AaBb' + rec.CreateTime
@@ -415,7 +416,7 @@ function editDepotHead(depotHeadTotalInfo, status){
     $("#Number").val(depotHeadInfo[1]).attr("data-defaultNumber",depotHeadInfo[1]);
     $("#OperTime").val(depotHeadInfo[19]);
     $('#OrganId').combobox('setValue', depotHeadInfo[3]);
-    $("#Remark").val(depotHeadInfo[4]);
+    $("#Remark").val(decodeURI(depotHeadInfo[4]));
 
     var TotalPrice = depotHeadInfo[6];
     preTotalPrice = depotHeadInfo[6]; //记录前一次合计金额，用于扣预付款
@@ -988,6 +989,10 @@ function funSaveDepotHead() {
         //进行明细的校验
         if (depotHeadID == 0) {
             //新增模式下
+            //调用查询单据编号是否重名的方法
+            if (checkDepotHeadNumber()) {
+                return;
+            }
             if (!CheckData("add")) {
                 return;
             }
@@ -1276,6 +1281,31 @@ function bindEvent(){
 }
 
 
+//分页信息处理
+function ininPager(){
+    try
+    {
+        var opts = $("#tableData").datagrid('options');
+        var pager = $("#tableData").datagrid('getPager');
+        pager.pagination({
+            onSelectPage:function(pageNum, pageSize)
+            {
+                opts.pageNumber = pageNum;
+                opts.pageSize = pageSize;
+                pager.pagination('refresh',
+                    {
+                        pageNumber:pageNum,
+                        pageSize:pageSize
+                    });
+                showDepotHeadDetails(pageNum,pageSize);
+            }
+        });
+    }
+    catch (e)
+    {
+        $.messager.alert('异常处理提示',"分页信息异常 :  " + e.name + ": " + e.message,'error');
+    }
+}
 //初始化首页
 function showDepotHeadDetails(pageNo,pageSize){
     var materialParam = $.trim($("#searchMaterial").val());
@@ -1452,7 +1482,7 @@ function showDepotHead(depotHeadTotalInfo){
     $("#NumberShow").text(depotHeadInfo[1]);//单据编号单据日期
     $("#OperTimeShow").text(depotHeadInfo[19]);//下单日期
     $("#SendTimeShow").text(depotHeadInfo[2] == 'undefined' ? "未发货" : depotHeadInfo[2]);//发货日期
-    $("#RemarkShow").text(depotHeadInfo[4]);//单据备注
+    $("#RemarkShow").text(decodeURI(depotHeadInfo[4]));//单据备注
     $('#OrganIdShow').text(depotHeadInfo[5]);//客户
     var TotalPrice = depotHeadInfo[6];
     $("#SalesmanShow").text(depotHeadInfo[7]); //销售人员
@@ -1523,6 +1553,7 @@ function initTableData_material_show(TotalPrice){
                 }
             }
             var AllPrice = TotalPrice;
+            allOperNum = allOperNum.toFixed(2);
             var array = [];
             array.push({
                 "Unit" : "合计",

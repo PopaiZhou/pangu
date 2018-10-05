@@ -43,7 +43,7 @@ function initTableData() {
             { title: '操作',field: 'op',align:"center",width:60,formatter:function(value,rec)
             {
                 var str = '';
-                var rowInfo = rec.id + 'AaBb' + rec.templateId +'AaBb' + rec.templateName + 'AaBb'+ rec.listingDate + 'AaBb'+ rec.supplierNo + 'AaBb'+ rec.remarks;
+                var rowInfo = rec.id + 'AaBb' + rec.templateId +'AaBb' + rec.templateName + 'AaBb'+ rec.listingDate + 'AaBb'+ rec.supplierNo + 'AaBb'+ encodeURI(rec.remarks);
                 if(1 == value)
                 {
                     str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editTemplateInfo(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -333,7 +333,7 @@ function editTemplateInfo(templateInfo) {
         templateName : template[2].replace("undefined",""),
         listingDate : template[3].replace("undefined",""),
         supplierNo : template[4].replace("undefined",""),
-        remarks : template[5].replace("undefined",""),
+        remarks : decodeURI(template[5]).replace("undefined",""),
         clientIp: clientIp
     };
     $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑版本册信息');
