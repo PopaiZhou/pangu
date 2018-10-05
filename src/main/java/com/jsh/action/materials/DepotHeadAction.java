@@ -76,7 +76,25 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             String endTime = Tools.getNow() + " 23:59:59";
             String newNumber = buildNumberFun(model.getType(), model.getSubType(), beginTime, endTime);  //从数据库查询最新的编号+1,这样能防止重复
             String allNewNumber = number + newNumber;
-            depotHead.setNumber(model.getNumber()); //一直从前端文本框里面获取
+
+            //判断当前编号是否已经使用
+            PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(getConditionByNumber());
+            depotHeadService.find(pageUtil);
+            List<DepotHead> dataList = pageUtil.getPageList();
+            if(dataList.size() > 0){
+                //证明编号已经在使用了
+                String oldNumber = model.getNumber();
+                String newGenNumber = "";
+                oldNumber = oldNumber.substring(0,oldNumber.length()- 4);
+                //重新生成
+                newGenNumber = oldNumber + buildNumberFun(model.getType(), model.getSubType(), beginTime, endTime);
+                depotHead.setNumber(newGenNumber); //一直从前端文本框里面获取
+            }else{
+                depotHead.setNumber(model.getNumber()); //一直从前端文本框里面获取
+            }
             depotHead.setDefaultNumber(allNewNumber); //初始编号，一直都从后台取值
 
             depotHead.setOperPersonName(getUser().getUsername());
@@ -440,9 +458,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             if (null != dataList && dataList.size() > 0) {
                 DepotHead depotHead = dataList.get(0);
                 if (depotHead != null) {
-                    String number = depotHead.getDefaultNumber(); //最大的单据编号
+                    String number = depotHead.getNumber(); //最大的单据编号
                     if (number != null) {
-                        Integer lastNumber = Integer.parseInt(number.substring(12, 16)); //末四尾
+                        Integer lastNumber = Integer.parseInt(number.substring(number.length()- 4, number.length())); //末四尾
                         lastNumber = lastNumber + 1;
                         Integer nLen = lastNumber.toString().length();
                         if (nLen == 1) {
@@ -505,25 +523,26 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      */
     public void findBy() {
         try {
-            String customerIds = "";
-            Map<String, Object> customerCondition = new HashMap<String, Object>();
-            customerCondition.put("customerNo_s_like", model.getCustomerNo());
-            customerCondition.put("customerName_s_like", model.getCustomerName());
+            if(StringUtils.isNotEmpty(model.getCustomerNo()) || StringUtils.isNotEmpty(model.getCustomerName())){
+                String customerIds = "";
+                Map<String, Object> customerCondition = new HashMap<String, Object>();
+                customerCondition.put("customerNo_s_like", model.getCustomerNo());
+                customerCondition.put("customerName_s_like", model.getCustomerName());
 
-            PageUtil<Customer> customerPageUtil = new PageUtil<Customer>();
-            customerPageUtil.setAdvSearch(customerCondition);
-            customerService.find(customerPageUtil);
-            List<Customer> customerList = customerPageUtil.getPageList();
-            if(null != customerList){
-                for(Customer customer : customerList){
-                    customerIds += customer.getId() + ",";
+                PageUtil<Customer> customerPageUtil = new PageUtil<Customer>();
+                customerPageUtil.setAdvSearch(customerCondition);
+                customerService.find(customerPageUtil);
+                List<Customer> customerList = customerPageUtil.getPageList();
+                if(null != customerList){
+                    for(Customer customer : customerList){
+                        customerIds += customer.getId() + ",";
+                    }
+                }
+                if(StringUtils.isNotEmpty(customerIds)){
+                    customerIds = customerIds.substring(0, customerIds.lastIndexOf(","));
+                    model.setCustomerIds(customerIds);
                 }
             }
-            if(StringUtils.isNotEmpty(customerIds)){
-                customerIds = customerIds.substring(0, customerIds.lastIndexOf(","));
-                model.setCustomerIds(customerIds);
-            }
-
             PageUtil<DepotHead> pageUtil = new PageUtil<DepotHead>();
             pageUtil.setPageSize(model.getPageSize());
             pageUtil.setCurPage(model.getPageNo());
@@ -1458,7 +1477,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("Number_s_like", model.getNumber());
         condition.put("Status_n_eq", model.getSearchStatus());
         condition.put("CheckStatus_n_eq", model.getSearchCheckStatus());
-        //condition.put("OrganId_s_in", model.getCustomerIds());
+        condition.put("OrganId_s_in", model.getCustomerIds());
         condition.put("SendStatus_n_eq", model.getSearchSendStatus());
         condition.put("Id_s_in", model.getDhIds());
 
