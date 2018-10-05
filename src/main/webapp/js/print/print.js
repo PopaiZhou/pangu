@@ -244,7 +244,7 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
             tableString = tableString + '<tr style="font-size: 17px;"><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
                 '<td align="center">'+depotHeadItem.UnitPrice+'</td><td align="center">'+depotHeadItem.OperNumber+'</td><td align="center">'+depotHeadItem.AllPrice+'</td></tr>';
         }
-        tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum.toFixed(2)+'</td><td align="center">'+allPrice.toFixed(2)+'</td></tr>';
+        tableString = tableString + '<tr style="font-size: 17px;"><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum.toFixed(2)+'</td><td align="center">'+allPrice.toFixed(0)+'</td></tr>';
     }
 
 
@@ -399,7 +399,7 @@ function CreateNewFormPageSend(strPrintName, printDatagrid, path,systemName) {
     if(rows[0].SendPersonName != undefined){
         SendPersonName = rows[0].SendPersonName;
     }
-    tableString = tableString + '</table></td></tr><tr style="font-size: 17px;"><td>制单：</td><td align="center">'+systemName+'</td><td>&nbsp;</td><td>业务经理:</td><td align="center">'+rows[0].SalesmanNo+'</td><td width="20%">&nbsp;&nbsp;发货员：</td><td colspan="2" align="right">'+SendPersonName+'</td></tr>';
+    tableString = tableString + '</table></td></tr><tr style="font-size: 17px;"><td>制单：</td><td align="center">'+systemName+'</td><td>&nbsp;</td><td>业务经理:</td><td align="center">'+rows[0].SalesmanNo+'</td><td></td><td></td></tr>';
 
     tableString = tableString + '</table></div>';
 
@@ -552,7 +552,7 @@ function PrintOrder(orderNo,path,systemName) {
                         tableString = tableString + '<tr style="font-size: 17px;"><td align="center">'+(j+1)+'</td><td align="center">'+depotHeadItem.TemplateName+'</td><td align="center">'+depotHeadItem.ProductName+'</td><td align="center">'+depotHeadItem.Unit+'</td>' +
                             '<td align="center">'+depotHeadItem.UnitPrice+'</td><td align="center">'+depotHeadItem.OperNumber+'</td><td align="center">'+depotHeadItem.AllPrice+'</td></tr>';
                     }
-                    tableString = tableString + '<tr><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum.toFixed(2)+'</td><td align="center">'+allPrice.toFixed(2)+'</td></tr>';
+                    tableString = tableString + '<tr style="font-size: 17px;"><td align="center">合计</td><td></td><td></td><td></td><td></td><td align="center">'+allNum.toFixed(2)+'</td><td align="center">'+allPrice.toFixed(0)+'</td></tr>';
                 }
 
 
