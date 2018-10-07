@@ -18,40 +18,27 @@
 	</bean>
 	<!-- 配置数据源C3P0 -->
 	<bean id="dataSource"
-		  class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		  class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		  destroy-method="close">
 
-		<property name="driverClassName" value="${driverClass}"/>
+		<property name="jdbcUrl" value="${jdbcUrl}"></property>
+		<property name="driverClass" value="${driverClass}"></property>
+		<property name="user" value="${user}"></property>
+		<property name="password" value="${password}"></property>
 
-		<!-- 基本属性 url、user、password -->
-		<property name="url" value="${jdbcUrl}"/>
-		<property name="username" value="${user}"/>
-		<property name="password" value="${password}"/>
-
-		<!-- 配置初始化大小、最小、最大 -->
-		<property name="initialSize" value="1"/>
-		<property name="minIdle" value="3"/>
-		<property name="maxActive" value="20"/>
-
-		<!-- 配置获取连接等待超时的时间 -->
-		<property name="maxWait" value="60000"/>
-
-		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
-		<property name="timeBetweenEvictionRunsMillis" value="60000"/>
-
-		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
-		<property name="minEvictableIdleTimeMillis" value="300000"/>
-
-		<property name="validationQuery" value="SELECT 'x' FROM DUAL"/>
-		<property name="testWhileIdle" value="true"/>
-		<property name="testOnBorrow" value="false"/>
-		<property name="testOnReturn" value="false"/>
-
-		<!-- 打开PSCache，并且指定每个连接上PSCache的大小（Oracle使用）
-                <property name="poolPreparedStatements" value="true" />
-                <property name="maxPoolPreparedStatementPerConnectionSize" value="20" /> -->
-
-		<!-- 配置监控统计拦截的filters -->
-		<property name="filters" value="stat,config"/>
+		<!--初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+		<property name="initialPoolSize" value="10"/>
+		<!--连接池中保留的最大连接数。Default: 15 -->
+		<property name="maxPoolSize" value="80"/>
+		<!--连接池中保留的最小连接数。-->
+		<property name="minPoolSize" value="3"/>
+		<!--最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+		<property name="maxIdleTime" value="60" />
+		<property name="maxStatements" value="6000"/>
+		<!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+		<property name="acquireIncrement" value="10"/>
+		<!--每60秒检查所有连接池中的空闲连接。Default: 0 -->
+		<property name="idleConnectionTestPeriod" value="60" />
 	</bean>
 	<!-- 配置SessionFactory -->
 	<bean id="sessionFactory"
