@@ -1,4 +1,4 @@
-var amountNum = "SLKSQ"; //单据编号开头字符
+var amountNum = "OPELW"; //单据编号开头字符
 var defaultAccountId = 0; //默认账户id
 var mPropertyList = ""; //商品属性列表
 var editIndex = undefined;

@@ -229,9 +229,9 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
 
     var tableString = '<div align="center"><table style="border-collapse:separate; border-spacing:0px 0px;"><tr><td colspan="4" rowspan="3"><img src="../../upload/images/logo.png" width="308" height="60"></td>' +
         '<td colspan="5">'+companyName+'</td></tr>' +
-        '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
-        '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">www.siley.uk</td></tr>' +
-        '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">Kasich&amp;Raatz'+strPrintName+'</div></td></tr>' +
+        '<tr><td colspan="5"><strong>OPEL WARD MATERIAL(SHAOXING) LIMITED</strong></td></tr>' +
+        '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">&nbsp;</td></tr>' +
+        '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">OPEL-WARD'+strPrintName+'</div></td></tr>' +
         '<tr style="font-size: 17px;"><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
         '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
         '<tr style="font-size: 17px;"><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
@@ -258,7 +258,7 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
 
 
     tableString = tableString + '</table></td></tr><tr style="font-size: 17px;"><td>制单：</td><td colspan="3">'+systemName+'</td><td colspan="2">业务经理:</td><td colspan="3">'+rows[0].SalesmanNo+'</td></tr>' +
-        '<tr style="font-size: 17px;"><td colspan="9">上海思黎装饰材料有限公司-Kasich&amp;Raatz</td></tr>';
+        '<tr style="font-size: 17px;"><td colspan="9">上海思黎装饰材料有限公司-OPEL-WARD</td></tr>';
 
     if(accountList != null){
         for (var i = 0; i < accountList.length; i++) {
@@ -387,9 +387,9 @@ function CreateNewFormPageSend(strPrintName, printDatagrid, path,systemName) {
     var tempFreight = rows[0].Freight == undefined ? "" : rows[0].Freight;
     var tableString = '<div align="center"><table style="border-collapse:separate; border-spacing:0px 0px;"><tr><td colspan="4" rowspan="3"><img src="../../upload/images/logo.png" width="308" height="60"></td>' +
         '<td colspan="5">'+companyName+'</td></tr>' +
-        '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
-        '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">www.siley.uk</td></tr>' +
-        '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">Kasich&amp;Raatz'+strPrintName+'</div></td></tr>' +
+        '<tr><td colspan="5"><strong>OPEL WARD  MATERIAL(SHAOXING) LIMITED</strong></td></tr>' +
+        '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">&nbsp;</td></tr>' +
+        '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">OPEL-WARD'+strPrintName+'</div></td></tr>' +
         '<tr style="font-size: 17px;"><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
         '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
         '<tr style="font-size: 17px;"><td>客户编号：</td><td>'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
@@ -555,9 +555,9 @@ function PrintOrder(orderNo,path,systemName) {
 
                 var tableString = '<div align="center"><table style="border-collapse:separate; border-spacing:0px 0px;"><tr><td colspan="4" rowspan="3"><img src="../../upload/images/logo.png" width="308" height="60"></td>' +
                     '<td colspan="5">'+companyName+'</td></tr>' +
-                    '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
-                    '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">www.siley.uk</td></tr>' +
-                    '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">Kasich&amp;Raatz订货单</div></td></tr>' +
+                    '<tr><td colspan="5"><strong>OPEL WARD  MATERIAL(SHAOXING) LIMITED</strong></td></tr>' +
+                    '<tr><td colspan="2">FAX : '+faxNum+'</td><td colspan="4">&nbsp;</td></tr>' +
+                    '<tr><td colspan="9" ><div align="center" style="font-size:32px;'+font+'">OPEL-WARD订货单</div></td></tr>' +
                     '<tr style="font-size: 17px;"><td width="100">订单号 ：</td><td colspan="8">'+Number+'</td></tr>' +
                     '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
                     '<tr style="font-size: 17px;"><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
@@ -584,7 +584,7 @@ function PrintOrder(orderNo,path,systemName) {
 
 
                 tableString = tableString + '</table></td></tr><tr style="font-size: 17px;"><td>制单：</td><td colspan="3">'+systemName+'</td><td colspan="2">业务经理:</td><td colspan="3">'+res.SalesmanNo+'</td></tr>' +
-                    '<tr style="font-size: 17px;"><td colspan="9">上海思黎装饰材料有限公司-Kasich&amp;Raatz</td></tr>';
+                    '<tr style="font-size: 17px;"><td colspan="9">上海思黎装饰材料有限公司-OPEL-WARD</td></tr>';
 
                 if(accountList != null){
                     for (var i = 0; i < accountList.length; i++) {
