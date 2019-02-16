@@ -211,16 +211,17 @@ function initTableData() {
                     return str;
                 }
             },
-            { title: '客户名称', field: 'OrganName',width:120},
+            { title: '省', field: 'state',width:60},
+            { title: '市', field: 'city',width:60},
+            { title: '客户名称', field: 'OrganName',width:80},
             { title: '单据编号',field: 'Number',width:130},
-            { title: '商品信息',field: 'MaterialsList',width:230,formatter:function(value){
+            { title: '商品信息',field: 'MaterialsList',width:150,formatter:function(value){
                 return value.replace(/,/g,"，");
             }
             },
             { title: '下单日期 ',field: 'CreateTime',width:150},
             { title: '发货日期 ',field: 'OperTime',width:150},
-            { title: '操作员',field: 'OperPersonName',width:120},
-            { title: '金额合计',field: 'TotalPrice',width:120,hidden : priceHidden},
+            { title: '金额合计',field: 'TotalPrice',width:80,hidden : priceHidden},
             { title: '收款状态',field: 'Status', width:100,align:"center",formatter:function(value){
                 return value ? "<span style='color:green;'>已收款</span>":"<span style='color:red;'>未收款</span>";
                 }
@@ -229,6 +230,7 @@ function initTableData() {
                 return value ? "<span style='color:green;'>已审核</span>":"<span style='color:red;'>未审核</span>";
                 }
             },
+            { title: '操作员',field: 'OperPersonName',width:80},
             { title: '审核员',field: 'CheckOperName',width:100},
             { title: '发货状态',field: 'SendStatus', width:100,align:"center",formatter:function(value){
                 return value ? "<span style='color:green;'>已发货</span>":"<span style='color:red;'>未发货</span>";
@@ -1116,6 +1118,10 @@ function bindEvent(){
             $("#searchSendEndTime").val("");
 
             $("#searchTotalPrice").val("");
+
+
+            $("#searchContacts").val("");
+            $("#searchExpressNumber").val("");
             //加载完以后重新初始化
             $("#searchBtn").click();
         }
@@ -1335,6 +1341,9 @@ function showDepotHeadDetails(pageNo,pageSize){
                             customerName: $.trim($("#searchCustomerName").val()),
                             customerNo: $.trim($("#searchCustomerNo").val()),
 
+                            searchContacts: $.trim($("#searchContacts").val()),
+                            searchExpressNumber: $.trim($("#searchExpressNumber").val()),
+
                             searchTotalPrice : $.trim($("#searchTotalPrice").val()),
 
                             Number: $.trim($("#searchNumber").val()),
@@ -1495,7 +1504,15 @@ function showDepotHead(depotHeadTotalInfo){
     $("#WeightShow").text(depotHeadInfo[17]); //重量
     $("#FreightShow").text(depotHeadInfo[18]); //运费预估  
 
-    $("#AddressShow").text(depotHeadInfo[13]+depotHeadInfo[14]+depotHeadInfo[15]+depotHeadInfo[16]); //收货地址
+    var address = '';
+    //如果是直辖市
+    if("北京" == depotHeadInfo[13] || "上海" == depotHeadInfo[13] || "重庆" == depotHeadInfo[13] || "天津" == depotHeadInfo[13]){
+        address = depotHeadInfo[13] + '市' + depotHeadInfo[14]+depotHeadInfo[15]+depotHeadInfo[16];
+    }else{
+        address = depotHeadInfo[13] + '省' + depotHeadInfo[14] + '市' + depotHeadInfo[15]+depotHeadInfo[16];
+    }
+
+    $("#AddressShow").text(address); //收货地址
 
     $('#depotHeadDlgShow').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/list.png"/>&nbsp;查看订单明细');
     $(".window-mask").css({ width: webW ,height: webH});

@@ -329,9 +329,9 @@ public class ProductAction extends BaseAction<ProductModel>{
          * 拼接搜索条件
          */
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("productId_s_like", model.getProductId());
+        condition.put("productId_s_eq", model.getProductId());
         condition.put("productName_s_like", model.getProductName());
-        condition.put("templateId_s_like", model.getTemplateId());
+        condition.put("templateId_s_eq", model.getTemplateId());
         condition.put("id_s_order", "desc");
         return condition;
     }

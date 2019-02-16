@@ -73,6 +73,7 @@ public class CustomerModel implements Serializable{
     private String browserType = ""; //浏览器类型
     private String fileName = ""; //文件名称
     private InputStream excelStream;  //输入流，导出excel文件
+    private String isCurrentPage; //是否导出所有数据
 
 
     /**
@@ -702,5 +703,23 @@ public class CustomerModel implements Serializable{
      */
     public void setCustomerIds(String customerIds) {
         this.customerIds = customerIds;
+    }
+
+    /**
+     * Getter method for property <tt>isCurrentPage</tt>.
+     *
+     * @return property value of isCurrentPage
+     */
+    public String getIsCurrentPage() {
+        return isCurrentPage;
+    }
+
+    /**
+     * Setter method for property <tt>isCurrentPage</tt>.
+     *
+     * @param isCurrentPage value to be assigned to property isCurrentPage
+     */
+    public void setIsCurrentPage(String isCurrentPage) {
+        this.isCurrentPage = isCurrentPage;
     }
 }

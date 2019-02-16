@@ -218,6 +218,15 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
     });
 
     var font = 'font-family:"宋体"';
+
+    var address = '';
+    //如果是直辖市
+    if("北京" == rows[0].state || "上海" == rows[0].state || "重庆" == rows[0].state || "天津" == rows[0].state){
+        address = rows[0].state + '市' + rows[0].city+rows[0].street+rows[0].address;
+    }else{
+        address = rows[0].state + '省' + rows[0].city + '市' + rows[0].street+rows[0].address;
+    }
+
     var tableString = '<div align="center"><table style="border-collapse:separate; border-spacing:0px 0px;"><tr><td colspan="4" rowspan="3"><img src="../../upload/images/logo.png" width="308" height="60"></td>' +
         '<td colspan="5">'+companyName+'</td></tr>' +
         '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
@@ -227,7 +236,7 @@ function CreateNewFormPageOrder(strPrintName, printDatagrid, path,systemName) {
         '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
         '<tr style="font-size: 17px;"><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
         '<tr style="font-size: 17px;"><td>收货人：</td><td>'+rows[0].Contacts+'</td><td>收货电话：</td><td>'+rows[0].Phonenum+'</td></tr>' +
-        '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+rows[0].state+rows[0].city+rows[0].street+rows[0].address+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+address+'</td></tr>' +
         '<tr style="font-size: 17px;"><td width="100">物流公司 ：</td><td width="100">'+rows[0].Express+'</td><td width="100">重量(KG)：</td><td>'+rows[0].Weight+'</td><td width="120">运费预估(元)：</td><td>'+rows[0].Freight+'</td><td colspan="3">若运费超出±10请联系本公司</td></tr>' +
         '<tr style="font-size: 17px;"><td width="100">订单备注 ：</td><td colspan="8">'+rows[0].Remark+'</td></tr>';
 
@@ -366,6 +375,15 @@ function CreateNewFormPageSend(strPrintName, printDatagrid, path,systemName) {
     });
 
     var font = 'font-family:"宋体"';
+
+    var address = '';
+    //如果是直辖市
+    if("北京" == rows[0].state || "上海" == rows[0].state || "重庆" == rows[0].state || "天津" == rows[0].state){
+        address = rows[0].state + '市' + rows[0].city+rows[0].street+rows[0].address;
+    }else{
+        address = rows[0].state + '省' + rows[0].city + '市' + rows[0].street+rows[0].address;
+    }
+
     var tempFreight = rows[0].Freight == undefined ? "" : rows[0].Freight;
     var tableString = '<div align="center"><table style="border-collapse:separate; border-spacing:0px 0px;"><tr><td colspan="4" rowspan="3"><img src="../../upload/images/logo.png" width="308" height="60"></td>' +
         '<td colspan="5">'+companyName+'</td></tr>' +
@@ -376,7 +394,7 @@ function CreateNewFormPageSend(strPrintName, printDatagrid, path,systemName) {
         '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
         '<tr style="font-size: 17px;"><td>客户编号：</td><td>'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
         '<tr style="font-size: 17px;"><td>收货人：</td><td>'+rows[0].Contacts+'</td><td>收货电话：</td><td>'+rows[0].Phonenum+'</td><td colspan="2">&nbsp;&nbsp;运单号码：</td><td>'+rows[0].ExpressNumber+'</td></tr>' +
-        '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+rows[0].state+rows[0].city+rows[0].street+rows[0].address+'</td></tr>' +
+        '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+address+'</td></tr>' +
         '<tr style="font-size: 17px;"><td width="100">物流公司 ：</td><td width="100">'+rows[0].Express+'</td><td width="100">重量(KG)：</td><td>'+rows[0].Weight+'</td><td>运费预估(元)：</td><td width="50">'+tempFreight+'</td><td colspan="3">若运费超出±10请联系本公司</td></tr>' +
         '<tr style="font-size: 17px;"><td width="100">订单备注 ：</td><td colspan="8">'+rows[0].Remark+'</td></tr>';
 
@@ -526,6 +544,15 @@ function PrintOrder(orderNo,path,systemName) {
                 });
 
                 var font = 'font-family:"宋体"';
+
+                var address = '';
+                //如果是直辖市
+                if("北京" == rows[0].state || "上海" == rows[0].state || "重庆" == rows[0].state || "天津" == rows[0].state){
+                    address = rows[0].state + '市' + rows[0].city+rows[0].street+rows[0].address;
+                }else{
+                    address = rows[0].state + '省' + rows[0].city + '市' + rows[0].street+rows[0].address;
+                }
+
                 var tableString = '<div align="center"><table style="border-collapse:separate; border-spacing:0px 0px;"><tr><td colspan="4" rowspan="3"><img src="../../upload/images/logo.png" width="308" height="60"></td>' +
                     '<td colspan="5">'+companyName+'</td></tr>' +
                     '<tr><td colspan="5"><strong>SILEY DECORATIVE MATERIAL(SHANGHAI) LIMITED</strong></td></tr>' +
@@ -535,7 +562,7 @@ function PrintOrder(orderNo,path,systemName) {
                     '<tr style="font-size: 17px;"><td width="100">订单状态 ：</td><td colspan="8">'+status+'</td></tr>' +
                     '<tr style="font-size: 17px;"><td>客户编号：</td><td colspan="2">'+customerNo+'</td><td width="100">客户名称：</td><td>'+customerName+'</td></tr>' +
                     '<tr style="font-size: 17px;"><td>收货人：</td><td>'+res.Contacts+'</td><td>收货电话：</td><td>'+res.Phonenum+'</td></tr>' +
-                    '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+res.state+res.city+res.street+res.address+'</td></tr>' +
+                    '<tr style="font-size: 17px;"><td width="100">收货地址 ：</td><td colspan="8">'+address+'</td></tr>' +
                     '<tr style="font-size: 17px;"><td width="100">物流公司 ：</td><td width="100">'+res.Express+'</td><td width="100">重量(KG)：</td><td>'+res.Weight+'</td><td width="120">运费预估(元)：</td><td>'+res.Freight+'</td><td colspan="3">若运费超出±10请联系本公司</td></tr>' +
                     '<tr style="font-size: 17px;"><td width="100">订单备注 ：</td><td colspan="8">'+res.Remark+'</td></tr>';
 

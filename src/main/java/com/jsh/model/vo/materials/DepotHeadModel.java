@@ -76,6 +76,16 @@ public class DepotHeadModel implements Serializable {
     private String searchSendStatus;
 
     /**
+     * 收货人搜索条件
+     */
+    private String searchContacts;
+
+    /**
+     * 运单号码搜索条件
+     */
+    private String searchExpressNumber;
+
+    /**
      * 审核状态
      */
     private String searchCheckStatus;
@@ -856,5 +866,41 @@ public class DepotHeadModel implements Serializable {
      */
     public void setSendEndTime(String sendEndTime) {
         SendEndTime = sendEndTime;
+    }
+
+    /**
+     * Getter method for property <tt>searchContacts</tt>.
+     *
+     * @return property value of searchContacts
+     */
+    public String getSearchContacts() {
+        return searchContacts;
+    }
+
+    /**
+     * Setter method for property <tt>searchContacts</tt>.
+     *
+     * @param searchContacts value to be assigned to property searchContacts
+     */
+    public void setSearchContacts(String searchContacts) {
+        this.searchContacts = searchContacts;
+    }
+
+    /**
+     * Getter method for property <tt>searchExpressNumber</tt>.
+     *
+     * @return property value of searchExpressNumber
+     */
+    public String getSearchExpressNumber() {
+        return searchExpressNumber;
+    }
+
+    /**
+     * Setter method for property <tt>searchExpressNumber</tt>.
+     *
+     * @param searchExpressNumber value to be assigned to property searchExpressNumber
+     */
+    public void setSearchExpressNumber(String searchExpressNumber) {
+        this.searchExpressNumber = searchExpressNumber;
     }
 }

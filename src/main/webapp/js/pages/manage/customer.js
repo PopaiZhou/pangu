@@ -105,10 +105,18 @@ function initTableData() {
             },'-',
             {
                 id:'setOutput',
-                text:'导出',
+                text:'导出当前页',
                 iconCls:'icon-excel',
                 handler:function() {
                     setOutputFun();
+                }
+            },'-',
+            {
+                id:'setOutputAll',
+                text:'导出所有',
+                iconCls:'icon-excel',
+                handler:function() {
+                    setOutputFunAll();
                 }
             }
         ],
@@ -445,9 +453,14 @@ function setDisEnableFun() {
     }
 }
 
-//导出数据
+//导出当前页数据
 function setOutputFun(){
-    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer";
+    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer&isCurrentPage=currentPage";
+}
+
+//导出所有数据
+function setOutputFunAll(){
+    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer&isCurrentPage=allPage";
 }
 
 //检查客户编号
