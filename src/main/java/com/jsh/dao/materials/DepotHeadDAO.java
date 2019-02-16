@@ -227,7 +227,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
             queryString.append(" WHERE dh.state='").append(state).append("' and dh.OperTime >='").append(beginTime).append("' and dh.OperTime<='").append(endTime).append("' and dh.SendStatus=1");
         }
 
-        queryString.append(" order by DefaultNumber ");
+        queryString.append(" order by Number ");
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }
@@ -261,7 +261,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         queryString.append(" LEFT JOIN jsh_template d on d.id = b.TemplateId ");
         //我只查已发货的订单 SendStatus=1
         queryString.append(" WHERE dh.OrganId='").append(organId).append("' and dh.OperTime >='").append(beginTime).append("' and dh.OperTime<='").append(endTime).append("' and dh.SendStatus=1");
-        queryString.append(" order by DefaultNumber ");
+        queryString.append(" order by Number ");
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }
@@ -278,7 +278,7 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
         queryString.append(" LEFT JOIN jsh_template d on d.id = b.TemplateId ");
         //我只查已发货的订单 SendStatus=1
         queryString.append(" WHERE dh.Salesman='").append(organId).append("' and dh.OperTime >='").append(beginTime).append("' and dh.OperTime<='").append(endTime).append("' and dh.SendStatus=1");
-        queryString.append(" order by DefaultNumber ");
+        queryString.append(" order by Number ");
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }

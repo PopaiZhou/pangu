@@ -34,20 +34,20 @@
             for (var i = row; i < tb.rows.length; i++) {
                 value = tb.rows[i].cells[col].innerText;
                 if (lastValue == value) {//判断产品名称是否相同
-                    if (!isNaN(tb.rows[i].cells[6].innerText))//判断是否为数字类型
-                        cellValue =cellValue+ parseFloat(tb.rows[i].cells[6].innerText);
+                    if (!isNaN(tb.rows[i].cells[10].innerText))//判断是否为数字类型
+                        cellValue =cellValue+ parseFloat(tb.rows[i].cells[10].innerText);
                     tb.rows[i].deleteCell(col);
                     tb.rows[i - pos].cells[col].rowSpan = tb.rows[i - pos].cells[col].rowSpan + 1;//设置单元格rowSpan的值
                     var z = tb.rows[i].cells.length;
                     tb.rows[i].deleteCell(z - 1);
                     tb.rows[i - pos].cells[z].rowSpan = tb.rows[i - pos].cells[z].rowSpan + 1//合并标煤合计那一列的单元格
-                    tb.rows[i - pos].cells[7].innerText = cellValue;//进行复制
+                    tb.rows[i - pos].cells[11].innerText = cellValue;//进行复制
                     pos++;
                 } else {//产品名称不同的处理
                     lastValue = value;
-                    cellValue = parseFloat(tb.rows[i].cells[6].innerText);
+                    cellValue = parseFloat(tb.rows[i].cells[10].innerText);
                     if (!isNaN(cellValue))
-                        tb.rows[i].cells[7].innerText = cellValue;
+                        tb.rows[i].cells[11].innerText = cellValue;
                     pos = 1;
                     tdSum = 0;
                 }
@@ -201,7 +201,7 @@
                         tableString = tableString + '<tr>' +
                                 '<td>' + thisRows[i].number + '</td><td>' + thisRows[i].oTime + '</td><td>' + thisRows[i].customerNo + '</td><td>' + thisRows[i].customerName + '</td>' +
                                 '<td>' + thisRows[i].state + '</td><td>' + thisRows[i].city + '</td>' +
-                                '<td>' + thisRows[i].productName + '</td><td>' + thisRows[i].templateName + '</td><td>' + thisRows[i].operNumber + '</td><td>' + thisRows[i].taxUnitPrice.toFixed(2) + '</td><td>' + thisRows[i].allPrice.toFixed(2) + '</td><td id=price' + i + '>' + thisRows[i].allPrice + '</td></tr>';
+                                '<td>' + thisRows[i].productName + '</td><td>' + thisRows[i].templateName + '</td><td>' + thisRows[i].operNumber + '</td><td>' + thisRows[i].taxUnitPrice.toFixed(2) + '</td><td>' + thisRows[i].allPrice.toFixed(2) + '</td><td id=price' + i + '>' + thisRows[i].allPrice.toFixed(2) + '</td></tr>';
                     }
                     tableString = tableString + '</table></div>';
 
