@@ -278,8 +278,8 @@
         $('#tableData').html(tableString+"</table>");
         //$("#statementTable").rowspan(0);//传入的参数是对应的列数从0开始  第一列合并相同
 
-        var tab=document.getElementById("statementTable");
-        autoRowSpan(tab,0,0);
+        //var tab=document.getElementById("statementTable");
+        //autoRowSpan(tab,0,0);
     }
 </script>
 </body>
