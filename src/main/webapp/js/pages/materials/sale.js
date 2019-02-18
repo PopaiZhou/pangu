@@ -213,6 +213,7 @@ function initTableData() {
             },
             { title: '省', field: 'state',width:60},
             { title: '市', field: 'city',width:60},
+            { title: '客户编号', field: 'OrganNo',width:80},
             { title: '客户名称', field: 'OrganName',width:80},
             { title: '单据编号',field: 'Number',width:130},
             { title: '商品信息',field: 'MaterialsList',width:150,formatter:function(value){
