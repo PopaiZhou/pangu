@@ -255,7 +255,7 @@
         $('#tableData').html(tableString+"</table>");
 
         var tab=document.getElementById("statementTable");
-        autoRowSpan(tab,0,0);
+        //autoRowSpan(tab,0,0);
 
     }
 
