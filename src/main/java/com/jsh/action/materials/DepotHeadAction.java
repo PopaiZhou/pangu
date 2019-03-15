@@ -594,7 +594,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("AccountDay", depotHead.getAccountDay()); //结算天数
                     item.put("AllocationProjectId", depotHead.getAllocationProjectId() == null ? "" : depotHead.getAllocationProjectId().getId());
                     item.put("AllocationProjectName", depotHead.getAllocationProjectId() == null ? "" : depotHead.getAllocationProjectId().getName());
-                    item.put("TotalPrice", depotHead.getTotalPrice() == null ? "" : Math.abs(depotHead.getTotalPrice()));
+                    item.put("TotalPrice", depotHead.getTotalPrice() == null ? "" : depotHead.getTotalPrice());
                     item.put("payType", depotHead.getPayType() == null ? "" : depotHead.getPayType());
                     item.put("Status", depotHead.getStatus());
                     item.put("SendStatus", depotHead.getSendStatus());
