@@ -10,8 +10,81 @@ $(function () {
 
 
 var id = 0;
+var btnEnableList = getBtnStr(); //获取按钮的权限
+var delFlag = false;
 //初始化表格数据
 function initTableData() {
+    var tableToolBar = [];
+    //98 新增
+    if(btnEnableList && btnEnableList.indexOf(98)>-1){
+        tableToolBar.push(
+            {
+                id:'addCustomer',
+                text:'增加',
+                iconCls:'icon-add',
+                handler:function() {
+                    addCustomer();
+                }
+            },'-'
+        );
+    }
+    //99 删除
+    if(btnEnableList && btnEnableList.indexOf(99)>-1){
+        delFlag = true;
+        tableToolBar.push(
+            {
+                id:'deleteCustomer',
+                text:'删除',
+                iconCls:'icon-remove',
+                handler:function() {
+                    batDeleteCustomer();
+                }
+            },'-'
+        );
+    }
+    //2 启用禁用
+    if(btnEnableList && btnEnableList.indexOf(2)>-1){
+        tableToolBar.push(
+            {
+                id:'setEnable',
+                text:'启用',
+                iconCls:'icon-ok',
+                handler:function() {
+                    setEnableFun();
+                }
+            },'-',
+            {
+                id:'setDisEnable',
+                text:'禁用',
+                iconCls:'icon-no',
+                handler:function() {
+                    setDisEnableFun();
+                }
+            },'-'
+        );
+    }
+    //1 导入导出
+    if(btnEnableList && btnEnableList.indexOf(1)>-1){
+        tableToolBar.push(
+            {
+                id:'setOutput',
+                text:'导出当前页',
+                iconCls:'icon-excel',
+                handler:function() {
+                    setOutputFun();
+                }
+            },'-',
+            {
+                id:'setOutputAll',
+                text:'导出所有',
+                iconCls:'icon-excel',
+                handler:function() {
+                    setOutputFunAll();
+                }
+            }
+        );
+    }
+
     //改变宽度和高度
     $("#searchPanel").panel({width:webW-2});
     $("#tablePanel").panel({width:webW-2});
@@ -52,7 +125,9 @@ function initTableData() {
                 if(1 == value)
                 {
                     str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editCustomerInfo(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
-                    str += '<img title="删除" src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteCustomer(\'' + rowInfo + '\');"/>';
+                    if(delFlag){
+                        str += '<img title="删除" src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteCustomer(\'' + rowInfo + '\');"/>';
+                    }
                 }
                 return str;
             }
@@ -70,48 +145,7 @@ function initTableData() {
                 return value? "启用":"禁用";
             }}
         ]],
-        toolbar:[
-            {
-                id:'addCustomer',
-                text:'增加',
-                iconCls:'icon-add',
-                handler:function() {
-                    addCustomer();
-                }
-            },'-',
-            {
-                id:'deleteCustomer',
-                text:'删除',
-                iconCls:'icon-remove',
-                handler:function() {
-                    batDeleteCustomer();
-                }
-            },'-',
-            {
-                id:'setEnable',
-                text:'启用',
-                iconCls:'icon-ok',
-                handler:function() {
-                    setEnableFun();
-                }
-            },'-',
-            {
-                id:'setDisEnable',
-                text:'禁用',
-                iconCls:'icon-no',
-                handler:function() {
-                    setDisEnableFun();
-                }
-            },'-',
-            {
-                id:'setOutput',
-                text:'导出',
-                iconCls:'icon-excel',
-                handler:function() {
-                    setOutputFun();
-                }
-            }
-        ],
+        toolbar:tableToolBar,
         onLoadError:function()
         {
             $.messager.alert('页面加载提示','页面加载异常，请稍后再试！','error');
@@ -445,9 +479,14 @@ function setDisEnableFun() {
     }
 }
 
-//导出数据
+//导出当前页数据
 function setOutputFun(){
-    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer";
+    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer&isCurrentPage=currentPage";
+}
+
+//导出所有数据
+function setOutputFunAll(){
+    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer&isCurrentPage=allPage";
 }
 
 //检查客户编号

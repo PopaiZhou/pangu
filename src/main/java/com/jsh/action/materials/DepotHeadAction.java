@@ -19,6 +19,9 @@ import org.springframework.dao.DataAccessException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -591,7 +594,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("AccountDay", depotHead.getAccountDay()); //结算天数
                     item.put("AllocationProjectId", depotHead.getAllocationProjectId() == null ? "" : depotHead.getAllocationProjectId().getId());
                     item.put("AllocationProjectName", depotHead.getAllocationProjectId() == null ? "" : depotHead.getAllocationProjectId().getName());
-                    item.put("TotalPrice", depotHead.getTotalPrice() == null ? "" : Math.abs(depotHead.getTotalPrice()));
+                    item.put("TotalPrice", depotHead.getTotalPrice() == null ? "" : depotHead.getTotalPrice());
                     item.put("payType", depotHead.getPayType() == null ? "" : depotHead.getPayType());
                     item.put("Status", depotHead.getStatus());
                     item.put("SendStatus", depotHead.getSendStatus());
@@ -1099,6 +1102,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("operNumber", arr[7]); //数量
                     item.put("unitPrice", arr[8]); //单价
                     item.put("allPrice", arr[9]); //总价
+                    item.put("customerNo",arr[10]);//客户编号
+                    item.put("state",arr[11]);//省
+                    item.put("city",arr[12]);//市
 
                     dataArray.add(item);
                 }
@@ -1186,6 +1192,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("operNumber", arr[7]); //数量
                     item.put("unitPrice", arr[8]); //单价
                     item.put("allPrice", arr[9]); //总价
+                    item.put("customerNo",arr[10]);//客户编号
+                    item.put("state",arr[11]);//省
+                    item.put("city",arr[12]);//市
 
                     dataArray.add(item);
                 }
@@ -1233,6 +1242,9 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("operNumber", arr[7]); //数量
                     item.put("unitPrice", arr[8]); //单价
                     item.put("allPrice", arr[9]); //总价
+                    item.put("customerNo",arr[10]);//客户编号
+                    item.put("state",arr[11]);//省
+                    item.put("city",arr[12]);//市
 
                     dataArray.add(item);
                 }
@@ -1399,6 +1411,11 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                     item.put("taxUnitPrice", arr[6]); //进货价
                     item.put("allPrice", (double)arr[5]*(double)arr[6]); //总价
 
+                    item.put("customerNo", arr[7]); //客户编号
+                    item.put("customerName", arr[8]); //客户姓名
+                    item.put("state", arr[9]); //省
+                    item.put("city", arr[10]); //市
+
                     dataArray.add(item);
                 }
             }
@@ -1476,6 +1493,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("SubType_s_eq", model.getSubType());
         condition.put("Number_s_like", model.getNumber());
         condition.put("Status_n_eq", model.getSearchStatus());
+
+        //收件人
+        condition.put("Contacts_s_eq", model.getSearchContacts());
+        //运单号码
+        condition.put("ExpressNumber_s_eq", model.getSearchExpressNumber());
+
         condition.put("CheckStatus_n_eq", model.getSearchCheckStatus());
         condition.put("OrganId_s_in", model.getCustomerIds());
         condition.put("SendStatus_n_eq", model.getSearchSendStatus());
@@ -1487,9 +1510,24 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
         condition.put("OperTime_s_gteq", model.getSendBeginTime());
         condition.put("OperTime_s_lteq", model.getSendEndTime());
 
+        //如果是有订单金额  只搜索1个月之内的订单数据
         if(null != model.getSearchTotalPrice()){
             condition.put("TotalPrice_s_gteq", model.getSearchTotalPrice()-10);
             condition.put("TotalPrice_s_lteq", model.getSearchTotalPrice()+10);
+
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Calendar c = Calendar.getInstance();
+            //过去一月
+            c.setTime(new Date());
+            c.add(Calendar.MONTH, -1);
+            Date m = c.getTime();
+            String begin = format.format(m);
+
+            String end = format.format(new Date());
+
+            condition.put("CreateTime_s_gteq", begin);
+            condition.put("CreateTime_s_lteq", end);
         }
 
         condition.put("Id_s_order", "desc");

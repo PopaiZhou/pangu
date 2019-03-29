@@ -356,7 +356,7 @@ public class CustomerAction extends BaseAction<CustomerModel> {
 
             pageUtil.setPageSize(model.getPageSize());
             pageUtil.setCurPage(model.getPageNo());
-            String isCurrentPage = "allPage";
+            String isCurrentPage = model.getIsCurrentPage();
             model.setFileName(Tools.changeUnicode("report" + System.currentTimeMillis() + ".xls", model.getBrowserType()));
             model.setExcelStream(customerService.exmportExcel(isCurrentPage, pageUtil));
         } catch (Exception e) {

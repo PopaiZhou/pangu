@@ -79,6 +79,14 @@
                 <select name="searchSendStatus" id="searchSendStatus" style="width:100px; height:20px">
                 </select>
             </td>
+            <td>收货人：</td>
+            <td>
+                <input type="text" name="searchContacts" id="searchContacts" style="width:100px;"/>
+            </td>
+            <td>运单号码：</td>
+            <td>
+                <input type="text" name="searchExpressNumber" id="searchExpressNumber" style="width:100px;"/>
+            </td>
         </tr>
         <tr>
             <td>下单日期：</td>

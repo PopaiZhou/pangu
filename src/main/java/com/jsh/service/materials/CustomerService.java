@@ -44,6 +44,13 @@ public class CustomerService extends BaseService<Customer> implements CustomerIS
     @Override
     public InputStream exmportExcel(String isAllPage, PageUtil<Customer> pageUtil) throws JshException {
         try {
+            if ("currentPage".equals(isAllPage)) {
+                customerDao.find(pageUtil);
+            } else {
+                pageUtil.setCurPage(0);
+                pageUtil.setPageSize(0);
+                customerDao.find(pageUtil);
+            }
             //将OutputStream转化为InputStream
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             putDataOnOutputStream(out, pageUtil.getPageList());

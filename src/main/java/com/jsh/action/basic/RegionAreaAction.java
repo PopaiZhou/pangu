@@ -41,6 +41,10 @@ public class RegionAreaAction extends BaseAction<RegionAreaModel> {
             //存放数据json数组
             JSONArray dataArray = new JSONArray();
             if(CollectionUtils.isNotEmpty(list)){
+                JSONObject myCountry = new JSONObject();
+                myCountry.put("id", "-1");
+                myCountry.put("name", "全国");
+                dataArray.add(myCountry);
                 for(RegionArea area : list){
                     JSONObject item = new JSONObject();
                     item.put("id", area.getRegionId());

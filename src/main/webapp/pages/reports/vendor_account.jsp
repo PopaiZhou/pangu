@@ -34,20 +34,20 @@
             for (var i = row; i < tb.rows.length; i++) {
                 value = tb.rows[i].cells[col].innerText;
                 if (lastValue == value) {//判断产品名称是否相同
-                    if (!isNaN(tb.rows[i].cells[6].innerText))//判断是否为数字类型
-                        cellValue =cellValue+ parseFloat(tb.rows[i].cells[6].innerText);
+                    if (!isNaN(tb.rows[i].cells[10].innerText))//判断是否为数字类型
+                        cellValue =cellValue+ parseFloat(tb.rows[i].cells[10].innerText);
                     tb.rows[i].deleteCell(col);
                     tb.rows[i - pos].cells[col].rowSpan = tb.rows[i - pos].cells[col].rowSpan + 1;//设置单元格rowSpan的值
                     var z = tb.rows[i].cells.length;
                     tb.rows[i].deleteCell(z - 1);
                     tb.rows[i - pos].cells[z].rowSpan = tb.rows[i - pos].cells[z].rowSpan + 1//合并标煤合计那一列的单元格
-                    tb.rows[i - pos].cells[7].innerText = cellValue;//进行复制
+                    tb.rows[i - pos].cells[11].innerText = cellValue;//进行复制
                     pos++;
                 } else {//产品名称不同的处理
                     lastValue = value;
-                    cellValue = parseFloat(tb.rows[i].cells[6].innerText);
+                    cellValue = parseFloat(tb.rows[i].cells[10].innerText);
                     if (!isNaN(cellValue))
-                        tb.rows[i].cells[7].innerText = cellValue;
+                        tb.rows[i].cells[11].innerText = cellValue;
                     pos = 1;
                     tdSum = 0;
                 }
@@ -193,9 +193,15 @@
             success: function (res) {
                 if (res && res.rows) {
                     var thisRows = res.rows;
-                    tableString = tableString + '<div><table id="statementTable" width="100%" border="1" bordercolor="#000000" style="border-collapse:collapse;"><tr><th>单号</th><th>日期</th><th>型号</th><th>样本名称</th><th>数量</th><th>单价</th><th>金额</th><th>总金额</th></tr>';
+                    tableString = tableString + '<div><table id="statementTable" width="100%" border="1" bordercolor="#000000" style="border-collapse:collapse;">' +
+                            '<tr><th>单号</th><th>日期</th><th>客户编号</th><th>客户姓名</th>' +
+                            '<th>省份</th><th>地区</th>'+
+                            '<th>型号</th><th>样本名称</th><th>数量</th><th>单价</th><th>金额</th><th>总金额</th></tr>';
                     for (var i = 0; i < thisRows.length; i++) {
-                        tableString = tableString + '<tr><td>' + thisRows[i].number + '</td><td>' + thisRows[i].oTime + '</td><td>' + thisRows[i].productName + '</td><td>' + thisRows[i].templateName + '</td><td>' + thisRows[i].operNumber + '</td><td>' + thisRows[i].taxUnitPrice + '</td><td>' + thisRows[i].allPrice + '</td><td id=price' + i + '>' + thisRows[i].allPrice + '</td></tr>';
+                        tableString = tableString + '<tr>' +
+                                '<td>' + thisRows[i].number + '</td><td>' + thisRows[i].oTime + '</td><td>' + thisRows[i].customerNo + '</td><td>' + thisRows[i].customerName + '</td>' +
+                                '<td>' + thisRows[i].state + '</td><td>' + thisRows[i].city + '</td>' +
+                                '<td>' + thisRows[i].productName + '</td><td>' + thisRows[i].templateName + '</td><td>' + thisRows[i].operNumber + '</td><td>' + thisRows[i].taxUnitPrice.toFixed(2) + '</td><td>' + thisRows[i].allPrice.toFixed(2) + '</td><td id=price' + i + '>' + thisRows[i].allPrice.toFixed(2) + '</td></tr>';
                     }
                     tableString = tableString + '</table></div>';
 
@@ -225,9 +231,9 @@
                                 for (var i = 0; i < thisRows.length; i++) {
                                     allNum = allNum + thisRows[i].OperNumber;
                                     allPrice = allPrice + thisRows[i].AllPrice;
-                                    tableString = tableString + '<tr><td>'+thisRows[i].templateName+'</td><td>'+thisRows[i].OperNumber+'</td><td>'+thisRows[i].AllPrice+'</td></tr>';
+                                    tableString = tableString + '<tr><td>'+thisRows[i].templateName+'</td><td>'+thisRows[i].OperNumber.toFixed(2)+'</td><td>'+thisRows[i].AllPrice.toFixed(2)+'</td></tr>';
                                 }
-                                tableString = tableString + '<tr><td colspan="3" align="center">合计数量：'+allNum+'米&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计金额：'+allPrice+'元</td><tr>';
+                                tableString = tableString + '<tr><td colspan="3" align="center">合计数量：'+allNum.toFixed(2)+'米&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;合计金额：'+allPrice.toFixed(2)+'元</td><tr>';
                                 tableString = tableString + '</table></div>';
                             }
                         },
@@ -249,7 +255,7 @@
         $('#tableData').html(tableString+"</table>");
 
         var tab=document.getElementById("statementTable");
-        autoRowSpan(tab,0,0);
+        //autoRowSpan(tab,0,0);
 
     }
 
