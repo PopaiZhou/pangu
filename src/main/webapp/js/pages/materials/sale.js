@@ -113,7 +113,7 @@ function initTableData() {
             },'-');
     }
     //9是打印出库单
-    if(btnEnableList && btnEnableList.indexOf(8)>-1){
+    if(btnEnableList && btnEnableList.indexOf(9)>-1){
         mulSelete = true;
         priceHidden = true;
         tableToolBar.push(

@@ -485,6 +485,11 @@ function PrintOrder(orderNo,path,systemName) {
 
     var OrganId = "";
     var id = 0;
+
+    var state = "";
+    var city = "";
+    var street = "";
+    var address = "";
     //根据订单编号查询订单信息
     $.ajax({
         type:"get",
@@ -501,6 +506,11 @@ function PrintOrder(orderNo,path,systemName) {
                 // 载入内容
                 var customerNo = "";
                 var customerName = "";
+
+                state = res.state;
+                city = res.city;
+                street = res.street;
+                address = res.address;
 
                 //加载客户信息
                 $.ajax({
@@ -545,12 +555,11 @@ function PrintOrder(orderNo,path,systemName) {
 
                 var font = 'font-family:"宋体"';
 
-                var address = '';
                 //如果是直辖市
-                if("北京" == rows[0].state || "上海" == rows[0].state || "重庆" == rows[0].state || "天津" == rows[0].state){
-                    address = rows[0].state + '市' + rows[0].city+rows[0].street+rows[0].address;
+                if("北京" == state || "上海" == state || "重庆" == state || "天津" == state){
+                    address = state + '市' + city+street+address;
                 }else{
-                    address = rows[0].state + '省' + rows[0].city + '市' + rows[0].street+rows[0].address;
+                    address = state + '省' + city + '市' + street+address;
                 }
 
                 var tableString = '<div align="center"><table style="border-collapse:separate; border-spacing:0px 0px;"><tr><td colspan="4" rowspan="3"><img src="../../upload/images/logo.png" width="308" height="60"></td>' +
