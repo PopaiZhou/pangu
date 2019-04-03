@@ -21,8 +21,14 @@
     <script type="text/javascript" src="<%=path %>/js/common/common.js"></script>
     <script type="text/javascript">
         function NewTab(name, url, funId) {
-            window.funId = funId;
-            addTab(name, url, '');
+            if(functions.indexOf(funId) > 0){
+                window.funId = funId;
+                addTab(name, url, '');
+            }else {
+                //alert("不存在");
+                $("div").remove();
+                $("<div style='width:100%;text-align:center;padding-top:20px'><b>抱歉，您没有该权限！</b></div>").appendTo("body");
+            }
         }
     </script>
 </head>

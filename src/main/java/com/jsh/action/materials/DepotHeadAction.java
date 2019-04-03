@@ -490,28 +490,35 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
     public void getHeaderIdByMaterial() {
         try {
             String materialParam = model.getMaterialParam(); //商品参数
-            PageUtil pageUtil = new PageUtil();
-            pageUtil.setPageSize(0);
-            pageUtil.setCurPage(0);
-            depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam);
             JSONObject outer = new JSONObject();
-            String allReturn = "";
-            List dataList = pageUtil.getPageList();
-            if (dataList != null) {
-                for (Integer i = 0; i < dataList.size(); i++) {
-                    Object dl = dataList.get(i); //获取对象
-                    allReturn = allReturn + dl.toString() + ",";
+            if (StringUtils.isEmpty(materialParam)) {
+                outer.put("ret", "");
+                //回写查询结果
+                toClient(outer.toString());
+            }else{
+                PageUtil pageUtil = new PageUtil();
+                pageUtil.setPageSize(0);
+                pageUtil.setCurPage(0);
+                depotHeadService.getHeaderIdByMaterial(pageUtil, materialParam);
+
+                String allReturn = "";
+                List dataList = pageUtil.getPageList();
+                if (dataList != null) {
+                    for (Integer i = 0; i < dataList.size(); i++) {
+                        Object dl = dataList.get(i); //获取对象
+                        allReturn = allReturn + dl.toString() + ",";
+                    }
                 }
+                if(StringUtils.isNotEmpty(allReturn)){
+                    allReturn = allReturn.substring(0, allReturn.length() - 1);
+                }
+                if (allReturn.equals("null")) {
+                    allReturn = "";
+                }
+                outer.put("ret", allReturn);
+                //回写查询结果
+                toClient(outer.toString());
             }
-            if(StringUtils.isNotEmpty(allReturn)){
-                allReturn = allReturn.substring(0, allReturn.length() - 1);
-            }
-            if (allReturn.equals("null")) {
-                allReturn = "";
-            }
-            outer.put("ret", allReturn);
-            //回写查询结果
-            toClient(outer.toString());
         } catch (JshException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
         } catch (IOException e) {

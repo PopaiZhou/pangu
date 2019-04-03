@@ -431,4 +431,15 @@
 	</bean>
 	<!--客户信息配置结束 -->
 
+	<!--快递信息配置开始 -->
+	<bean id="expressService" class="com.jsh.service.materials.ExpressService">
+		<property name="baseDao" ref="baseDao"/>
+		<property name="expressDao" ref="expressDao" />
+	</bean>
+	<bean id="expressAction" class="com.jsh.action.materials.ExpressAction" scope="prototype">
+		<property name="expressService" ref="expressService"/>
+		<property name="logService" ref="logService"/>
+	</bean>
+	<!--产品型号配置结束 -->
+
 </beans>

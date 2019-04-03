@@ -1326,8 +1326,10 @@ function showDepotHeadDetails(pageNo,pageSize){
         }),
         success: function (res) {
             if(res) {
+                //如果 ids == '' && materialParam == '' 查询全部
+                //如果 ids == '' && materialParam != '' 根据条件查询
                 var ids = res.ret;
-                if(ids){
+                if((ids == '' && materialParam == '') || (ids != '' && materialParam != '')){
                     $.ajax({
                         type: "post",
                         url: path + "/depotHead/findBy.action",
@@ -1353,7 +1355,7 @@ function showDepotHeadDetails(pageNo,pageSize){
 
                             SendBeginTime: $("#searchSendBeginTime").val(),
                             SendEndTime: $("#searchSendEndTime").val(),
-                            
+
                             dhIds: ids,
                             pageNo: pageNo,
                             pageSize: pageSize
@@ -1367,8 +1369,7 @@ function showDepotHeadDetails(pageNo,pageSize){
                             return;
                         }
                     });
-                }
-                else {
+                }else{
                     $("#tableData").datagrid('loadData', []);
                 }
             }
