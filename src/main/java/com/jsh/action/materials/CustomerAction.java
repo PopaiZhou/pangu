@@ -9,12 +9,14 @@ import com.jsh.base.Log;
 import com.jsh.enums.CustomerTypeEnum;
 import com.jsh.model.po.Basicuser;
 import com.jsh.model.po.Customer;
+import com.jsh.model.po.Express;
 import com.jsh.model.po.Logdetails;
 import com.jsh.model.po.UserBusiness;
 import com.jsh.model.vo.materials.CustomerModel;
 import com.jsh.service.basic.UserBusinessIService;
 import com.jsh.service.basic.UserIService;
 import com.jsh.service.materials.CustomerIService;
+import com.jsh.service.materials.ExpressIService;
 import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
@@ -37,6 +39,7 @@ public class CustomerAction extends BaseAction<CustomerModel> {
     private CustomerIService customerService;
     private UserBusinessIService userBusinessService;
     private UserIService userService;
+    private ExpressIService expressService;
     private CustomerModel model = new CustomerModel();
 
     /**
@@ -207,6 +210,7 @@ public class CustomerAction extends BaseAction<CustomerModel> {
                     item.put("telephone", customer.getTelephone());
                     item.put("qq", customer.getQq());
                     item.put("express", customer.getExpress());
+                    item.put("expressCode",getExpressCode(customer.getExpress()));
                     item.put("address", customer.getAddress());
                     item.put("taxNum", customer.getTaxNum());
                     item.put("bankName", customer.getBankName());
@@ -588,6 +592,31 @@ public class CustomerAction extends BaseAction<CustomerModel> {
         }
     }
 
+    private String getExpressCode(String expressName){
+        /**
+         * 拼接搜索条件
+         */
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("enabled_s_eq", 1);
+        condition.put("sort_order_s_order", "ASC");
+
+        PageUtil<Express> pageUtil = new PageUtil<Express>();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        pageUtil.setAdvSearch(condition);
+        expressService.find(pageUtil);
+        List<Express> dataList = pageUtil.getPageList();
+        //存放数据json数组
+        if (null != dataList) {
+            for (Express express : dataList) {
+                if(expressName.contains(express.getExpressName())){
+                    return express.getExpressCode();
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * 拼接搜索条件
      *
@@ -640,5 +669,14 @@ public class CustomerAction extends BaseAction<CustomerModel> {
      */
     public void setUserService(UserIService userService) {
         this.userService = userService;
+    }
+
+    /**
+     * Setter method for property <tt>expressService</tt>.
+     *
+     * @param expressService value to be assigned to property expressService
+     */
+    public void setExpressService(ExpressIService expressService) {
+        this.expressService = expressService;
     }
 }

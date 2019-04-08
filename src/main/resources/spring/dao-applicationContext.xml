@@ -66,4 +66,6 @@
 	<bean id="productDao" parent="daoTemplate" class="com.jsh.dao.materials.ProductDAO"/>
 	<!-- 配置productDAO组件 -->
 	<bean id="customerDao" parent="daoTemplate" class="com.jsh.dao.materials.CustomerDAO"/>
+	<!-- 配置expressDAO组件 -->
+	<bean id="expressDao" parent="daoTemplate" class="com.jsh.dao.materials.ExpressDAO"/>
 </beans>
