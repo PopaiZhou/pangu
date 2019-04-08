@@ -5,7 +5,7 @@
 <hibernate-configuration>
 <session-factory>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/jsh_erp</property>
+		<property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/jsh_erp</property>
 	<property name="hibernate.dialect">
 		org.hibernate.dialect.MySQL5Dialect
 	</property>
@@ -13,7 +13,7 @@
 	<!-- 一般重新建库用create(慎用)，只更新字段用update -->
 	<property name="hbm2ddl.auto">update</property>
 
-	<!-- 对应的实体映射 -->
+    <!-- 对应的实体映射 -->
 	<mapping resource="hibernate/Supplier.hbm.xml" />
 	<mapping resource="hibernate/Logdetails.hbm.xml" />
 	<mapping resource="hibernate/Assetname.hbm.xml" />
@@ -41,5 +41,6 @@
 	<mapping resource="hibernate/Template.hbm.xml"/>
 	<mapping resource="hibernate/Product.hbm.xml"/>
 	<mapping resource="hibernate/Customer.hbm.xml"/>
+    <mapping resource="hibernate/Express.hbm.xml"/>
 </session-factory>
 </hibernate-configuration>

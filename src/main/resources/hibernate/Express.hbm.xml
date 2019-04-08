@@ -6,19 +6,25 @@
 
     <class name="com.jsh.model.po.Express" table="jsh_express" schema="jsh_erp">
         <id name="id">
-            <column name="id" sql-type="bigint(20)"/>
+            <column name="id" sql-type="int(11)"/>
         </id>
         <property name="expressName">
-            <column name="expressName" sql-type="varchar(128)" length="32" not-null="true"/>
+            <column name="express_name" sql-type="varchar(128)" length="128" not-null="true"/>
         </property>
         <property name="expressCode">
-            <column name="expressCode" sql-type="varchar(64)"/>
+            <column name="express_code" sql-type="varchar(64)" length="64" not-null="true"/>
         </property>
         <property name="sortOrder">
-            <column name="sortOrder" sql-type="int" not-null="true"/>
+            <column name="sort_order" sql-type="int(11)" />
         </property>
         <property name="enabled">
             <column name="enabled" sql-type="bit(1)" not-null="true"/>
+        </property>
+        <property name="created">
+            <column name="created" sql-type="timestamp" />
+        </property>
+        <property name="updated">
+            <column name="updated" sql-type="timestamp" />
         </property>
     </class>
 </hibernate-mapping>

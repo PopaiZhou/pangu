@@ -50,7 +50,7 @@
 </div>
 
 <!-- 数据显示table -->
-<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="快递信息列表" iconCls="icon-list"
+<div id="tablePanel" class="easyui-panel" style="padding:1px;top:300px;" title="物流信息列表" iconCls="icon-list"
      collapsible="true" closable="false">
     <table id="tableData" style="top:300px;border-bottom-color:#FFFFFF"></table>
 </div>
@@ -77,7 +77,7 @@
                 </td>
                 <td style="width: 60px;height: 20px">排序</td>
                 <td style="padding:1px;">
-                    <input name="expressOrder" id="expressOrder" class="easyui-numberbox" style="width: 160px;height: 20px"/>
+                    <input name="sortOrder" id="sortOrder" class="easyui-numberbox" style="width: 160px;height: 20px"/>
                 </td>
             </tr>
         </table>

@@ -42,6 +42,7 @@ public class DepotHead implements java.io.Serializable {
     private String Contacts;
     private String Phonenum;
     private String SendPersonName;
+    private String ExpressCode;
     /**
      * 省
      */
@@ -570,5 +571,23 @@ public class DepotHead implements java.io.Serializable {
      */
     public void setCheckStatus(Boolean checkStatus) {
         CheckStatus = checkStatus;
+    }
+
+    /**
+     * Getter method for property <tt>ExpressCode</tt>.
+     *
+     * @return property value of ExpressCode
+     */
+    public String getExpressCode() {
+        return ExpressCode;
+    }
+
+    /**
+     * Setter method for property <tt>ExpressCode</tt>.
+     *
+     * @param ExpressCode value to be assigned to property ExpressCode
+     */
+    public void setExpressCode(String expressCode) {
+        ExpressCode = expressCode;
     }
 }

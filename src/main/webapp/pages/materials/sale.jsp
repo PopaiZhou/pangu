@@ -160,19 +160,15 @@
             <tr>
                 <td>物流公司：</td>
                 <td style="padding:5px">
+                    <input id="ExpressCode" name="ExpressCode" class="easyui-validatebox" style="width:120px;"/>
+                </td>
+                <td>物流备注：</td>
+                <td style="padding:5px">
                     <input id="Express" name="Express" class="easyui-validatebox" style="width:120px;"/>
                 </td>
                 <td>运单号码：</td>
                 <td style="padding:5px">
                     <input id="ExpressNumber" name="ExpressNumber" class="easyui-validatebox" style="width:130px;"/>
-                </td>
-                <td>收货人：</td>
-                <td style="padding:5px">
-                    <input id="Contacts" name="Contacts" class="easyui-validatebox" style="width:120px;"/>
-                </td>
-                <td>收货号码：</td>
-                <td style="padding:5px">
-                    <input id="Phonenum" name="Phonenum" class="easyui-validatebox" style="width:120px;"/>
                 </td>
             </tr>
             <tr>
@@ -183,6 +179,14 @@
                 <td>运费预估：</td>
                 <td style="padding:5px">
                     <input id="Freight" name="Freight" data-options="required:true" class="easyui-validatebox" style="width:130px;"/>
+                </td>
+                <td>收货人：</td>
+                <td style="padding:5px">
+                    <input id="Contacts" name="Contacts" class="easyui-validatebox" style="width:120px;"/>
+                </td>
+                <td>收货号码：</td>
+                <td style="padding:5px">
+                    <input id="Phonenum" name="Phonenum" class="easyui-validatebox" style="width:120px;"/>
                 </td>
             </tr>
             <tr>
@@ -335,6 +339,36 @@
        onclick="javascript:$('#receiptDlg').dialog('close')">取消</a>
 </div>
 
+
+<!--快递跟踪 -->
+<div id="expressDlg" class="easyui-dialog" style="width:550px;padding:10px 20px;top:80px"
+     closed="true" modal="true" buttons="#expressDlgButtons" cache="false" collapsible="false" closable="true">
+    <form id="expressFM" method="post" novalidate>
+        <table>
+            <tr>
+                <td style="width:60px;">运单号码：</td>
+                <td style="padding:5px">
+                    <span id="ExpressNumberCheckShow"></span>
+                </td>
+                <td style="width:60px;">物流公司：</td>
+                <td style="padding:5px">
+                    <span id="ExpressCompanyCheckShow"></span>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:60px;">签收状态：</td>
+                <td style="padding:5px">
+                    <span id="ExpressStateCheckShow"></span>
+                </td>
+            </tr>
+        </table>
+        <table id="expressData" style="top:300px;border-bottom-color:#FFFFFF"></table>
+    </form>
+</div>
+<div id="expressDlgButtons">
+    <a href="javascript:void(0)" id="cancelExpressDlg" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#expressDlg').dialog('close')">取消</a>
+</div>
 
 </body>
 </html>

@@ -172,6 +172,11 @@
     <comment>物流公司</comment>
    </column>
   </property>
+  <property generated="never" lazy="false" name="ExpressCode" type="java.lang.String">
+   <column length="64" name="ExpressCode">
+    <comment>物流代码编号</comment>
+   </column>
+  </property>
   <property generated="never" lazy="false" name="ExpressNumber" type="java.lang.String">
    <column length="128" name="ExpressNumber">
     <comment>运单号码</comment>

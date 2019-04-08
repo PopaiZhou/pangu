@@ -5,11 +5,17 @@ import java.io.Serializable;
 public class ExpressModel implements Serializable {
     private static final long serialVersionUID = -3610181717571729525L;
 
+    private ExpressShowModel showModel = new ExpressShowModel();
+
     private long id;
     private String expressName;
     private String expressCode;
     private int sortOrder;
     private Boolean enabled = true;
+    //快递单号
+    private String ExpressNumber;
+
+    private String batchDeleteIds;
 
     /**
      * 每页显示的个数
@@ -168,5 +174,59 @@ public class ExpressModel implements Serializable {
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * Getter method for property <tt>batchDeleteIds</tt>.
+     *
+     * @return property value of batchDeleteIds
+     */
+    public String getBatchDeleteIds() {
+        return batchDeleteIds;
+    }
+
+    /**
+     * Setter method for property <tt>batchDeleteIds</tt>.
+     *
+     * @param batchDeleteIds value to be assigned to property batchDeleteIds
+     */
+    public void setBatchDeleteIds(String batchDeleteIds) {
+        this.batchDeleteIds = batchDeleteIds;
+    }
+
+    /**
+     * Getter method for property <tt>showModel</tt>.
+     *
+     * @return property value of showModel
+     */
+    public ExpressShowModel getShowModel() {
+        return showModel;
+    }
+
+    /**
+     * Setter method for property <tt>showModel</tt>.
+     *
+     * @param showModel value to be assigned to property showModel
+     */
+    public void setShowModel(ExpressShowModel showModel) {
+        this.showModel = showModel;
+    }
+
+    /**
+     * Getter method for property <tt>ExpressNumber</tt>.
+     *
+     * @return property value of ExpressNumber
+     */
+    public String getExpressNumber() {
+        return ExpressNumber;
+    }
+
+    /**
+     * Setter method for property <tt>ExpressNumber</tt>.
+     *
+     * @param ExpressNumber value to be assigned to property ExpressNumber
+     */
+    public void setExpressNumber(String expressNumber) {
+        ExpressNumber = expressNumber;
     }
 }

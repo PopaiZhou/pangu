@@ -19,25 +19,11 @@ function initTableData() {
     if(btnEnableList && btnEnableList.indexOf(98)>-1){
         tableToolBar.push(
             {
-                id:'addCustomer',
+                id:'addExpress',
                 text:'增加',
                 iconCls:'icon-add',
                 handler:function() {
-                    addCustomer();
-                }
-            },'-'
-        );
-    }
-    //99 删除
-    if(btnEnableList && btnEnableList.indexOf(99)>-1){
-        delFlag = true;
-        tableToolBar.push(
-            {
-                id:'deleteCustomer',
-                text:'删除',
-                iconCls:'icon-remove',
-                handler:function() {
-                    batDeleteCustomer();
+                    addExpress();
                 }
             },'-'
         );
@@ -61,27 +47,6 @@ function initTableData() {
                     setDisEnableFun();
                 }
             },'-'
-        );
-    }
-    //1 导入导出
-    if(btnEnableList && btnEnableList.indexOf(1)>-1){
-        tableToolBar.push(
-            {
-                id:'setOutput',
-                text:'导出当前页',
-                iconCls:'icon-excel',
-                handler:function() {
-                    setOutputFun();
-                }
-            },'-',
-            {
-                id:'setOutputAll',
-                text:'导出所有',
-                iconCls:'icon-excel',
-                handler:function() {
-                    setOutputFunAll();
-                }
-            }
         );
     }
 
@@ -199,35 +164,15 @@ function bindEvent(){
         if(!$('#supplierFM').form('validate')){
             return;
         }
-        else if(checkCustomerNo()){
-            return;
-        }
         $.ajax({
             url: url,
             type:"post",
             dataType: "json",
             data:{
-                customerNo:$("#customerNo").val(),
-                customerName:$("#customerName").val(),
-                customerShort:$("#customerShort").val(),
-                telephone:$("#telephone").val(),
-                phonenum:$("#phonenum").val(),
-                contacts:$("#contacts").val(),
-                qq:$("#qq").val(),
-                email:$("#email").val(),
-                taxRate:$("#taxRate").val(),
-                taxNum:$("#taxNum").val(),
-                bankName:$("#bankName").val(),
-                accountNumber:$("#accountNumber").val(),
-                express:$("#express").val(),
-                type:$("#type").combobox('getValue'),
-                userId:$("#basicUser").combobox('getValue'),
-                text:$("#text").val(),
-                state:$('#state').combobox('getText'),
-                city:$('#city').combobox('getText'),
-                street:$('#street').combobox('getText'),
-                address:$('#address').val(),
-                description:$("#description").val(),
+                expressCode:$("#expressCode").val(),
+                expressName:$("#expressName").val(),
+                sortOrder:$("#sortOrder").val(),
+
                 enabled:true,
                 clientIp: clientIp
             },
@@ -272,70 +217,16 @@ function bindEvent(){
     });
 }
 
-//新增客户信息信息
-function addCustomer() {
-    $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加客户信息');
+//新增物流信息信息
+function addExpress() {
+    $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/edit_add.png"/>&nbsp;增加物流信息');
     $(".window-mask").css({ width: webW ,height: webH});
     $("#supplier").focus();
     $('#supplierFM').form('clear');
     id = 0;
-    url = path + '/customer/create.action';
+    url = path + '/express/create.action';
 }
-//批量删除
-function batDeleteCustomer() {
-    var row = $('#tableData').datagrid('getChecked');
-    if(row.length == 0)
-    {
-        $.messager.alert('删除提示','没有记录被选中！','info');
-        return;
-    }
-    if(row.length > 0){
-        $.messager.confirm('删除确认','确定要删除选中的' + row.length + '条信息吗？',function(r){
-            if (r){
-                var ids = "";
-                for(var i = 0;i < row.length; i ++)
-                {
-                    if(i == row.length-1)
-                    {
-                        ids += row[i].id;
-                        break;
-                    }
-                    ids += row[i].id + ",";
-                }
-            }
-            $.ajax({
-                type:"post",
-                url: path + "/customer/batchDelete.action",
-                dataType: "json",
-                async :  false,
-                data: ({
-                    batchDeleteIds : ids,
-                    clientIp: clientIp
-                }),
-                success: function (tipInfo)
-                {
-                    var msg = tipInfo.showModel.msgTip;
-                    if(msg == '成功')
-                    {
-                        $.messager.alert('提示','删除客户信息成功！','info');
-                        //加载完以后重新初始化
-                        $("#searchBtn").click();
-                        $(":checkbox").attr("checked",false);
-                    }
-                    else{
-                        $.messager.alert('删除提示','删除信息失败，请稍后再试！','error');
-                    }
-                },
-                //此处添加错误处理
-                error:function()
-                {
-                    $.messager.alert('删除提示','删除信息异常，请稍后再试！','error');
-                    return;
-                }
-            });
-        });
-    }
-}
+
 //批量启用
 function setEnableFun() {
     var row = $('#tableData').datagrid('getChecked');
@@ -362,7 +253,7 @@ function setEnableFun() {
                 }
                 $.ajax({
                     type:"post",
-                    url: path + "/customer/batchSetEnable.action",
+                    url: path + "/express/batchSetEnable.action",
                     dataType: "json",
                     async :  false,
                     data: ({
@@ -419,7 +310,7 @@ function setDisEnableFun() {
                 }
                 $.ajax({
                     type:"post",
-                    url: path + "/customer/batchSetEnable.action",
+                    url: path + "/express/batchSetEnable.action",
                     dataType: "json",
                     async :  false,
                     data: ({
@@ -451,52 +342,6 @@ function setDisEnableFun() {
     }
 }
 
-//导出当前页数据
-function setOutputFun(){
-    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer&isCurrentPage=currentPage";
-}
-
-//导出所有数据
-function setOutputFunAll(){
-    window.location.href = path + "/customer/exportExcel.action?browserType=" + getOs() + "&type=Customer&isCurrentPage=allPage";
-}
-
-//检查客户编号
-function checkCustomerNo() {
-    var customerNo = $.trim($("#customerNo").val());
-    //表示是否存在 true == 存在 false = 不存在
-    var flag = false;
-    //开始ajax名称检验，不能重名
-    if(customerNo.length > 0)
-    {
-        $.ajax({
-            type:"post",
-            url: path + "/customer/checkIsCustomerNoExist.action",
-            dataType: "json",
-            async :  false,
-            data: ({
-                id : id,
-                customerNo : customerNo
-            }),
-            success: function (tipInfo)
-            {
-                flag = tipInfo;
-                if(tipInfo)
-                {
-                    $.messager.alert('提示','客户编号已经存在','info');
-                    return;
-                }
-            },
-            //此处添加错误处理
-            error:function()
-            {
-                $.messager.alert('提示','检查客户编号是否重复异常，请稍后再试！','error');
-                return;
-            }
-        });
-    }
-    return flag;
-}
 //初始化下拉列表信息(下拉列表)
 function initSelectList() {
     //初始化 是否启用 下拉框
@@ -508,72 +353,23 @@ function initSelectList() {
 }
 
 //编辑客户信息信息
-function editCustomerInfo(customerInfo) {
-    var customer = customerInfo.split("AaBb");
+function editExpressInfo(expressInfo) {
+    var express = expressInfo.split("AaBb");
+    var enabled = "0";
+    if(express[4]){
+        enabled = "1";
+    }
     var row = {
-        customerNo : customer[1],
-        customerName : customer[2],
-        customerShort : customer[3].replace("undefined",""),
-        contacts : customer[4].replace("undefined",""),
-        phonenum : customer[5].replace("undefined",""),
-        email : customer[6].replace("undefined",""),
-        description : customer[7].replace("undefined",""),
-        telephone : customer[8].replace("undefined",""),
-        qq : customer[9].replace("undefined",""),
-        express : customer[10].replace("undefined",""),
-        address : customer[11].replace("undefined",""),
-        taxNum : customer[12].replace("undefined",""),
-        bankName : customer[13].replace("undefined",""),
-        accountNumber : customer[14].replace("undefined",""),
-        taxRate : customer[15].replace("undefined",""),
-        state : customer[16].replace("undefined",""),
-        city : customer[17].replace("undefined",""),
-        street : customer[18].replace("undefined",""),
+        expressCode : express[1],
+        expressName : express[2],
+        sortOrder : express[3].replace("undefined",""),
+        enabled : enabled,
 
-        basicUser : customer[20].replace("undefined",""),
-        type : customer[22].replace("undefined",""),
-        enabled : true,
         clientIp: clientIp
     };
-    $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑客户信息信息');
+    $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑物流信息');
     $(".window-mask").css({ width: webW ,height: webH});
     $('#supplierFM').form('load',row);
-    id = customer[0];
-    url = path + '/customer/update.action?id=' + customer[0];
-}
-
-//单个删除客户信息
-function deleteCustomer(customerInfo) {
-    $.messager.confirm('删除确认','确定要删除此条信息吗？',function(r) {
-        if (r) {
-            var customer = customerInfo.split("AaBb");
-            $.ajax({
-                type: "post",
-                url: path + "/customer/delete.action",
-                dataType: "json",
-                data: ({
-                    id: customer[0],
-                    customerId: customer[1],
-                    customerName: customer[2].replace("undefined", ""),
-                    clientIp: clientIp
-                }),
-                success: function (tipInfo) {
-                    var msg = tipInfo.showModel.msgTip;
-                    if (msg == '成功') {
-                        //加载完以后重新初始化
-                        $.messager.alert('提示', '删除客户信息成功！', 'info');
-                        $("#searchBtn").click();
-                    }
-                    else {
-                        $.messager.alert('删除提示', '删除信息失败，请稍后再试！', 'error');
-                    }
-                },
-                //此处添加错误处理
-                error: function () {
-                    $.messager.alert('删除提示', '删除信息异常，请稍后再试！', 'error');
-                    return;
-                }
-            });
-        }
-    });
+    id = express[0];
+    url = path + '/express/update.action?id=' + express[0];
 }

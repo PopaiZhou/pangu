@@ -109,6 +109,7 @@ public class DepotHeadModel implements Serializable {
     private Boolean SendStatus = false; //发货状态
     private Double Weight;
     private Double Freight;
+    private String ExpressCode;
     private String Express;
     private String ExpressNumber;
     private String Contacts;
@@ -902,5 +903,23 @@ public class DepotHeadModel implements Serializable {
      */
     public void setSearchExpressNumber(String searchExpressNumber) {
         this.searchExpressNumber = searchExpressNumber;
+    }
+
+    /**
+     * Getter method for property <tt>ExpressCode</tt>.
+     *
+     * @return property value of ExpressCode
+     */
+    public String getExpressCode() {
+        return ExpressCode;
+    }
+
+    /**
+     * Setter method for property <tt>ExpressCode</tt>.
+     *
+     * @param ExpressCode value to be assigned to property ExpressCode
+     */
+    public void setExpressCode(String expressCode) {
+        ExpressCode = expressCode;
     }
 }

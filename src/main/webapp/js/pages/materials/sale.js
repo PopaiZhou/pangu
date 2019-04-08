@@ -50,7 +50,7 @@ function initTableData() {
     if(btnEnableList && btnEnableList.indexOf(7)>-1){
         modifyShow = true;
         deleteShow = true;
-        opeWith = 90;
+        opeWith = 120;
         tableToolBar.push(
         {
             id:'addTemplate',
@@ -197,7 +197,7 @@ function initTableData() {
                         + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId + 'AaBb' + rec.Express
                         + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb' + rec.state + 'AaBb' + rec.city
                         + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight + 'AaBb' + rec.CreateTime
-                        + 'AaBb' + rec.OrganNo;
+                        + 'AaBb' + rec.OrganNo + 'AaBb' + rec.ExpressCode;
                     if(1 == value) {
                         var orgId = rec.OrganId? rec.OrganId:0;
                         str += '<img title="查看" src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showDepotHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -205,7 +205,10 @@ function initTableData() {
                             str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editDepotHead(\'' + rowInfo + '\''+',' + rec.Status + ');"/>&nbsp;&nbsp;&nbsp;';
                         }
                         if(deleteShow){
-                            str += '<img title="删除" src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.Id +',' + orgId +',' + rec.TotalPrice+',' + rec.Status + ');"/>';
+                            str += '<img title="删除" src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.Id +',' + orgId +',' + rec.TotalPrice+',' + rec.Status + ');"/>&nbsp;&nbsp;&nbsp;';
+                        }
+                        if(rec.SendStatus){
+                            str += '<img title="快递跟踪" src="' + path + '/js/easyui-1.3.5/themes/icons/send2.png" style="cursor: pointer;" onclick="checkExpress(\''+ rec.ExpressCode +'\',\'' + rec.ExpressNumber +'\',\''+rec.Express+'\');"/>';
                         }
                     }
                     return str;
@@ -429,6 +432,7 @@ function editDepotHead(depotHeadTotalInfo, status){
 
 
     $("#Express").val(depotHeadInfo[9]); //物流公司
+    $('#ExpressCode').combobox('setValue', depotHeadInfo[21]);//物流公司编码
     $("#ExpressNumber").val(depotHeadInfo[10]); //物流编号
     $("#Contacts").val(depotHeadInfo[11]); //联系人
     $("#Phonenum").val(depotHeadInfo[12]); //联系号码
@@ -448,6 +452,49 @@ function editDepotHead(depotHeadTotalInfo, status){
     initTableData_material("edit",TotalPrice); //商品列表
     reject(); //撤销下、刷新商品列表
     url = path + '/depotHead/update.action?depotHeadID=' + depotHeadInfo[0];
+}
+
+function checkExpress(ExpressCode,ExpressNumber,Express) {
+    if(ExpressCode === 'undefined' || ExpressCode === ""){
+        $.messager.alert('查询提示', '不支持该物流信息查询！', 'warning');
+        return;
+    }
+
+    //查询物流信息
+    $.ajax({
+        type: "post",
+        url: path + "/express/checkExpress.action",
+        data: {
+            ExpressCode: ExpressCode,
+            ExpressNumber: ExpressNumber,
+            ExpressName : Express
+        },
+        success:function(res){
+            if(res){
+                res = JSON.parse(res);
+                $("#ExpressNumberCheckShow").text(res.LogisticCode); //运单号码
+                $("#ExpressCompanyCheckShow").text(res.ExpressName); //运单公司
+                $("#ExpressStateCheckShow").text(res.StateName); //签收状态
+                var tableString = "";
+                tableString = tableString + '<div><table id="statementTable" width="100%" border="1" bordercolor="#000000" style="border-collapse:collapse;">' +
+                    '<tr><th>时间</th><th>状态</th></tr>';
+                for (var i = 0; i < res.Traces.length; i++) {
+                    tableString = tableString + '<tr><td>' + res.Traces[i].AcceptTime + '</td><td>' + res.Traces[i].AcceptStation + '</td></tr>';
+                }
+                tableString = tableString + '</table></div>';
+
+                $('#expressData').html(tableString);
+
+                $('#expressDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/comment.png"/>&nbsp;物流跟踪');
+            }
+        },
+        error:function(){
+            $.messager.alert('提示','生成单据编号失败！','error');
+        }
+    });
+
+
+
 }
 
 //初始化表格数据-商品列表-编辑状态
@@ -712,6 +759,11 @@ function initCustomerList() {
         valueField:'id',
         textField:'customerName'
     });
+    $('#ExpressCode').combobox({
+        url: path + "/express/findBySelect_sup.action",
+        valueField:'expressCode',
+        textField:'expressName'
+    });
     //初始化 收款状态搜索 下拉框
     $('#searchState').combobox({
         url: path +'/js/pages/manage/orderStatus.json',
@@ -759,6 +811,7 @@ function initCustomerList() {
                         //默认详细地址
                         $("#address").val(res.rows[0].address);
 
+                        $('#ExpressCode').combobox('setValue',res.rows[0].expressCode);
                         $('#state').combobox('setValue',res.rows[0].state);
                         $('#city').combobox('setValue',res.rows[0].city);
                         $('#street').combobox('setValue',res.rows[0].street);
@@ -1044,6 +1097,7 @@ function funSaveDepotHead() {
                 Weight: $("#Weight").val(), //重量
                 Freight: $("#Freight").val(), //运费预估
                 Express: $("#Express").val(), //默认物流
+                ExpressCode: $('#ExpressCode').combobox('getValue'), //物流编码
                 ExpressNumber: $("#ExpressNumber").val(), //物流单号
                 Contacts: $("#Contacts").val(), //联系人
                 Phonenum: $("#Phonenum").val(), //联系电话

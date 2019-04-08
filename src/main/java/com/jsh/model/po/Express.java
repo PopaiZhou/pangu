@@ -1,41 +1,31 @@
 package com.jsh.model.po;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "jsh_express", schema = "jsh_erp", catalog = "")
-public class Express implements Serializable {
-
-    private static final long serialVersionUID = 8547347753009960907L;
-
+public class Express {
     private long id;
     private String expressName;
     private String expressCode;
-    private int sortOrder;
-    private Boolean enabled = true;
-
-    public Express() {
-    }
-
-    public Express(long id) {
-        this.id = id;
-    }
-
-    public Express(long id, String expressName, String expressCode, int sortOrder, Boolean enabled) {
-        this.id = id;
-        this.expressName = expressName;
-        this.expressCode = expressCode;
-        this.sortOrder = sortOrder;
-        this.enabled = enabled;
-    }
+    private Integer sortOrder;
+    private Boolean enabled;
+    private Timestamp created;
+    private Timestamp updated;
 
     /**
      * Getter method for property <tt>id</tt>.
      *
      * @return property value of id
      */
+    @Id
+    @Column(name = "id", nullable = false)
     public long getId() {
         return id;
     }
@@ -54,6 +44,8 @@ public class Express implements Serializable {
      *
      * @return property value of expressName
      */
+    @Basic
+    @Column(name = "express_name", nullable = true, length = 128)
     public String getExpressName() {
         return expressName;
     }
@@ -72,6 +64,8 @@ public class Express implements Serializable {
      *
      * @return property value of expressCode
      */
+    @Basic
+    @Column(name = "express_code", nullable = true, length = 64)
     public String getExpressCode() {
         return expressCode;
     }
@@ -90,7 +84,9 @@ public class Express implements Serializable {
      *
      * @return property value of sortOrder
      */
-    public int getSortOrder() {
+    @Basic
+    @Column(name = "sort_order", nullable = true)
+    public Integer getSortOrder() {
         return sortOrder;
     }
 
@@ -99,7 +95,7 @@ public class Express implements Serializable {
      *
      * @param sortOrder value to be assigned to property sortOrder
      */
-    public void setSortOrder(int sortOrder) {
+    public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
     }
 
@@ -108,6 +104,8 @@ public class Express implements Serializable {
      *
      * @return property value of enabled
      */
+    @Basic
+    @Column(name = "enabled", nullable = true)
     public Boolean getEnabled() {
         return enabled;
     }
@@ -119,5 +117,64 @@ public class Express implements Serializable {
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    /**
+     * Getter method for property <tt>created</tt>.
+     *
+     * @return property value of created
+     */
+    @Basic
+    @Column(name = "created", nullable = true)
+    public Timestamp getCreated() {
+        return created;
+    }
+
+    /**
+     * Setter method for property <tt>created</tt>.
+     *
+     * @param created value to be assigned to property created
+     */
+    public void setCreated(Timestamp created) {
+        this.created = created;
+    }
+
+    /**
+     * Getter method for property <tt>updated</tt>.
+     *
+     * @return property value of updated
+     */
+    @Basic
+    @Column(name = "updated", nullable = true)
+    public Timestamp getUpdated() {
+        return updated;
+    }
+
+    /**
+     * Setter method for property <tt>updated</tt>.
+     *
+     * @param updated value to be assigned to property updated
+     */
+    public void setUpdated(Timestamp updated) {
+        this.updated = updated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Express that = (Express) o;
+        return id == that.id &&
+                Objects.equals(expressName, that.expressName) &&
+                Objects.equals(expressCode, that.expressCode) &&
+                Objects.equals(sortOrder, that.sortOrder) &&
+                Objects.equals(enabled, that.enabled) &&
+                Objects.equals(created, that.created) &&
+                Objects.equals(updated, that.updated);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, expressName, expressCode, sortOrder, enabled, created, updated);
     }
 }

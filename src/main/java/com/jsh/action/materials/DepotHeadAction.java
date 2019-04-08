@@ -148,6 +148,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setSendStatus(false);//发货状态
             depotHead.setWeight(model.getWeight());
             depotHead.setFreight(model.getFreight());
+            depotHead.setExpressCode(model.getExpressCode());
             depotHeadService.create(depotHead);
 
             //========标识位===========
@@ -262,6 +263,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             depotHead.setFreight(model.getFreight());
             //发货状态
             depotHead.setSendStatus(false);
+            depotHead.setExpressCode(model.getExpressCode());
 
             depotHeadService.update(depotHead);
 
@@ -635,6 +637,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                         item.put("Expired",Tools.isExpired(depotHead.getCreateTime()));
                     }
                     item.put("op", 1);
+                    item.put("ExpressCode",depotHead.getExpressCode());
                     dataArray.add(item);
                 }
             }
@@ -716,6 +719,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 //发货员
                 item.put("SendPersonName", depotHead.getSendPersonName());
 
+                item.put("ExpressCode",depotHead.getExpressCode());
                 //item.put("MaterialsList", findMaterialsListByHeaderId(depotHead.getId()));
                 item.put("MaterialsList", findProductListByHeaderId(depotHead.getId()));
             }
