@@ -28,11 +28,12 @@ public class Product {
     private Double wholesalePrice;
     private Double retailPrice;
     private Double inventory;
+    private Double weight;
     private Boolean enabled;
     private Timestamp gmtCreate;
     private Timestamp gmtModify;
 
-    public Product(long id, String productId, String productName, Template templateId, Supplier supplierNo, String standard, Double purchasePrice, Double wholesalePrice, Double retailPrice, Double inventory, Boolean enabled, Timestamp gmtCreate, Timestamp gmtModify) {
+    public Product(long id, String productId, String productName, Template templateId, Supplier supplierNo, String standard, Double purchasePrice, Double wholesalePrice, Double retailPrice,Double weight, Double inventory, Boolean enabled, Timestamp gmtCreate, Timestamp gmtModify) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
@@ -44,6 +45,7 @@ public class Product {
         this.retailPrice = retailPrice;
         this.inventory = inventory;
         this.enabled = enabled;
+        this.weight = weight;
         this.gmtCreate = gmtCreate;
         this.gmtModify = gmtModify;
     }
@@ -328,6 +330,7 @@ public class Product {
         if (wholesalePrice != null ? !wholesalePrice.equals(that.wholesalePrice) : that.wholesalePrice != null)
             return false;
         if (retailPrice != null ? !retailPrice.equals(that.retailPrice) : that.retailPrice != null) return false;
+        if (weight != null ? !weight.equals(that.weight) : that.weight != null) return false;
         if (inventory != null ? !inventory.equals(that.inventory) : that.inventory != null) return false;
         if (enabled != null ? !enabled.equals(that.enabled) : that.enabled != null) return false;
         if (gmtCreate != null ? !gmtCreate.equals(that.gmtCreate) : that.gmtCreate != null) return false;
@@ -348,9 +351,30 @@ public class Product {
         result = 31 * result + (wholesalePrice != null ? wholesalePrice.hashCode() : 0);
         result = 31 * result + (retailPrice != null ? retailPrice.hashCode() : 0);
         result = 31 * result + (inventory != null ? inventory.hashCode() : 0);
+        result = 31 * result + (weight != null ? weight.hashCode() : 0);
         result = 31 * result + (enabled != null ? enabled.hashCode() : 0);
         result = 31 * result + (gmtCreate != null ? gmtCreate.hashCode() : 0);
         result = 31 * result + (gmtModify != null ? gmtModify.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * Getter method for property <tt>weight</tt>.
+     *
+     * @return property value of weight
+     */
+    @Basic
+    @Column(name = "weight")
+    public Double getWeight() {
+        return weight;
+    }
+
+    /**
+     * Setter method for property <tt>weight</tt>.
+     *
+     * @param weight value to be assigned to property weight
+     */
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 }

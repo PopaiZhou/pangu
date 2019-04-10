@@ -26,5 +26,6 @@
         <property name="enabled" column="enabled"/>
         <property name="gmtCreate" column="gmtCreate"/>
         <property name="gmtModify" column="gmtModify"/>
+        <property name="weight" column="weight"/>
     </class>
 </hibernate-mapping>

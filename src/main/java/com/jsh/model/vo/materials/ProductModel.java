@@ -42,6 +42,11 @@ public class ProductModel implements Serializable {
     private Double inventory;
 
     /**
+     * 重量系数
+     */
+    private Double weight;
+
+    /**
      * 每页显示的个数
      */
     private int pageSize = 10;
@@ -329,5 +334,23 @@ public class ProductModel implements Serializable {
      */
     public void setProductIds(String productIds) {
         this.productIds = productIds;
+    }
+
+    /**
+     * Getter method for property <tt>weight</tt>.
+     *
+     * @return property value of weight
+     */
+    public Double getWeight() {
+        return weight;
+    }
+
+    /**
+     * Setter method for property <tt>weight</tt>.
+     *
+     * @param weight value to be assigned to property weight
+     */
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 }

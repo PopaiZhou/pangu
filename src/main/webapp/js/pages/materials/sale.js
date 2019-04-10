@@ -50,7 +50,7 @@ function initTableData() {
     if(btnEnableList && btnEnableList.indexOf(7)>-1){
         modifyShow = true;
         deleteShow = true;
-        opeWith = 120;
+        opeWith = 90;
         tableToolBar.push(
         {
             id:'addTemplate',
@@ -207,30 +207,44 @@ function initTableData() {
                         if(deleteShow){
                             str += '<img title="删除" src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteDepotHead('+ rec.Id +',' + orgId +',' + rec.TotalPrice+',' + rec.Status + ');"/>&nbsp;&nbsp;&nbsp;';
                         }
-                        if(rec.SendStatus){
-                            str += '<img title="快递跟踪" src="' + path + '/js/easyui-1.3.5/themes/icons/send2.png" style="cursor: pointer;" onclick="checkExpress(\''+ rec.ExpressCode +'\',\'' + rec.ExpressNumber +'\',\''+rec.Express+'\');"/>';
-                        }
                     }
                     return str;
                 }
             },
+
+            { title: '物流',field: 'SendStatus',align:"center",width:40,
+                formatter:function(value,rec) {
+                    var str = '';
+                    var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + encodeURI(rec.Remark)
+                        + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId + 'AaBb' + rec.Express
+                        + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb' + rec.state + 'AaBb' + rec.city
+                        + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight + 'AaBb' + rec.CreateTime
+                        + 'AaBb' + rec.OrganNo + 'AaBb' + rec.ExpressCode;
+                    if (rec.SendStatus) {
+                        str += '<img title="快递跟踪" src="' + path + '/js/easyui-1.3.5/themes/icons/send2.png" style="cursor: pointer;" onclick="checkExpress(\'' + rec.ExpressCode + '\',\'' + rec.ExpressNumber + '\',\'' + rec.Express + '\');"/>';
+                    }
+                    return str;
+                }
+            },
+
+
             { title: '省', field: 'state',width:60},
             { title: '市', field: 'city',width:60},
             { title: '客户编号', field: 'OrganNo',width:80},
-            { title: '客户名称', field: 'OrganName',width:80},
+            { title: '客户名称', field: 'OrganName',width:60},
             { title: '单据编号',field: 'Number',width:130},
             { title: '商品信息',field: 'MaterialsList',width:150,formatter:function(value){
                 return value.replace(/,/g,"，");
             }
             },
-            { title: '下单日期 ',field: 'CreateTime',width:150},
-            { title: '发货日期 ',field: 'OperTime',width:150},
-            { title: '金额合计',field: 'TotalPrice',width:80,hidden : priceHidden},
-            { title: '收款状态',field: 'Status', width:100,align:"center",formatter:function(value){
+            { title: '下单日期 ',field: 'CreateTime',width:130},
+            { title: '发货日期 ',field: 'OperTime',width:130},
+            { title: '金额合计',field: 'TotalPrice',width:55,hidden : priceHidden},
+            { title: '收款状态',field: 'Status', width:60,align:"center",formatter:function(value){
                 return value ? "<span style='color:green;'>已收款</span>":"<span style='color:red;'>未收款</span>";
                 }
             },
-            { title: '审核状态',field: 'CheckStatus', width:100,align:"center",formatter:function(value){
+            { title: '审核状态',field: 'CheckStatus', width:60,align:"center",formatter:function(value){
                 return value ? "<span style='color:green;'>已审核</span>":"<span style='color:red;'>未审核</span>";
                 }
             },
@@ -571,6 +585,7 @@ function initTableData_material(type,TotalPrice){
                                         var retailPrice = res.rows[0].retailPrice;//零售价
                                         var purchasePrice = res.rows[0].purchasePrice;//进货价
                                         var supplierNo = res.rows[0].supplierNo;//供应商编号
+                                        var weight = res.rows[0].weight;//重量系数
                                         //版本编号下拉框赋值
                                         target.combobox('setValue',tId);
                                         //规格赋值
@@ -583,6 +598,8 @@ function initTableData_material(type,TotalPrice){
                                         body.find("[field='TaxUnitPrice']").find(input).val(purchasePrice);
                                         //供应商编号
                                         body.find("[field='AnotherDepotId']").find(input).val(supplierNo);
+                                        //重量系数
+                                        body.find("[field='weight']").find(input).val(weight);
                                         //获取数量
                                         var OperNumber = body.find("[field='OperNumber']").find(input).val();
 
@@ -600,7 +617,7 @@ function initTableData_material(type,TotalPrice){
                                             //总价赋值
                                             body.find("[field='AllPrice']").find(input).val((retailPrice * OperNumber).toFixed(2));
                                         }
-                                        statisticsFun(body,UnitPrice,OperNumber,footer);
+                                        statisticsFun(body,UnitPrice,OperNumber,weight,footer);
                                     }
                                 },
                                 error: function() {
@@ -649,7 +666,9 @@ function initTableData_material(type,TotalPrice){
             { title: '批发价',field: 'WholesalePrice',editor:'validatebox',width:120,hidden:true},
             { title: '零售价',field: 'RetailPrice',editor:'validatebox',width:120,hidden:true},
             { title: '进货价',field: 'TaxUnitPrice',editor:'validatebox',width:120,hidden:true},
-            { title: '供应商编号',field: 'AnotherDepotId',editor:'validatebox',width:120,hidden:true}
+            { title: '供应商编号',field: 'AnotherDepotId',editor:'validatebox',width:120,hidden:true},
+            { title: '重量系数',field: 'weight',editor:'validatebox',width:120,hidden:true},
+            { title: '重量',field: 'weightSum',editor:'validatebox',width:120,hidden:true}
         ]],
         toolbar:[
             {
@@ -919,31 +938,38 @@ function autoReckon() {
         var footer =$("#depotHeadFM .datagrid-footer");
         var input = ".datagrid-editable-input";
 
-        //修改数量，自动计算总价
+        //修改数量，自动计算总价,重量
         body.find("[field='OperNumber']").find(input).off("keyup").on("keyup",function(){
             var UnitPrice = body.find("[field='UnitPrice']").find(input).val(); //单价
+            var weight = body.find("[field='weight']").find(input).val(); //重量系数
             var OperNumber =$(this).val()-0; //数量
             body.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
-            statisticsFun(body,UnitPrice,OperNumber,footer);
+            body.find("[field='weightSum']").find(input).val((OperNumber * weight).toFixed(2)); //重量
+
+            statisticsFun(body,UnitPrice,OperNumber,weight,footer);
         });
         //在可以更改价格状态下，才会去自动计算
         if(isChangePrice){
             //修改单价，自动计算总价
             body.find("[field='UnitPrice']").find(input).off("keyup").on("keyup",function(){
                 var UnitPrice = body.find("[field='UnitPrice']").find(input).val(); //单价
+                var weight = body.find("[field='weight']").find(input).val(); //重量系数
                 var OperNumber =$(this).val()-0; //数量
                 body.find("[field='AllPrice']").find(input).val((UnitPrice*OperNumber).toFixed(2)); //金额
-                statisticsFun(body,UnitPrice,OperNumber,footer);
+                statisticsFun(body,UnitPrice,OperNumber,weight,footer);
             });
         }
     });
 }
 
 //最底下合计方法
-function statisticsFun(body,UnitPrice,OperNumber,footer){
+function statisticsFun(body,UnitPrice,OperNumber,weight,footer){
     var TotalPrice = 0;
 
     var totalNum = 0;
+
+    var totalWeight = 0;
+
     //金额的合计
     body.find("[field='AllPrice']").each(function(){
         if($(this).find("div").text()!==""){
@@ -955,15 +981,23 @@ function statisticsFun(body,UnitPrice,OperNumber,footer){
             totalNum = totalNum + parseFloat($(this).find("div").text().toString());
         }
     });
+    body.find("[field='weightSum']").each(function(){
+        if($(this).find("div").text()!==""){
+            totalWeight = totalWeight + parseFloat($(this).find("div").text().toString());
+        }
+    });
     TotalPrice = TotalPrice + UnitPrice*OperNumber;
 
     totalNum = totalNum + OperNumber;
+
+    totalWeight = totalWeight + (OperNumber * weight);
+
     footer.find("[field='AllPrice']").find("div").text((TotalPrice).toFixed(0)); //金额的合计
-    footer.find("[field='OperNumber']").find("div").text((totalNum).toFixed(2)); //金额的合计
+    footer.find("[field='OperNumber']").find("div").text((parseFloat(totalNum)).toFixed(2)); //金额的合计
     footer.find("[field='Unit']").find("div").text("合计"); //金额的合计
 
     //重量赋值
-    $("#Weight").val((totalNum * 0.8).toFixed(2));//赋值
+    $("#Weight").val((totalWeight).toFixed(2));//赋值
 }
 
 //检查单据编号是否存在

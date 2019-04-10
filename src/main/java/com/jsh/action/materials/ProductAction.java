@@ -51,6 +51,7 @@ public class ProductAction extends BaseAction<ProductModel>{
             product.setPurchasePrice(model.getPurchasePrice());
             product.setWholesalePrice(model.getWholesalePrice());
             product.setRetailPrice(model.getRetailPrice());
+            product.setWeight(model.getWeight());
 
             productService.create(product);
 
@@ -92,6 +93,7 @@ public class ProductAction extends BaseAction<ProductModel>{
             product.setPurchasePrice(model.getPurchasePrice());
             product.setWholesalePrice(model.getWholesalePrice());
             product.setRetailPrice(model.getRetailPrice());
+            product.setWeight(model.getWeight());
             productService.update(product);
 
             //========标识位===========
@@ -149,6 +151,7 @@ public class ProductAction extends BaseAction<ProductModel>{
                     item.put("purchasePrice",product.getPurchasePrice());
                     item.put("wholesalePrice",product.getWholesalePrice());
                     item.put("retailPrice",product.getRetailPrice());
+                    item.put("weight",product.getWeight());
                     item.put("op","1");
                     dataArray.add(item);
                 }
@@ -203,6 +206,7 @@ public class ProductAction extends BaseAction<ProductModel>{
                     item.put("purchasePrice",product.getPurchasePrice());
                     item.put("wholesalePrice",product.getWholesalePrice());
                     item.put("retailPrice",product.getRetailPrice());
+                    item.put("weight",product.getWeight());
                     item.put("op","1");
                     dataArray.add(item);
                 }

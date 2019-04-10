@@ -467,6 +467,10 @@ public class DepotItemAction extends BaseAction<DepotItemModel> {
                     item.put("TaxUnitPrice", depotItem.getMaterialId().getPurchasePrice());
                     //供应商编号
                     item.put("AnotherDepotId", depotItem.getDepotId());
+                    //重量系数
+                    item.put("weight",depotItem.getMaterialId().getWeight());
+                    //总重量
+                    item.put("weightSum",depotItem.getOperNumber() * depotItem.getMaterialId().getWeight());
 
                     item.put("op", 1);
                     dataArray.add(item);

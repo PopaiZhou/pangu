@@ -90,6 +90,11 @@
                 </td>
             </tr>
             <tr>
+                <td style="width: 60px;height: 20px">重量系数:</td>
+                <td style="width:180px;padding:1px;">
+                    <input name="weight" id="weight" type="text" class="easyui-numberbox"
+                           data-options="required:true,min:0,precision:2" style="width: 200px;height: 20px"/>
+                </td>
                 <td style="width: 60px;height: 20px">进货价:</td>
                 <td style="width:180px;padding:1px;">
                     <input name="purchasePrice" id="purchasePrice" type="text" class="easyui-numberbox"
