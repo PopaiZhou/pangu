@@ -43,7 +43,7 @@ function initTableData() {
             { title: '操作',field: 'op',align:"center",width:60,formatter:function(value,rec)
             {
                 var str = '';
-                var rowInfo = rec.id + 'AaBb' + rec.productId +'AaBb' + rec.productName + 'AaBb'+ rec.tId + 'AaBb'+ rec.standard + 'AaBb'+ rec.purchasePrice+ 'AaBb'+ rec.wholesalePrice+ 'AaBb'+ rec.retailPrice;
+                var rowInfo = rec.id + 'AaBb' + rec.productId +'AaBb' + rec.productName + 'AaBb'+ rec.tId + 'AaBb'+ rec.standard + 'AaBb'+ rec.purchasePrice+ 'AaBb'+ rec.wholesalePrice+ 'AaBb'+ rec.retailPrice+ 'AaBb'+ rec.weight;
                 if(1 == value)
                 {
                     str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editProductInfo(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
@@ -60,6 +60,7 @@ function initTableData() {
             { title: '批发商', field: 'wholesalePrice',width:100},
             { title: '零售商', field: 'retailPrice',width:100},
             { title: '所属供应商', field: 'supplier',width:300,align:"center"},
+            { title: '重量系数', field: 'weight',width:100,align:"center"},
             { title: '规格', field: 'standard',width:200,align:"center"}
 
         ]],
@@ -242,6 +243,7 @@ function bindEvent(){
                 standard : $("#standard").val(),
                 purchasePrice : $("#purchasePrice").val(),
                 wholesalePrice : $("#wholesalePrice").val(),
+                weight : $("#weight").val(),
                 retailPrice : $("#retailPrice").val(),
                 enabled : 1,
                 clientIp : clientIp
@@ -335,6 +337,7 @@ function editProductInfo(productInfo) {
         purchasePrice : product[5].replace("undefined","0"),
         wholesalePrice : product[6].replace("undefined","0"),
         retailPrice : product[7].replace("undefined","0"),
+        weight : product[8].replace("undefined","0"),
         clientIp: clientIp
     };
     $('#supplierDlg').dialog('open').dialog('setTitle','<img src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png"/>&nbsp;编辑产品型号信息');

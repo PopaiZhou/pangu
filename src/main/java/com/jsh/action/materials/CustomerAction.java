@@ -609,7 +609,7 @@ public class CustomerAction extends BaseAction<CustomerModel> {
         //存放数据json数组
         if (null != dataList) {
             for (Express express : dataList) {
-                if(expressName.contains(express.getExpressName())){
+                if(expressName.contains(express.getExpressName()) || express.getExpressName().contains(expressName)){
                     return express.getExpressCode();
                 }
             }
