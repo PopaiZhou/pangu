@@ -44,8 +44,8 @@ public class DepotHeadDAO extends BaseDAO<DepotHead> implements DepotHeadIDAO {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void batchSetStatus(Boolean status, String depotHeadIDs) {
-        String sql = "update jsh_depothead d set d.Status=" + status + " where d.id in (" + depotHeadIDs + ")";
+    public void batchSetStatus(Boolean status,Long accountId, String depotHeadIDs) {
+        String sql = "update jsh_depothead d set d.Status=" + status + ",d.AccountId="+accountId+" where d.id in (" + depotHeadIDs + ")";
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
         query.executeUpdate();
     }

@@ -13,7 +13,7 @@ public interface DepotHeadIService extends BaseIService<DepotHead> {
 
     void findAllMoney(PageUtil<DepotHead> depotHead, Integer supplierId, String type, String subType, String mode) throws JshException;
 
-    void batchSetStatus(Boolean status, String depotHeadIDs);
+    void batchSetStatus(Boolean status, Long accountId,String depotHeadIDs);
 
     void batchSetCheck(Boolean status, String depotHeadIDs,String checkOperName);
 

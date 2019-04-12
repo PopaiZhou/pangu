@@ -13,7 +13,7 @@ public interface DepotHeadIDAO extends BaseIDAO<DepotHead> {
 
     void findAllMoney(PageUtil<DepotHead> pageUtil, Integer supplierId, String type, String subType, String mode) throws JshException;
 
-    void batchSetStatus(Boolean status, String depotHeadIDs);
+    void batchSetStatus(Boolean status, Long accountId ,String depotHeadIDs);
 
     void batchSetCheck(Boolean status, String depotHeadIDs,String checkOperName);
 

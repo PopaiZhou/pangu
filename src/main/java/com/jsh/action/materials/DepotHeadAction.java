@@ -367,7 +367,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      */
     public String batchSetStatus() {
         try {
-            depotHeadService.batchSetStatus(model.getStatus(), model.getDepotHeadIDs());
+            depotHeadService.batchSetStatus(model.getStatus(),model.getAccountId(), model.getDepotHeadIDs());
             model.getShowModel().setMsgTip("成功");
             //记录操作日志使用
             tipMsg = "成功";

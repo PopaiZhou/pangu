@@ -1318,6 +1318,7 @@ function bindEvent(){
                         data: ({
                             Status: true,
                             DepotHeadIDs : ids,
+                            AccountId : $('#AccountId').val(),//收款账户
                             clientIp: clientIp
                         }),
                         success: function (tipInfo)

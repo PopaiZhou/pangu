@@ -32,8 +32,8 @@ public class DepotHeadService extends BaseService<DepotHead> implements DepotHea
     }
 
     @Override
-    public void batchSetStatus(Boolean status, String depotHeadIDs) {
-        depotHeadDao.batchSetStatus(status, depotHeadIDs);
+    public void batchSetStatus(Boolean status,Long accountId, String depotHeadIDs) {
+        depotHeadDao.batchSetStatus(status,accountId,depotHeadIDs);
     }
 
     @Override

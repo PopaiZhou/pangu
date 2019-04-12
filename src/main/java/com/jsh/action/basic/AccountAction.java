@@ -331,7 +331,7 @@ public class AccountAction extends BaseAction<AccountModel> {
             List<DepotHead> dataList = pageUtil.getPageList();
             if (dataList != null) {
                 for (DepotHead depotHead : dataList) {
-                    accountSum = accountSum + depotHead.getChangeAmount();
+                    accountSum = accountSum + depotHead.getTotalPrice();
                 }
             }
         } catch (DataAccessException e) {

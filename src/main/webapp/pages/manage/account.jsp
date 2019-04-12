@@ -72,12 +72,12 @@
             <input name="serialNo" id="serialNo" class="easyui-validatebox"
                    data-options="required:true,validType:'length[2,30]'" style="width: 230px;height: 20px"/>
         </div>
-        <div class="fitem" style="padding:5px">
+        <div class="fitem" style="padding:5px" hidden>
             <label id="initialAmountLabel">期初金额</label>
             <input name="initialAmount" id="initialAmount" type="text" class="easyui-numberbox"
                    data-options="min:0,precision:2" style="width: 230px;height: 20px"></input>
         </div>
-        <div class="fitem" style="padding:5px">
+        <div class="fitem" style="padding:5px" hidden>
             <label id="currentAmountLabel">当前余额</label>
             <input name="currentAmount" id="currentAmount" type="text" disabled="disabled" class="easyui-numberbox"
                    data-options="min:0,precision:2" style="width: 230px;height: 20px"></input>
@@ -127,8 +127,8 @@
                 {field: 'id', width: 35, align: "center", checkbox: true},
                 {title: '名称', field: 'name', width: 200},
                 {title: '编号', field: 'serialNo', width: 150, align: "center"},
-                {title: '期初金额', field: 'initialAmount', width: 100, align: "center"},
-                {title: '当前余额', field: 'currentAmount', width: 100, align: "center"},
+                {title: '期初金额', field: 'initialAmount', width: 100, align: "center",hidden:true},
+                {title: '当前余额', field: 'currentAmount', width: 100, align: "center",hidden:true},
                 {
                     title: '是否默认', field: 'isDefault', width: 100, align: "center",
                     formatter: function (value, rec) {
@@ -142,11 +142,11 @@
                 },
                 {title: '备注', field: 'remark', width: 100},
                 {
-                    title: '操作', field: 'op', align: "center", width: 210, formatter: function (value, rec) {
+                    title: '操作', field: 'op', align: "center", width: 150, formatter: function (value, rec) {
                         var str = '';
                         var rowInfo = rec.id + 'AaBb' + rec.name + 'AaBb' + rec.serialNo + 'AaBb' + rec.initialAmount + 'AaBb' + rec.currentAmount + 'AaBb' + rec.remark;
                         if (1 == value) {
-                            str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
+                            //str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountInOutList(\'' + rowInfo + '\');"/>&nbsp;<a onclick="showAccountInOutList(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">流水</a>&nbsp;&nbsp;';
                             str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccount(\'' + rowInfo + '\');"/>&nbsp;<a onclick="editAccount(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">编辑</a>&nbsp;&nbsp;';
                             str += '<img src="<%=path%>/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccount(\'' + rowInfo + '\');"/>&nbsp;<a onclick="deleteAccount(\'' + rowInfo + '\');" style="text-decoration:none;color:black;" href="javascript:void(0)">删除</a>&nbsp;&nbsp;';
                         }
