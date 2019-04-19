@@ -5,5 +5,7 @@ import com.jsh.model.po.AccountItem;
 
 public interface AccountItemIDAO extends BaseIDAO<AccountItem> {
 
+    void batchDeleteByHeaderIds(String objIDs);
+
 }
 

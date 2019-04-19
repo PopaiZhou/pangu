@@ -7,6 +7,8 @@ public class AccountHead implements java.io.Serializable {
     private Long Id;
     private String Type;
     private Customer OrganId;
+    private Supplier SupplierId;
+    private Basicuser UserId;
     private Basicuser HandsPersonId;
     private Double ChangeAmount;
     private Double TotalPrice;
@@ -118,4 +120,39 @@ public class AccountHead implements java.io.Serializable {
         Remark = remark;
     }
 
+    /**
+     * Getter method for property <tt>SupplierId</tt>.
+     *
+     * @return property value of SupplierId
+     */
+    public Supplier getSupplierId() {
+        return SupplierId;
+    }
+
+    /**
+     * Setter method for property <tt>SupplierId</tt>.
+     *
+     * @param SupplierId value to be assigned to property SupplierId
+     */
+    public void setSupplierId(Supplier supplierId) {
+        SupplierId = supplierId;
+    }
+
+    /**
+     * Getter method for property <tt>UserId</tt>.
+     *
+     * @return property value of UserId
+     */
+    public Basicuser getUserId() {
+        return UserId;
+    }
+
+    /**
+     * Setter method for property <tt>UserId</tt>.
+     *
+     * @param UserId value to be assigned to property UserId
+     */
+    public void setUserId(Basicuser userId) {
+        UserId = userId;
+    }
 }

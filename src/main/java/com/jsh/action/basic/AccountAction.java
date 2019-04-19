@@ -315,6 +315,50 @@ public class AccountAction extends BaseAction<AccountModel> {
     }
 
     /**
+     * 查找结算账户信息
+     *
+     * @return
+     */
+    public void findByNew() {
+        try {
+            PageUtil<Account> pageUtil = new PageUtil<Account>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(getCondition());
+            accountService.find(pageUtil);
+            List<Account> dataList = pageUtil.getPageList();
+
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Account account : dataList) {
+                    DecimalFormat df = new DecimalFormat(".##");
+                    JSONObject item = new JSONObject();
+                    item.put("id", account.getId());
+                    //结算账户名称
+                    item.put("name", account.getName());
+                    item.put("serialNo", account.getSerialNo());
+                    item.put("initialAmount", account.getInitialAmount());
+                    item.put("currentAmount", account.getCurrentAmount());  //当前余额
+                    item.put("isDefault", account.getIsDefault());  //是否默认
+                    item.put("remark", account.getRemark());
+                    item.put("op", 1);
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找结算账户信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询结算账户信息结果异常", e);
+        }
+    }
+
+    /**
      * 单个账户的金额求和-入库和出库
      *
      * @param id

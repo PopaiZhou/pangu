@@ -79,4 +79,19 @@ public class AccountDAO extends BaseDAO<Account> implements AccountIDAO {
         }
         pageUtil.setPageList(query.list());
     }
+
+    //更新结算账户余额
+    @Override
+    public void updateCurrentAmount(Long accountId,Double TotalPrices) throws JshException {
+        String sql = "UPDATE jsh_account  set CurrentAmount =  "+TotalPrices+"   where Id = " + accountId ;
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
+        query.executeUpdate();
+    }
+
+    @Override
+    public void subCurrentAmount(Long accountId, Double TotalPrices) {
+        String sql = "UPDATE jsh_account  set CurrentAmount = CurrentAmount - "+TotalPrices+"   where Id = " + accountId ;
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
+        query.executeUpdate();
+    }
 }

@@ -614,7 +614,7 @@ public class CustomerAction extends BaseAction<CustomerModel> {
                 }
             }
         }
-        return null;
+        return "";
     }
 
     /**

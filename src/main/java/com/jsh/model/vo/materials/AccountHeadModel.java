@@ -11,6 +11,7 @@ public class AccountHeadModel implements Serializable {
      **/
     private String Type;
     private Long OrganId;
+    private Long UserId;
     private Long HandsPersonId;
     private Double ChangeAmount;
     private Double TotalPrice;
@@ -24,7 +25,7 @@ public class AccountHeadModel implements Serializable {
 
     private String supplierId; //单位Id，用于查询单位的收付款
 
-    private String supType; //单位类型，客户、供应商
+    private String supType; //单位类型，客户、供应商、业务员
     /**
      * 分类ID
      */
@@ -34,6 +35,15 @@ public class AccountHeadModel implements Serializable {
      * 分类IDs 批量操作使用
      */
     private String accountHeadIDs = "";
+
+    /**
+     * 修改之前的金额
+     */
+    private Double preTotalPrice;
+    /**
+     * 修改之前的账户编号
+     */
+    private long preAccountId;
 
     /**
      * 账户编号ids
@@ -253,5 +263,59 @@ public class AccountHeadModel implements Serializable {
      */
     public void setTotalPrices(String totalPrices) {
         TotalPrices = totalPrices;
+    }
+
+    /**
+     * Getter method for property <tt>UserId</tt>.
+     *
+     * @return property value of UserId
+     */
+    public Long getUserId() {
+        return UserId;
+    }
+
+    /**
+     * Setter method for property <tt>UserId</tt>.
+     *
+     * @param UserId value to be assigned to property UserId
+     */
+    public void setUserId(Long userId) {
+        UserId = userId;
+    }
+
+    /**
+     * Getter method for property <tt>preTotalPrice</tt>.
+     *
+     * @return property value of preTotalPrice
+     */
+    public Double getPreTotalPrice() {
+        return preTotalPrice;
+    }
+
+    /**
+     * Setter method for property <tt>preTotalPrice</tt>.
+     *
+     * @param preTotalPrice value to be assigned to property preTotalPrice
+     */
+    public void setPreTotalPrice(Double preTotalPrice) {
+        this.preTotalPrice = preTotalPrice;
+    }
+
+    /**
+     * Getter method for property <tt>preAccountId</tt>.
+     *
+     * @return property value of preAccountId
+     */
+    public long getPreAccountId() {
+        return preAccountId;
+    }
+
+    /**
+     * Setter method for property <tt>preAccountId</tt>.
+     *
+     * @param preAccountId value to be assigned to property preAccountId
+     */
+    public void setPreAccountId(long preAccountId) {
+        this.preAccountId = preAccountId;
     }
 }

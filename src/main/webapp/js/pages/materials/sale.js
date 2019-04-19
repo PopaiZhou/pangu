@@ -211,23 +211,15 @@ function initTableData() {
                     return str;
                 }
             },
-
-            { title: '物流',field: 'SendStatus',align:"center",width:40,
+            { title: '物流',field: 'SendStatus2',align:"center",width:40,
                 formatter:function(value,rec) {
                     var str = '';
-                    var rowInfo = rec.Id + 'AaBb' + rec.Number+ 'AaBb' + rec.OperTime+ 'AaBb' + rec.OrganId+ 'AaBb' + encodeURI(rec.Remark)
-                        + 'AaBb' + rec.OrganName+ 'AaBb' + rec.TotalPrice + 'AaBb' + rec.Salesman + 'AaBb' + rec.SalesmanId + 'AaBb' + rec.Express
-                        + 'AaBb' + rec.ExpressNumber + 'AaBb' + rec.Contacts + 'AaBb' + rec.Phonenum + 'AaBb' + rec.state + 'AaBb' + rec.city
-                        + 'AaBb' + rec.street + 'AaBb' + rec.address + 'AaBb' + rec.Weight + 'AaBb' + rec.Freight + 'AaBb' + rec.CreateTime
-                        + 'AaBb' + rec.OrganNo + 'AaBb' + rec.ExpressCode;
                     if (rec.SendStatus) {
                         str += '<img title="快递跟踪" src="' + path + '/js/easyui-1.3.5/themes/icons/send2.png" style="cursor: pointer;" onclick="checkExpress(\'' + rec.ExpressCode + '\',\'' + rec.ExpressNumber + '\',\'' + rec.Express + '\');"/>';
                     }
                     return str;
                 }
             },
-
-
             { title: '省', field: 'state',width:60},
             { title: '市', field: 'city',width:60},
             { title: '客户编号', field: 'OrganNo',width:80},
@@ -443,7 +435,6 @@ function editDepotHead(depotHeadTotalInfo, status){
     oldNumber = depotHeadInfo[1]; //记录编辑前的单据编号
     oldId = depotHeadInfo[0]; //记录单据Id
     Salesman = depotHeadInfo[8];
-
 
     $("#Express").val(depotHeadInfo[9]); //物流公司
     $('#ExpressCode').combobox('setValue', depotHeadInfo[21]);//物流公司编码
@@ -829,6 +820,7 @@ function initCustomerList() {
                         $("#Phonenum").val(res.rows[0].phonenum);
                         //默认详细地址
                         $("#address").val(res.rows[0].address);
+
 
                         $('#ExpressCode').combobox('setValue',res.rows[0].expressCode);
                         $('#state').combobox('setValue',res.rows[0].state);

@@ -13,4 +13,9 @@ public class AccountItemDAO extends BaseDAO<AccountItem> implements AccountItemI
     public Class<AccountItem> getEntityClass() {
         return AccountItem.class;
     }
+
+    @Override
+    public void batchDeleteByHeaderIds(String objIDs) {
+        this.getHibernateTemplate().bulkUpdate("delete from " + getEntityClass().getName() + " where HeaderId in (" + objIDs + ")");
+    }
 }

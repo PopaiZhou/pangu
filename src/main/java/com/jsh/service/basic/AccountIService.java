@@ -7,4 +7,9 @@ import com.jsh.util.PageUtil;
 
 public interface AccountIService extends BaseIService<Account> {
     public void findAccountInOutList(PageUtil<Account> depotHead, Long accountId) throws JshException;
+
+    public void addCurrentAmount(Long accountId,Double TotalPrices) throws JshException;
+
+    public void subCurrentAmount(Long accountId,Double TotalPrices) throws JshException;
+
 }

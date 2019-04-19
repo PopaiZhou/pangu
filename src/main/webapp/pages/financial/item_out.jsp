@@ -20,7 +20,7 @@
     <script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
     <script src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
     <script src="<%=path %>/js/common/common.js"></script>
-    <script src="<%=path %>/js/pages/financial/financial_base.js"></script>
+    <script src="<%=path %>/js/pages/financial/financial_base_new.js"></script>
     <script>
         var kid = ${sessionScope.user.id};
         var path = "<%=path%>";
@@ -67,9 +67,21 @@
     <form id="accountHeadFM" method="post" novalidate>
         <table>
             <tr>
-                <td style="width:60px;">往来单位：</td>
+                <td style="width:60px;">往来类型：</td>
                 <td style="padding:5px;width:170px;">
+                    <select name="Type" id="Type" style="width:130px;"></select>
+                </td>
+                <td style="width:60px;" id="OrganIdLabel" hidden>客户：</td>
+                <td style="padding:5px;width:170px;" id="OrganIdName" hidden>
                     <select name="OrganId" id="OrganId" style="width:130px;"></select>
+                </td>
+                <td style="width:60px;" id="SupplierIdLabel" hidden>供应商：</td>
+                <td style="padding:5px;width:170px;" id="SupplierIdName" hidden>
+                    <select name="SupplierId" id="SupplierId" style="width:130px;"></select>
+                </td>
+                <td style="width:60px;" id="UserIdLabel" hidden>业务员：</td>
+                <td style="padding:5px;width:170px;" id="UserIdName" hidden>
+                    <select name="UserId" id="UserId" style="width:130px;"></select>
                 </td>
                 <td style="width:70px;">单据日期：</td>
                 <td style="padding:5px;width:170px;">
@@ -81,9 +93,6 @@
                 <td style="padding:5px;width:170px;">
                     <input name="BillNo" id="BillNo" class="easyui-validatebox"
                            data-options="required:true,validType:'length[2,30]'" style="width: 140px;"/>
-                </td>
-                <td style="width:70px;"></td>
-                <td style="padding:5px">
                 </td>
                 <td style="width:100px;"></td>
             </tr>
@@ -123,11 +132,21 @@
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
     <table>
         <tr>
+            <td style="width:60px;">往来类型：</td>
+            <td style="padding:5px;width:60px;">
+                <span id="TypeShow"></span>
+            </td>
             <td style="width:60px;">往来单位：</td>
-            <td style="padding:5px;width:130px;">
+            <td style="padding:5px;width:60px;">
                 <span id="OrganIdShow"></span>
             </td>
-            <td style="width:70px;">单据日期：</td>
+            <td style="width:60px;">经手人：</td>
+            <td style="padding:5px;width:60px;">
+                <span id="HandsPersonIdShow"></span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:60px;">单据日期：</td>
             <td style="padding:5px;width:130px;">
                 <span id="BillTimeShow"></span>
             </td>
@@ -135,8 +154,6 @@
             <td style="padding:5px;width:140px;">
                 <span id="BillNoShow"></span>
             </td>
-            <td style="width:70px;"></td>
-            <td style="width:140px;"></td>
             <td style="width:100px;"></td>
         </tr>
         <tr>
