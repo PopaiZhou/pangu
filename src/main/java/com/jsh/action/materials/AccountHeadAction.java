@@ -478,7 +478,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                         item.put("subType", "user");
                     }
                     if("收款".equalsIgnoreCase(accountHead.getType())){
-                        item.put("MaterialsList", "版本销售收入");
+                        item.put("MaterialsList", "主营业务收入");
                     }else{
                         item.put("MaterialsList", findInoutItemListByHeaderId(accountHead.getId()));
                     }
