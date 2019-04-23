@@ -6,6 +6,7 @@ import com.jsh.model.po.*;
 import com.jsh.model.vo.materials.AccountHeadModel;
 import com.jsh.service.basic.AccountIService;
 import com.jsh.service.materials.AccountHeadIService;
+import com.jsh.service.materials.AccountItemIService;
 import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class AccountHeadAction extends BaseAction<AccountHeadModel> {
     private AccountHeadIService accountHeadService;
+    private AccountItemIService accountItemService;
     private AccountIService accountService;
     private AccountHeadModel model = new AccountHeadModel();
 
@@ -386,7 +389,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
     public String batchDeleteNew() {
         try {
             //删除流程
-            accountHeadService.batchDeleteByIds(model.getAccountHeadIDs());
+            accountHeadService.batchDeleteByIds(model.getAccountHeadIDs(),model.getType());
             model.getShowModel().setMsgTip("成功");
             //记录操作日志使用
             tipMsg = "成功";
@@ -434,6 +437,17 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
      */
     public void findBy() {
         try {
+            //如果有按照项目名称搜索项
+            if(StringUtils.isNotEmpty(model.getMaterialsList())){
+                Map<String,Object> conditon = new HashMap<>();
+                conditon.put("InOutItemId_s_eq", model.getMaterialsList());
+                List<AccountItem> itemList = accountItemService.find(conditon);
+                List<String> headIds = new ArrayList<>();
+                for(AccountItem accountItem : itemList){
+                    headIds.add(accountItem.getHeaderId().getId().toString());
+                }
+                model.setMaterialsList(StringUtils.join(headIds.toArray(), ","));
+            }
             PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
             pageUtil.setPageSize(model.getPageSize());
             pageUtil.setCurPage(model.getPageNo());
@@ -569,12 +583,12 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
     public void saveAccountDetails(){
         Log.infoFileSync("==================开始调用保存收款记录方法saveAccountDetails()===================");
         Boolean flag = false;
+        double totalAmount = 0;
         try {
             if(StringUtils.isNotEmpty(model.getOrganIds())){
                 List<String> OrganIds = Arrays.asList(model.getOrganIds().split(","));
                 List<String> TotalPrice = Arrays.asList(model.getTotalPrices().split(","));
                 List<String> BillNo = Arrays.asList(model.getBillNo().split(","));
-                double totalAmount = 0;
                 for(int i = 0 ; i < OrganIds.size() ; i ++){
                     AccountHead accountHead = new AccountHead();
                     accountHead.setType(model.getType());
@@ -613,9 +627,9 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             }
         }
 
-        logService.create(new Logdetails(getUser(), "增加财务", model.getClientIp(),
+        logService.create(new Logdetails(getUser(),   "增加财务", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-                , tipType, "增加财务编号为  " + model.getBillNo() + " " + tipMsg + "！", "增加财务" + tipMsg));
+                , tipType, "增加财务编号为  " + model.getBillNo() + " " + tipMsg + "！", "增加财务|收款操作" + tipMsg +"本次收款金额："+totalAmount +",收款账号："+model.getAccountId()));
         Log.infoFileSync("==================开始调用保存收款记录方法saveAccountDetails()===================");
     }
 
@@ -732,7 +746,26 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
         {
             condition.put("BillNo_s_like", model.getBillNo());
         }
+        //供应商
+        if("supplier".equalsIgnoreCase(model.getSupType())){
+            //供应商不为null
+            condition.put("SupplierId_o_isn", null);
+            condition.put("SupplierId_s_eq",model.getSupplierId());
+        }
+        if("organ".equalsIgnoreCase(model.getSupType())){
+            //客户不为null
+            condition.put("OrganId_o_isn", null);
+            condition.put("OrganId_s_eq",model.getOrganId());
+        }
+        if("user".equalsIgnoreCase(model.getSupType())){
+            //业务员不为null
+            condition.put("UserId_o_isn", null);
+            condition.put("UserId_s_eq",model.getUserId());
+        }
+        condition.put("HandsPersonId_s_eq", model.getHandsPersonId());
+        condition.put("AccountId_s_eq", model.getAccountId());
         condition.put("Type_s_in", model.getType());
+        condition.put("Id_s_in", model.getMaterialsList());
         condition.put("BillTime_s_gteq", model.getBeginTime());
         condition.put("BillTime_s_lteq", model.getEndTime());
         condition.put("Id_s_order", "desc");
@@ -761,5 +794,14 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
      */
     public void setAccountService(AccountIService accountService) {
         this.accountService = accountService;
+    }
+
+    /**
+     * Setter method for property <tt>accountItemService</tt>.
+     *
+     * @param accountItemService value to be assigned to property accountItemService
+     */
+    public void setAccountItemService(AccountItemIService accountItemService) {
+        this.accountItemService = accountItemService;
     }
 }

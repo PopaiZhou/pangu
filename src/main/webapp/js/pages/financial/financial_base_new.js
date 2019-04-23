@@ -199,6 +199,15 @@
 				BillNo:$.trim($("#searchBillNo").val()),
 				BeginTime:$("#searchBeginTime").val(),
 				EndTime:$("#searchEndTime").val(),
+                materialsList : $('#searchMaterialsList').combobox('getValue'),
+                supType : $('#searchType').combobox('getValue'),
+
+                OrganId : $('#searchOrganId').combobox('getValue'),
+                supplierId : $('#searchSupplierId').combobox('getValue'),
+                UserId : $('#searchUserId').combobox('getValue'),
+                HandsPersonId : $('#searchHandsPersonId').combobox('getValue'),
+                AccountId : $('#searchAccountId').combobox('getValue'),
+
 				pageNo:pageNo,
 				pageSize:pageSize
 			}),
@@ -457,6 +466,109 @@
 				return row[opts.textField].indexOf(q) > -1;
 			}
 		});
+		//初始化搜索下拉列表--项目名称
+        $('#searchMaterialsList').combobox({
+            method:'get',
+            url: path + "/inOutItem/findBySelect.action?type=" + inOrOut,
+            valueField:'Id',
+            textField:'InOutItemName',
+            filter: function (q, row) {
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) > -1;
+            }
+        });
+
+        //初始化 收款状态搜索 下拉框
+        $('#searchType').combobox({
+            url: path +'/js/pages/financial/financialType.json',
+            valueField:'value',
+            textField:'name',
+            onSelect:function(record){
+                //供应商，显示供应商下拉列表
+                if(record.value === 'supplier'){
+                    //隐藏客户信息
+                    $("#searchOrganIdLabel").hide();
+                    $("#searchOrganIdName").hide();
+                    //显示供应商信息
+                    $("#searchSupplierIdLabel").show();
+                    $("#searchSupplierIdName").show();
+                    //隐藏业务员信息
+                    $("#searchUserIdLabel").hide();
+                    $("#searchUserIdName").hide();
+                }else if(record.value === 'organ'){
+                    //客户，显示客户下拉列表
+                    $("#searchOrganIdLabel").show();
+                    $("#searchOrganIdName").show();
+                    //隐藏供应商
+                    $("#searchSupplierIdLabel").hide();
+                    $("#searchSupplierIdName").hide();
+                    //隐藏业务员
+                    $("#searchUserIdLabel").hide();
+                    $("#searchUserIdName").hide();
+                }else if(record.value === 'user'){
+                    //客户，隐藏客户下拉列表
+                    $("#searchOrganIdLabel").hide();
+                    $("#searchOrganIdName").hide();
+                    //隐藏供应商
+                    $("#searchSupplierIdLabel").hide();
+                    $("#searchSupplierIdName").hide();
+                    //显示业务员
+                    $("#searchUserIdLabel").show();
+                    $("#searchUserIdName").show();
+                }
+            }
+        });
+        //客户下拉框 -- 搜索
+        $('#searchOrganId').combobox({
+            url: path + "/customer/findBySelect_sup.action",
+            valueField:'id',
+            textField:'customerName',
+            filter: function (q, row) {
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) > -1;
+            }
+        });
+        //供应商 -- 搜索
+        $('#searchSupplierId').combobox({
+            url: path + "/supplier/findBySelect_sup.action",
+            valueField:'id',
+            textField:'supplier',
+            filter: function (q, row) {
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) > -1;
+            }
+        });
+        //业务员 -- 搜索
+        $('#searchUserId').combobox({
+            url: path + "/user/findBySelect_sup.action",
+            valueField:'id',
+            textField:'username',
+            filter: function (q, row) {
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) > -1;
+            }
+        });
+        //经手人 -- 搜索
+        $('#searchHandsPersonId').combobox({
+            url: path + "/user/findBySelect_sup.action",
+            valueField:'id',
+            textField:'username',
+            filter: function (q, row) {
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) > -1;
+            }
+        });
+        $('#searchAccountId').combobox({
+            url: path + "/account/findBySelect.action",
+            valueField:'Id',
+            textField:'AccountName',
+            filter: function (q, row) {
+                var opts = $(this).combobox('options');
+                return row[opts.textField].indexOf(q) > -1;
+            }
+        });
+
+
 	}
 	//获取账户信息
 	function initSystemData_account(){
@@ -565,6 +677,16 @@
 				$("#searchBillNo").val("");
 				$("#searchBeginTime").val("");
 				$("#searchEndTime").val("");
+                $("#searchMaterialsList").combobox("setValue","");
+
+
+                $("#searchType").combobox("setValue","");
+                $("#searchOrganId").combobox("setValue","");
+                $("#searchSupplierId").combobox("setValue","");
+                $("#searchUserId").combobox("setValue","");
+
+                $("#searchHandsPersonId").combobox("setValue","");
+                $("#searchAccountId").combobox("setValue","");
 				//加载完以后重新初始化
 				$("#searchBtn").click();
 			}
@@ -577,12 +699,10 @@
 				if(!$('#accountHeadFM').form('validate')){
 					return;
 				}else{
-					if(listTitle === "收入单列表"){
-						if(!$('#AccountId').val()){
-							$.messager.alert('提示','请选择收款账户！','warning');
-							return;
-						}
-					}
+				    if(!$('#AccountId').val()){
+				        $.messager.alert('提示','请选择收款账户！','warning');
+				        return;
+				    }
 					var ChangeAmount = $.trim($("#ChangeAmount").val());
 					var TotalPrice = $("#accountHeadFM .datagrid-footer [field='EachAmount'] div").text();
 					var OrganId = $('#OrganId').combobox('getValue');
@@ -837,7 +957,7 @@
 			$("#OrganId").combobox({disabled: true});
 			$('#OrganId').combobox('setValue', accountHeadInfo[6]);
 		}
-		//供应商
+		//业务员
 		if(subType === 'user'){
 			//隐藏客户信息
 			$("#OrganIdLabel").hide();
@@ -929,7 +1049,8 @@
 					dataType: "json",
 					data: ({
 						accountHeadIDs : accountHeadID,
-						clientIp: clientIp
+						clientIp: clientIp,
+                        Type : listType
 					}),
 					success: function (tipInfo)
 					{

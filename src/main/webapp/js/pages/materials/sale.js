@@ -968,6 +968,7 @@ function statisticsFun(body,UnitPrice,OperNumber,weight,footer){
             TotalPrice = TotalPrice + parseFloat($(this).find("div").text().toString());
         }
     });
+
     body.find("[field='OperNumber']").each(function(){
         if($(this).find("div").text()!==""){
             totalNum = totalNum + parseFloat($(this).find("div").text().toString());

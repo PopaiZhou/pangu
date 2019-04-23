@@ -33,10 +33,42 @@
      closable="false">
     <table id="searchTable">
         <tr>
+            <td>项目名称：</td>
+            <td>
+                <select name="searchMaterialsList" id="searchMaterialsList" style="width:130px;"></select>
+            </td>
+            <td>经手人：</td>
+            <td>
+                <select name="searchHandsPersonId" id="searchHandsPersonId" style="width:130px;"></select>
+            </td>
+            <td>往来类型：</td>
+            <td>
+                <select name="searchType" id="searchType" style="width:100px;"></select>
+            </td>
+
+            <td id="searchOrganIdLabel" hidden>来往单位：</td>
+            <td id="searchOrganIdName" hidden>
+                <select name="searchOrganId" id="searchOrganId" style="width:100px;"></select>
+            </td>
+            <td id="searchSupplierIdLabel" hidden>来往单位：</td>
+            <td id="searchSupplierIdName" hidden>
+                <select name="searchSupplierId" id="searchSupplierId" style="width:100px;"></select>
+            </td>
+            <td id="searchUserIdLabel" hidden>来往单位：</td>
+            <td id="searchUserIdName" hidden>
+                <select name="searchUserId" id="searchUserId" style="width:100px;"></select>
+            </td>
+        </tr>
+        <tr>
             <td>单据编号：</td>
             <td>
-                <input type="text" name="searchBillNo" id="searchBillNo" style="width:100px;"/>
+                <input type="text" name="searchBillNo" id="searchBillNo" style="width:130px;"/>
             </td>
+            <td>收入账户：</td>
+            <td>
+                <input type="text" name="searchAccountId" id="searchAccountId" style="width:130px;"/>
+            </td>
+
             <td>单据日期：</td>
             <td>
                 <input type="text" name="searchBeginTime" id="searchBeginTime"

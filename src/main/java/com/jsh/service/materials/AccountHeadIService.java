@@ -19,7 +19,7 @@ public interface AccountHeadIService extends BaseIService<AccountHead> {
      */
     void batchDeleteByBillNos(String billNos) throws JshException;
 
-    void batchDeleteByIds(String objIDs);
+    void batchDeleteByIds(String objIDs,String type);
 
     void findCustomerStatementAccount(PageUtil pageUtil, String beginTime, String endTime, Long organId) throws JshException;
 

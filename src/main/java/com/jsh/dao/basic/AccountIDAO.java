@@ -13,4 +13,6 @@ public interface AccountIDAO extends BaseIDAO<Account> {
 
     public void subCurrentAmount(Long accountId,Double TotalPrices);
 
+    public void addCurrentAmount(Long accountId,Double TotalPrices);
+
 }

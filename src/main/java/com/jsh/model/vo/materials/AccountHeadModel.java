@@ -65,6 +65,11 @@ public class AccountHeadModel implements Serializable {
     private int pageNo = 1;
 
     /**
+     * 项目名称搜索项
+     */
+    private String materialsList;
+
+    /**
      * 用户IP，用户记录操作日志
      */
     private String clientIp = "";
@@ -317,5 +322,23 @@ public class AccountHeadModel implements Serializable {
      */
     public void setPreAccountId(long preAccountId) {
         this.preAccountId = preAccountId;
+    }
+
+    /**
+     * Getter method for property <tt>materialsList</tt>.
+     *
+     * @return property value of materialsList
+     */
+    public String getMaterialsList() {
+        return materialsList;
+    }
+
+    /**
+     * Setter method for property <tt>materialsList</tt>.
+     *
+     * @param materialsList value to be assigned to property materialsList
+     */
+    public void setMaterialsList(String materialsList) {
+        this.materialsList = materialsList;
     }
 }

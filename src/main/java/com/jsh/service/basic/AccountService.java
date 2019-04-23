@@ -25,10 +25,7 @@ public class AccountService extends BaseService<Account> implements AccountIServ
 
     @Override
     public void addCurrentAmount(Long accountId,Double TotalPrices) throws JshException {
-        Account account = accountDao.get(accountId);
-        Double currentAmount = account.getCurrentAmount() == null ? 0 : account.getCurrentAmount();
-        Double total = currentAmount + TotalPrices;
-        accountDao.updateCurrentAmount(accountId,total);
+        accountDao.addCurrentAmount(accountId,TotalPrices);
     }
 
     @Override

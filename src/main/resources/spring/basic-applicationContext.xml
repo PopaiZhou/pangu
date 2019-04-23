@@ -372,6 +372,7 @@
     <!-- spring整合struts2需要默认为request或者 prototype，不能是单例 -->
     <bean id="accountHeadAction" class="com.jsh.action.materials.AccountHeadAction" scope="prototype">
         <property name="accountHeadService" ref="accountHeadService"/>
+		<property name="accountItemService" ref="accountItemService"/>
 		<property name="accountService" ref="accountService"/>
         <property name="logService" ref="logService"/>
     </bean>

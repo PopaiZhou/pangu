@@ -76,6 +76,16 @@ public abstract class BaseService<T> implements BaseIService<T> {
         baseDao.find(pageUtil);
     }
 
+    /**
+     * 没有分页
+     * @param conditon
+     * @throws DataAccessException
+     */
+    @Override
+    public List<T> find(Map<String,Object> conditon) throws DataAccessException {
+        return baseDao.find(conditon);
+    }
+
     @Override
     public Boolean checkIsNameExist(String filedName, String filedVale, String idFiled, Long objectID) throws DataAccessException {
         PageUtil<T> pageUtil = new PageUtil<T>();

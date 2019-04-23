@@ -55,7 +55,7 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
 
     @Transactional
     @Override
-    public void batchDeleteByIds(String objIDs) {
+    public void batchDeleteByIds(String objIDs,String Type) {
         //删除分3步
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("Id_s_in", objIDs);
@@ -76,9 +76,16 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
         //2 删除jsh_accountitem 财务子表
         accountItemDao.batchDeleteByHeaderIds(objIDs);
         //更新余额
-        for (long key : sumMap.keySet()) {
-            accountDao.subCurrentAmount(key,sumMap.get(key));
+        if("收入".equalsIgnoreCase(Type)){
+            for (long key : sumMap.keySet()) {
+                accountDao.subCurrentAmount(key,sumMap.get(key));
+            }
+        }else{
+            for (long key : sumMap.keySet()) {
+                accountDao.addCurrentAmount(key,sumMap.get(key));
+            }
         }
+
     }
 
     @Override
