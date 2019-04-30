@@ -22,7 +22,7 @@
 		listTitle = $("#tablePanel").prev().text();
 		if(listTitle === "收入单列表"){
 			listType = "收入";
-			searchType = '\'收入\',\'收款\'';
+			searchType = '\'收入\',\'收款\',\'互转收入\'';
 			itemType = false; //显示当前列
 			payTypeTitle = "收入项目";
 			amountNum = "SR";
@@ -30,7 +30,7 @@
 		}
 		else if(listTitle === "支出单列表"){
 			listType = "支出";
-			searchType = '\'支出\'';
+			searchType = '\'支出\',\'互转支出\'';
 			itemType = false; //显示当前列
 			payTypeTitle = "支出项目";
 			amountNum = "ZC";
@@ -72,7 +72,7 @@
 						if(1 == value)
 						{
 							var orgId =  rec.OrganId ?  rec.OrganId : 0;
-							if('收款' != rec.Type){
+							if('收款' != rec.Type && '互转支出' != rec.Type && '互转收入' != rec.Type){
 								str += '<img title="查看" src="' + path + '/js/easyui-1.3.5/themes/icons/list.png" style="cursor: pointer;" onclick="showAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
 								str += '<img title="编辑" src="' + path + '/js/easyui-1.3.5/themes/icons/pencil.png" style="cursor: pointer;" onclick="editAccountHead(\'' + rowInfo + '\');"/>&nbsp;&nbsp;&nbsp;';
 								str += '<img title="删除" src="' + path + '/js/easyui-1.3.5/themes/icons/edit_remove.png" style="cursor: pointer;" onclick="deleteAccountHead('+ rec.Id +',' + orgId +',' + rec.TotalPrice + ');"/>';
@@ -95,6 +95,9 @@
 						}
 						if(value === "user"){
 							return "业务员";
+						}
+						if(value === "trans"){
+							return "银行互转";
 						}
 					}
 				},

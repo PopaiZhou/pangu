@@ -443,10 +443,15 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                 conditon.put("InOutItemId_s_eq", model.getMaterialsList());
                 List<AccountItem> itemList = accountItemService.find(conditon);
                 List<String> headIds = new ArrayList<>();
-                for(AccountItem accountItem : itemList){
-                    headIds.add(accountItem.getHeaderId().getId().toString());
+                if(itemList.size() > 0){
+                    for(AccountItem accountItem : itemList){
+                        headIds.add(accountItem.getHeaderId().getId().toString());
+                    }
+                    model.setMaterialsList(StringUtils.join(headIds.toArray(), ","));
                 }
-                model.setMaterialsList(StringUtils.join(headIds.toArray(), ","));
+                else{
+                    model.setMaterialsList("-1");
+                }
             }
             PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
             pageUtil.setPageSize(model.getPageSize());
@@ -491,8 +496,16 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                     if(accountHead.getUserId() != null){
                         item.put("subType", "user");
                     }
+                    if(accountHead.getOrganId() == null && accountHead.getSupplierId() ==null && accountHead.getUserId() ==null){
+                        item.put("subType", "trans");
+                        item.put("UserName", "未知");
+                    }
                     if("收款".equalsIgnoreCase(accountHead.getType())){
                         item.put("MaterialsList", "主营业务收入");
+                    }else if("互转支出".equalsIgnoreCase(accountHead.getType())){
+                        item.put("MaterialsList", "互转支出");
+                    }else if("互转收入".equalsIgnoreCase(accountHead.getType())){
+                        item.put("MaterialsList", "互转收入");
                     }else{
                         item.put("MaterialsList", findInoutItemListByHeaderId(accountHead.getId()));
                     }

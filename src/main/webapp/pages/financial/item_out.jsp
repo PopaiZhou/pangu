@@ -64,7 +64,7 @@
             <td>
                 <input type="text" name="searchBillNo" id="searchBillNo" style="width:130px;"/>
             </td>
-            <td>收入账户：</td>
+            <td>支出账户：</td>
             <td>
                 <input type="text" name="searchAccountId" id="searchAccountId" style="width:130px;"/>
             </td>
