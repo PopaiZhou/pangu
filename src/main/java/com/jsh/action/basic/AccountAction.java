@@ -590,7 +590,7 @@ public class AccountAction extends BaseAction<AccountModel> {
     /**
      * 银行互转
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void transAmount() {
         Log.infoFileSync("==================开始银行互转方法===================");
         Boolean flag = false;

@@ -120,7 +120,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
      *
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void createNew() {
         Log.infoFileSync("==================开始调用增加财务信息方法create()===================");
         Boolean flag = false;
@@ -276,7 +276,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
      *
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void updateNew() {
         Boolean flag = false;
         try {

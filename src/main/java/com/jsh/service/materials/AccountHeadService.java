@@ -1,6 +1,7 @@
 package com.jsh.service.materials;
 
 import com.jsh.base.BaseService;
+import com.jsh.base.Log;
 import com.jsh.dao.basic.AccountIDAO;
 import com.jsh.dao.materials.AccountHeadIDAO;
 import com.jsh.dao.materials.AccountItemIDAO;
@@ -41,19 +42,30 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void batchDeleteByBillNos(String billNos) throws JshException {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("BillNo_s_in", billNos);
         List<AccountHead> list = accountHeadDao.find(condition);
+        Map<Long,Double> sumMap = new HashMap<>();
         for(AccountHead accountHead : list){
+            if(sumMap.containsKey(accountHead.getAccountId().getId())){
+                Double total = sumMap.get(accountHead.getAccountId().getId());
+                total = total + accountHead.getTotalPrice();
+                sumMap.put(accountHead.getAccountId().getId(),total);
+            }else{
+                sumMap.put(accountHead.getAccountId().getId(),accountHead.getTotalPrice());
+            }
+        }
+        for (long key : sumMap.keySet()) {
+            Log.infoFileSync("==================AccountHeadService.java batchDeleteByBillNos 退款,减去相关金额key="+key+"|amount="+sumMap.get(key)+"===================");
             //退款,减去相关金额
-            accountDao.subCurrentAmount(accountHead.getAccountId().getId(),accountHead.getTotalPrice());
+            accountDao.subCurrentAmount(key,sumMap.get(key));
         }
         accountHeadDao.batchDeleteByBillNos(billNos);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void batchDeleteByIds(String objIDs,String Type) {
         //删除分3步
@@ -78,10 +90,12 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
         //更新余额
         if("收入".equalsIgnoreCase(Type)){
             for (long key : sumMap.keySet()) {
+                Log.infoFileSync("==================AccountHeadService.java batchDeleteByIds 收入,加上相关金额key="+key+"|amount="+sumMap.get(key)+"===================");
                 accountDao.subCurrentAmount(key,sumMap.get(key));
             }
         }else{
             for (long key : sumMap.keySet()) {
+                Log.infoFileSync("==================AccountHeadService.java batchDeleteByIds 支出,减去相关金额key="+key+"|amount="+sumMap.get(key)+"===================");
                 accountDao.addCurrentAmount(key,sumMap.get(key));
             }
         }
