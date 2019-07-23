@@ -542,6 +542,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 customerCondition.put("customerName_s_like", model.getCustomerName());
 
                 PageUtil<Customer> customerPageUtil = new PageUtil<Customer>();
+                customerPageUtil.setPageSize(0);
+                customerPageUtil.setCurPage(0);
                 customerPageUtil.setAdvSearch(customerCondition);
                 customerService.find(customerPageUtil);
                 List<Customer> customerList = customerPageUtil.getPageList();
