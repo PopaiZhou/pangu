@@ -17,6 +17,16 @@
                 <comment>单位Id(收款/付款单位)-客户编号</comment>
             </column>
         </many-to-one>
+        <many-to-one name="SupplierId" class="com.jsh.model.po.Supplier" lazy="false">
+            <column name="SupplierId">
+                <comment>供应商(收款/付款单位)-供应商编号</comment>
+            </column>
+        </many-to-one>
+        <many-to-one name="UserId" class="com.jsh.model.po.Basicuser" lazy="false">
+            <column name="UserId">
+                <comment>业务员Id(收款/付款单位)-供应商编号</comment>
+            </column>
+        </many-to-one>
         <many-to-one name="HandsPersonId" class="com.jsh.model.po.Basicuser" lazy="false">
             <column name="HandsPersonId">
                 <comment>经手人Id</comment>

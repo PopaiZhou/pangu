@@ -62,4 +62,13 @@ public class AccountHeadDAO extends BaseDAO<AccountHead> implements AccountHeadI
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
         pageUtil.setPageList(query.list());
     }
+
+    @Override
+    public void findInoutItemListByHeaderId(PageUtil pageUtil, Long headerId) throws JshException {
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("select group_concat(concat(jsh_inoutitem.`Name`)) as mName from jsh_accountitem inner join jsh_inoutitem " +
+                " on jsh_accountitem.InOutItemId = jsh_inoutitem.Id where jsh_accountitem.HeaderId =" + headerId);
+        Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(queryString + SearchConditionUtil.getCondition(pageUtil.getAdvSearch()));
+        pageUtil.setPageList(query.list());
+    }
 }

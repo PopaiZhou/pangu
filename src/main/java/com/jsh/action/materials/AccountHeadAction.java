@@ -4,7 +4,9 @@ import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.model.po.*;
 import com.jsh.model.vo.materials.AccountHeadModel;
+import com.jsh.service.basic.AccountIService;
 import com.jsh.service.materials.AccountHeadIService;
+import com.jsh.service.materials.AccountItemIService;
 import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 import com.jsh.util.Tools;
@@ -13,10 +15,12 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.xpath.operations.Or;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +34,8 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public class AccountHeadAction extends BaseAction<AccountHeadModel> {
     private AccountHeadIService accountHeadService;
+    private AccountItemIService accountItemService;
+    private AccountIService accountService;
     private AccountHeadModel model = new AccountHeadModel();
 
     /*
@@ -67,6 +73,8 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             }
             if (model.getHandsPersonId() != null) {
                 accountHead.setHandsPersonId(new Basicuser(model.getHandsPersonId()));
+            }else{
+                accountHead.setHandsPersonId(new Basicuser(getUser().getId()));
             }
             accountHead.setChangeAmount(model.getChangeAmount() == null ? 0 : model.getChangeAmount());
             accountHead.setTotalPrice(model.getTotalPrice());
@@ -88,6 +96,89 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             tipMsg = "成功";
             tipType = 0;
         } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加财务信息异常", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        } finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>增加财务信息回写客户端结果异常", e);
+            }
+        }
+
+        logService.create(new Logdetails(getUser(), "增加财务", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "增加财务编号为  " + model.getBillNo() + " " + tipMsg + "！", "增加财务" + tipMsg));
+        Log.infoFileSync("==================结束调用增加财务方法create()===================");
+    }
+
+    /**
+     * 增加财务新方法
+     * @author zhoujp
+     *
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void createNew() {
+        Log.infoFileSync("==================开始调用增加财务信息方法create()===================");
+        Boolean flag = false;
+        try {
+            AccountHead accountHead = new AccountHead();
+            String subType = model.getSupType();
+            //供应商
+            if(subType.equalsIgnoreCase("supplier")){
+                if(model.getSupplierId() != null){
+                    accountHead.setSupplierId(new Supplier(Long.parseLong(model.getSupplierId())));
+                }
+            }
+            //客户
+            if(subType.equalsIgnoreCase("organ")){
+                if (model.getOrganId() != null) {
+                    accountHead.setOrganId(new Customer(model.getOrganId()));
+                }
+            }
+            //业务员
+            if(subType.equalsIgnoreCase("user")){
+                if (model.getUserId() != null) {
+                    accountHead.setUserId(new Basicuser(model.getUserId()));
+                }
+            }
+            accountHead.setType(model.getType());
+
+            if (model.getHandsPersonId() != null) {
+                accountHead.setHandsPersonId(new Basicuser(model.getHandsPersonId()));
+            }else{
+                accountHead.setHandsPersonId(new Basicuser(getUser().getId()));
+            }
+            accountHead.setChangeAmount(model.getChangeAmount() == null ? 0 : model.getChangeAmount());
+            accountHead.setTotalPrice(model.getTotalPrice());
+            if (model.getAccountId() != null) {
+                accountHead.setAccountId(new Account(model.getAccountId()));
+            }
+            accountHead.setBillNo(model.getBillNo());
+            try {
+                accountHead.setBillTime(new Timestamp(Tools.parse(model.getBillTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
+            } catch (ParseException e) {
+                Log.errorFileSync(">>>>>>>>>>>>>>>解析购买日期格式异常", e);
+            }
+            accountHead.setRemark(model.getRemark());
+            accountHeadService.create(accountHead);
+            if("支出".equalsIgnoreCase(model.getType())){
+                //如果是支出，需要减掉相关金额
+                accountService.subCurrentAmount(model.getAccountId(),model.getTotalPrice());
+            }else{
+                accountService.addCurrentAmount(model.getAccountId(),model.getTotalPrice());
+            }
+
+
+            //========标识位===========
+            flag = true;
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException | JshException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加财务信息异常", e);
             flag = false;
             tipMsg = "失败";
@@ -181,6 +272,92 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
     }
 
     /**
+     * 更新财务
+     *
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateNew() {
+        Boolean flag = false;
+        try {
+            AccountHead accountHead = accountHeadService.get(model.getAccountHeadID());
+            accountHead.setType(model.getType());
+            if (model.getOrganId() != null) {
+                accountHead.setOrganId(new Customer(model.getOrganId()));
+            }
+            if (model.getHandsPersonId() != null) {
+                accountHead.setHandsPersonId(new Basicuser(model.getHandsPersonId()));
+            }
+            accountHead.setChangeAmount(model.getChangeAmount() == null ? 0 : model.getChangeAmount());
+            accountHead.setTotalPrice(model.getTotalPrice());
+            if (model.getAccountId() != null) {
+                accountHead.setAccountId(new Account(model.getAccountId()));
+            }
+            accountHead.setBillNo(model.getBillNo());
+            try {
+                accountHead.setBillTime(new Timestamp(Tools.parse(model.getBillTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
+            } catch (ParseException e) {
+                Log.errorFileSync(">>>>>>>>>>>>>>>解析购买日期格式异常", e);
+            }
+            accountHead.setRemark(model.getRemark());
+            //原来的金额
+            double oldAmount = model.getPreTotalPrice();
+            double newAmount = model.getTotalPrice();
+            long oldAccountId = model.getPreAccountId();
+            long newAccountId = model.getAccountId();
+            //如果没有修改对应的收款账户，那么直接更新新的金额即可
+            if("支出".equalsIgnoreCase(accountHead.getType())){
+                //如果是支出,需要减相关金额
+                if(oldAccountId == newAccountId){
+                    accountService.subCurrentAmount(newAccountId,newAmount - oldAmount);
+                }else{
+                    //如果前后收款账户不一致，那么需要先加回去原来的账户金额，再减掉后来新的账户金额
+                    //比如原来 支付宝收20元
+                    //修改后  微信收40元
+                    //那么需要先 加上支付宝20元 再微信减去40元
+                    accountService.addCurrentAmount(oldAccountId,oldAmount);
+                    //再减去微信的40元
+                    accountService.subCurrentAmount(newAccountId,newAmount);
+                }
+            }else{
+                if(oldAccountId == newAccountId){
+                    //新金额= 修改后的金额 - 原来的金额
+                    //如果原来 20元 后来变成40元 那么新金额 = 40 - 20 = 20元
+                    //如果原来 40元 后来变成20元 那么新金额 = 20 - 40 = -20元
+                    accountService.addCurrentAmount(newAccountId,newAmount - oldAmount);
+                }else{
+                    //如果前后收款账户不一致，那么需要先减掉原来的账户金额，再加上后来新的账户金额
+                    //比如原来 支付宝收20元
+                    //修改后  微信收40元
+                    //那么需要先 减去支付宝20元 再微信加上40元
+                    accountService.subCurrentAmount(oldAccountId,oldAmount);
+                    //再加上微信的40元
+                    accountService.addCurrentAmount(newAccountId,newAmount);
+                }
+            }
+            accountHeadService.update(accountHead);
+
+            flag = true;
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException | JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>修改财务ID为 ： " + model.getAccountHeadID() + "信息失败", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        }  finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>修改财务回写客户端结果异常", e);
+            }
+        }
+        logService.create(new Logdetails(getUser(), "更新财务", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "更新财务ID为  " + model.getAccountHeadID() + " " + tipMsg + "！", "更新财务" + tipMsg));
+    }
+
+    /**
      * 批量删除指定ID财务
      *
      * @return
@@ -188,6 +365,31 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
     public String batchDelete() {
         try {
             accountHeadService.batchDelete(model.getAccountHeadIDs());
+            model.getShowModel().setMsgTip("成功");
+            //记录操作日志使用
+            tipMsg = "成功";
+            tipType = 0;
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>批量删除财务ID为：" + model.getAccountHeadIDs() + "信息异常", e);
+            tipMsg = "失败";
+            tipType = 1;
+        }
+
+        logService.create(new Logdetails(getUser(), "批量删除财务", model.getClientIp(),
+                new Timestamp(System.currentTimeMillis())
+                , tipType, "批量删除财务ID为  " + model.getAccountHeadIDs() + " " + tipMsg + "！", "批量删除财务" + tipMsg));
+        return SUCCESS;
+    }
+    /**
+     * 批量删除指定ID
+     * 新方法
+     *
+     * @return
+     */
+    public String batchDeleteNew() {
+        try {
+            //删除流程
+            accountHeadService.batchDeleteByIds(model.getAccountHeadIDs(),model.getType());
             model.getShowModel().setMsgTip("成功");
             //记录操作日志使用
             tipMsg = "成功";
@@ -235,6 +437,22 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
      */
     public void findBy() {
         try {
+            //如果有按照项目名称搜索项
+            if(StringUtils.isNotEmpty(model.getMaterialsList())){
+                Map<String,Object> conditon = new HashMap<>();
+                conditon.put("InOutItemId_s_eq", model.getMaterialsList());
+                List<AccountItem> itemList = accountItemService.find(conditon);
+                List<String> headIds = new ArrayList<>();
+                if(itemList.size() > 0){
+                    for(AccountItem accountItem : itemList){
+                        headIds.add(accountItem.getHeaderId().getId().toString());
+                    }
+                    model.setMaterialsList(StringUtils.join(headIds.toArray(), ","));
+                }
+                else{
+                    model.setMaterialsList("-1");
+                }
+            }
             PageUtil<AccountHead> pageUtil = new PageUtil<AccountHead>();
             pageUtil.setPageSize(model.getPageSize());
             pageUtil.setCurPage(model.getPageNo());
@@ -250,6 +468,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                 for (AccountHead accountHead : dataList) {
                     JSONObject item = new JSONObject();
                     item.put("Id", accountHead.getId());
+                    item.put("Type", accountHead.getType());
                     item.put("OrganId", accountHead.getOrganId() == null ? "" : accountHead.getOrganId().getId());
                     item.put("OrganName", accountHead.getOrganId() == null ? "" : accountHead.getOrganId().getCustomerName());
                     item.put("HandsPersonId", accountHead.getHandsPersonId() == null ? "" : accountHead.getHandsPersonId().getId());
@@ -260,8 +479,37 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                     item.put("BillTime", Tools.getCenternTime(accountHead.getBillTime()));
                     item.put("ChangeAmount", accountHead.getChangeAmount() == null ? "" : Math.abs(accountHead.getChangeAmount()));
                     item.put("TotalPrice", accountHead.getTotalPrice() == null ? "" : Math.abs(accountHead.getTotalPrice()));
-                    item.put("Remark", accountHead.getRemark());
+                    item.put("Remark", accountHead.getRemark() == null ? "" : accountHead.getRemark() );
                     item.put("op", 1);
+
+                    item.put("SupplierId", accountHead.getSupplierId() == null ? "" : accountHead.getSupplierId().getId());
+                    item.put("SupplierName", accountHead.getSupplierId() == null ? "" : accountHead.getSupplierId().getSupplier());
+
+                    item.put("UserId", accountHead.getUserId() == null ? "" : accountHead.getUserId().getId());
+                    item.put("UserName", accountHead.getUserId() == null ? "" : accountHead.getUserId().getUsername());
+                    if(accountHead.getOrganId() != null){
+                        item.put("subType", "organ");
+                    }
+                    if(accountHead.getSupplierId() != null){
+                        item.put("subType", "supplier");
+                    }
+                    if(accountHead.getUserId() != null){
+                        item.put("subType", "user");
+                    }
+                    if(accountHead.getOrganId() == null && accountHead.getSupplierId() ==null && accountHead.getUserId() ==null){
+                        item.put("subType", "trans");
+                        item.put("UserName", "未知");
+                    }
+                    if("收款".equalsIgnoreCase(accountHead.getType())){
+                        item.put("MaterialsList", "主营业务收入");
+                    }else if("互转支出".equalsIgnoreCase(accountHead.getType())){
+                        item.put("MaterialsList", "互转支出");
+                    }else if("互转收入".equalsIgnoreCase(accountHead.getType())){
+                        item.put("MaterialsList", "互转收入");
+                    }else{
+                        item.put("MaterialsList", findInoutItemListByHeaderId(accountHead.getId()));
+                    }
+
                     dataArray.add(item);
                 }
             }
@@ -348,6 +596,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
     public void saveAccountDetails(){
         Log.infoFileSync("==================开始调用保存收款记录方法saveAccountDetails()===================");
         Boolean flag = false;
+        double totalAmount = 0;
         try {
             if(StringUtils.isNotEmpty(model.getOrganIds())){
                 List<String> OrganIds = Arrays.asList(model.getOrganIds().split(","));
@@ -360,6 +609,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                     accountHead.setHandsPersonId(new Basicuser(getUser().getId()));
                     accountHead.setChangeAmount(0.00);
                     accountHead.setTotalPrice(Double.parseDouble(TotalPrice.get(i)));
+                    totalAmount = totalAmount + Double.parseDouble(TotalPrice.get(i));
                     accountHead.setAccountId(new Account(model.getAccountId()));
                     accountHead.setBillNo(BillNo.get(i));
                     try {
@@ -369,13 +619,15 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                     }
                     accountHeadService.create(accountHead);
                 }
+                //收款，需要在相关账户余额上加上对应金额
+                accountService.addCurrentAmount(model.getAccountId(),totalAmount);
             }
             //========标识位===========
             flag = true;
             //记录操作日志使用
             tipMsg = "成功";
             tipType = 0;
-        } catch (DataAccessException e) {
+        } catch (DataAccessException | JshException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>增加财务信息异常", e);
             flag = false;
             tipMsg = "失败";
@@ -388,9 +640,9 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             }
         }
 
-        logService.create(new Logdetails(getUser(), "增加财务", model.getClientIp(),
+        logService.create(new Logdetails(getUser(),   "增加财务", model.getClientIp(),
                 new Timestamp(System.currentTimeMillis())
-                , tipType, "增加财务编号为  " + model.getBillNo() + " " + tipMsg + "！", "增加财务" + tipMsg));
+                , tipType, "增加财务编号为  " + model.getBillNo() + " " + tipMsg + "！", "增加财务|收款操作" + tipMsg +"本次收款金额："+totalAmount +",收款账号："+model.getAccountId()));
         Log.infoFileSync("==================开始调用保存收款记录方法saveAccountDetails()===================");
     }
 
@@ -470,6 +722,23 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
         }
     }
+    public String findInoutItemListByHeaderId(Long headerId){
+        String allReturn = "";
+        PageUtil pageUtil = new PageUtil();
+        pageUtil.setPageSize(0);
+        pageUtil.setCurPage(0);
+        try {
+            accountHeadService.findInoutItemListByHeaderId(pageUtil, headerId);
+            allReturn = pageUtil.getPageList().toString();
+            allReturn = allReturn.substring(1, allReturn.length() - 1);
+            if (allReturn.equals("null")) {
+                allReturn = "";
+            }
+        } catch (JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
+        }
+        return allReturn;
+    }
 
     private Map<String, Object> getConditionByNumber() {
         Map<String, Object> condition = new HashMap<String, Object>();
@@ -490,7 +759,26 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
         {
             condition.put("BillNo_s_like", model.getBillNo());
         }
-        condition.put("Type_s_eq", model.getType());
+        //供应商
+        if("supplier".equalsIgnoreCase(model.getSupType())){
+            //供应商不为null
+            condition.put("SupplierId_o_isn", null);
+            condition.put("SupplierId_s_eq",model.getSupplierId());
+        }
+        if("organ".equalsIgnoreCase(model.getSupType())){
+            //客户不为null
+            condition.put("OrganId_o_isn", null);
+            condition.put("OrganId_s_eq",model.getOrganId());
+        }
+        if("user".equalsIgnoreCase(model.getSupType())){
+            //业务员不为null
+            condition.put("UserId_o_isn", null);
+            condition.put("UserId_s_eq",model.getUserId());
+        }
+        condition.put("HandsPersonId_s_eq", model.getHandsPersonId());
+        condition.put("AccountId_s_eq", model.getAccountId());
+        condition.put("Type_s_in", model.getType());
+        condition.put("Id_s_in", model.getMaterialsList());
         condition.put("BillTime_s_gteq", model.getBeginTime());
         condition.put("BillTime_s_lteq", model.getEndTime());
         condition.put("Id_s_order", "desc");
@@ -510,5 +798,23 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
 
     public void setAccountHeadService(AccountHeadIService accountHeadService) {
         this.accountHeadService = accountHeadService;
+    }
+
+    /**
+     * Setter method for property <tt>accountService</tt>.
+     *
+     * @param accountService value to be assigned to property accountService
+     */
+    public void setAccountService(AccountIService accountService) {
+        this.accountService = accountService;
+    }
+
+    /**
+     * Setter method for property <tt>accountItemService</tt>.
+     *
+     * @param accountItemService value to be assigned to property accountItemService
+     */
+    public void setAccountItemService(AccountItemIService accountItemService) {
+        this.accountItemService = accountItemService;
     }
 }

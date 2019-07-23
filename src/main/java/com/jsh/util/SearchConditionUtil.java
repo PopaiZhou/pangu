@@ -17,8 +17,9 @@ public class SearchConditionUtil {
      * 根据搜索条件自动拼接成hql搜索语句
      *
      * @param condition 搜索条件 规则：
-     *                  1、类型 n--数字 s--字符串
+     *                  1、类型 n--数字 s--字符串 o --object
      *                  2、属性 eq--等于 neq--不等于 like--像'%XX%' llike--左像'%XX' rlike--右像'XX%' in--包含  gt--大于 gteq--大于等于 lt--小于 lteq--小于等于
+     *                         is -- is isn -- is not
      *                  order--value desc asc  gy-- group by
      *                  示例:
      *                  Map<String,Object> condition = new HashMap<String,Object>();
@@ -61,6 +62,11 @@ public class SearchConditionUtil {
                     else
                         hql.append(emptyPrefix + searchCondition[0] + getType(searchCondition[2]) + "'" + valueInfo + "'");
                 }
+            }else{
+                String[] searchCondition = keyInfo.split("_");
+                if (searchCondition[1].equals("o")){
+                    hql.append(emptyPrefix + searchCondition[0] + getType(searchCondition[2]) + valueInfo);
+                }
             }
         }
         return hql.append(groupbyInfo).append(orderInfo).toString();
@@ -79,6 +85,10 @@ public class SearchConditionUtil {
             typeStr = " = ";
         else if (type.equals("neq"))
             typeStr = " != ";
+        else if (type.equals("is"))
+            typeStr = " is ";
+        else if (type.equals("isn"))
+            typeStr = " is not ";
         else if (type.equals("like"))
             typeStr = " like ";
         else if (type.equals("llike"))
@@ -112,10 +122,11 @@ public class SearchConditionUtil {
         condition.put("supplier_s_like", "aaa");
         condition.put("contacts_s_llike", "186");
         condition.put("contacts_s_rlike", "186");
-        condition.put("phonenum_s_eq", null);
+        condition.put("phonenum_s_neq", null);
         condition.put("email_n_neq", 23);
         condition.put("description_s_order", "desc");
         condition.put("description_s_gb", "aaa");
+        condition.put("phonenum_o_isn", null);
 
         //获取搜索条件拼接
         System.out.println(getCondition(condition));

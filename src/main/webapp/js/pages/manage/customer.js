@@ -136,11 +136,11 @@ function initTableData() {
             { title: '名称',field: 'customerName',width:100},
             { title: '收货人', field: 'contacts',width:70,align:"center"},
             { title: '收货电话', field: 'phonenum',width:100,align:"center"},
+            { title: '地址',field: 'fullAddress',width:250,align:"center"},
             { title: '类型', field: 'type',width:100,align:"center"},
             { title: '业务经理',field: 'userName',width:70,align:"center"},
             { title: 'QQ', field: 'qq',width:100,align:"center"},
             { title: '默认物流',field: 'express',width:70,align:"center"},
-            { title: '地址',field: 'fullAddress',width:250,align:"center"},
             { title: '状态',field: 'enabled',width:70,align:"center",formatter:function(value){
                 return value? "启用":"禁用";
             }}

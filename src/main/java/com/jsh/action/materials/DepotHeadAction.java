@@ -367,7 +367,7 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
      */
     public String batchSetStatus() {
         try {
-            depotHeadService.batchSetStatus(model.getStatus(), model.getDepotHeadIDs());
+            depotHeadService.batchSetStatus(model.getStatus(),model.getAccountId(), model.getDepotHeadIDs());
             model.getShowModel().setMsgTip("成功");
             //记录操作日志使用
             tipMsg = "成功";
@@ -542,6 +542,8 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
                 customerCondition.put("customerName_s_like", model.getCustomerName());
 
                 PageUtil<Customer> customerPageUtil = new PageUtil<Customer>();
+                customerPageUtil.setPageSize(0);
+                customerPageUtil.setCurPage(0);
                 customerPageUtil.setAdvSearch(customerCondition);
                 customerService.find(customerPageUtil);
                 List<Customer> customerList = customerPageUtil.getPageList();

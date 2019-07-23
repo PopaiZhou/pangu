@@ -20,7 +20,7 @@
     <script src="<%=path %>/js/easyui-1.3.5/locale/easyui-lang-zh_CN.js"></script>
     <script src="<%=path %>/js/My97DatePicker/WdatePicker.js"></script>
     <script src="<%=path %>/js/common/common.js"></script>
-    <script src="<%=path %>/js/pages/financial/financial_base.js"></script>
+    <script src="<%=path %>/js/pages/financial/financial_base_new.js"></script>
     <script>
         var kid = ${sessionScope.user.id};
         var path = "<%=path%>";
@@ -33,10 +33,42 @@
      closable="false">
     <table id="searchTable">
         <tr>
+            <td>项目名称：</td>
+            <td>
+                <select name="searchMaterialsList" id="searchMaterialsList" style="width:130px;"></select>
+            </td>
+            <td>经手人：</td>
+            <td>
+                <select name="searchHandsPersonId" id="searchHandsPersonId" style="width:130px;"></select>
+            </td>
+            <td>往来类型：</td>
+            <td>
+                <select name="searchType" id="searchType" style="width:100px;"></select>
+            </td>
+
+            <td id="searchOrganIdLabel" hidden>来往单位：</td>
+            <td id="searchOrganIdName" hidden>
+                <select name="searchOrganId" id="searchOrganId" style="width:100px;"></select>
+            </td>
+            <td id="searchSupplierIdLabel" hidden>来往单位：</td>
+            <td id="searchSupplierIdName" hidden>
+                <select name="searchSupplierId" id="searchSupplierId" style="width:100px;"></select>
+            </td>
+            <td id="searchUserIdLabel" hidden>来往单位：</td>
+            <td id="searchUserIdName" hidden>
+                <select name="searchUserId" id="searchUserId" style="width:100px;"></select>
+            </td>
+        </tr>
+        <tr>
             <td>单据编号：</td>
             <td>
-                <input type="text" name="searchBillNo" id="searchBillNo" style="width:100px;"/>
+                <input type="text" name="searchBillNo" id="searchBillNo" style="width:130px;"/>
             </td>
+            <td>收入账户：</td>
+            <td>
+                <input type="text" name="searchAccountId" id="searchAccountId" style="width:130px;"/>
+            </td>
+
             <td>单据日期：</td>
             <td>
                 <input type="text" name="searchBeginTime" id="searchBeginTime"
@@ -67,13 +99,21 @@
     <form id="accountHeadFM" method="post" novalidate>
         <table>
             <tr>
-                <td style="width:60px;">往来单位：</td>
+                <td style="width:60px;">往来类型：</td>
                 <td style="padding:5px;width:170px;">
+                    <select name="Type" id="Type" style="width:130px;"></select>
+                </td>
+                <td style="width:60px;" id="OrganIdLabel" hidden>客户：</td>
+                <td style="padding:5px;width:170px;" id="OrganIdName" hidden>
                     <select name="OrganId" id="OrganId" style="width:130px;"></select>
                 </td>
-                <td style="width:70px;">经手人：</td>
-                <td style="padding:5px;width:170px;">
-                    <select name="HandsPersonId" id="HandsPersonId" style="width:110px;"></select>
+                <td style="width:60px;" id="SupplierIdLabel" hidden>供应商：</td>
+                <td style="padding:5px;width:170px;" id="SupplierIdName" hidden>
+                    <select name="SupplierId" id="SupplierId" style="width:130px;"></select>
+                </td>
+                <td style="width:60px;" id="UserIdLabel" hidden>业务员：</td>
+                <td style="padding:5px;width:170px;" id="UserIdName" hidden>
+                    <select name="UserId" id="UserId" style="width:130px;"></select>
                 </td>
                 <td style="width:70px;">单据日期：</td>
                 <td style="padding:5px;width:170px;">
@@ -124,15 +164,21 @@
      closed="true" modal="true" cache="false" collapsible="false" closable="true">
     <table>
         <tr>
+            <td style="width:60px;">往来类型：</td>
+            <td style="padding:5px;width:60px;">
+                <span id="TypeShow"></span>
+            </td>
             <td style="width:60px;">往来单位：</td>
-            <td style="padding:5px;width:130px;">
+            <td style="padding:5px;width:60px;">
                 <span id="OrganIdShow"></span>
             </td>
-            <td style="width:70px;">经手人：</td>
-            <td style="padding:5px;width:130px;">
+            <td style="width:60px;">经手人：</td>
+            <td style="padding:5px;width:60px;">
                 <span id="HandsPersonIdShow"></span>
             </td>
-            <td style="width:70px;">单据日期：</td>
+        </tr>
+        <tr>
+            <td style="width:60px;">单据日期：</td>
             <td style="padding:5px;width:130px;">
                 <span id="BillTimeShow"></span>
             </td>

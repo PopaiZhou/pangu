@@ -17,6 +17,7 @@
 	var editIndex = undefined;
 	var listTitle = ""; //单据标题
 	var listType = ""; //入库 出库
+	var searchType = "";
 	var listSubType = ""; //采购 销售等
 	var payTypeTitle = "";//付款 收款
 	var organUrl = ""; //组织数据接口地址

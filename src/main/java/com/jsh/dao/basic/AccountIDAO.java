@@ -9,4 +9,10 @@ public interface AccountIDAO extends BaseIDAO<Account> {
 
     public void findAccountInOutList(PageUtil<Account> pageUtil, Long accountId) throws JshException;
 
+    public void updateCurrentAmount(Long accountId,Double TotalPrices) throws JshException;
+
+    public void subCurrentAmount(Long accountId,Double TotalPrices);
+
+    public void addCurrentAmount(Long accountId,Double TotalPrices);
+
 }

@@ -442,6 +442,43 @@ public class UserAction extends BaseAction<UserModel> {
     }
 
     /**
+     * 查询内部用户信息下拉列表
+     */
+    public void findBySelect_sup() {
+        try {
+            /**
+             * 拼接搜索条件
+             */
+            Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("id_s_order", "ASC");
+
+            PageUtil<Basicuser> pageUtil = new PageUtil<Basicuser>();
+            pageUtil.setPageSize(0);
+            pageUtil.setCurPage(0);
+            pageUtil.setAdvSearch(condition);
+            userService.find(pageUtil);
+            List<Basicuser> dataList = pageUtil.getPageList();
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Basicuser basicuser : dataList) {
+                    JSONObject item = new JSONObject();
+                    item.put("id", basicuser.getId());
+                    //客户名称
+                    item.put("username", basicuser.getUsername());
+                    dataArray.add(item);
+                }
+            }
+            //回写查询结果
+            toClient(dataArray.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找内部用户下拉框信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写内部用户下拉框信息结果异常", e);
+        }
+    }
+
+    /**
      * 拼接搜索条件
      *
      * @return 拼接后的条件

@@ -251,6 +251,7 @@ public class InOutItemAction extends BaseAction<InOutItemModel> {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("name_s_like", model.getName());
         condition.put("remark_s_like", model.getRemark());
+        condition.put("type_s_eq", model.getType());
         condition.put("id_s_order", "desc");
         return condition;
     }

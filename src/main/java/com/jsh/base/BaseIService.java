@@ -4,6 +4,8 @@ import com.jsh.util.PageUtil;
 import org.springframework.dao.DataAccessException;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 服务层底层接口
@@ -76,6 +78,14 @@ public interface BaseIService<T> {
      * @throws DataAccessException
      */
     void find(PageUtil<T> pageUtil) throws DataAccessException;
+
+    /**
+     * 查找列表
+     * 没有分页
+     * @param conditon
+     * @throws DataAccessException
+     */
+    List<T> find(Map<String,Object> conditon) throws DataAccessException;
 
     /**
      * 检查名称是否存在，页面唯一性效验使用

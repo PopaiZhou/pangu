@@ -14,6 +14,7 @@ import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -66,7 +67,7 @@ public class AccountAction extends BaseAction<AccountModel> {
             Account.setName(model.getName());
             Account.setSerialNo(model.getSerialNo());
             Account.setInitialAmount(model.getInitialAmount() != null ? model.getInitialAmount() : 0);
-            Account.setCurrentAmount(model.getCurrentAmount());
+            Account.setCurrentAmount(model.getCurrentAmount() != null ? model.getCurrentAmount() : 0);
             Account.setRemark(model.getRemark());
             accountService.create(Account);
 
@@ -262,6 +263,25 @@ public class AccountAction extends BaseAction<AccountModel> {
     }
 
     /**
+     * 查询某张卡的金额
+     */
+    public void getAccountAmount() {
+        Double amount = 0d;
+        try {
+            Account account = accountService.get(model.getAccountID());
+            amount = account.getCurrentAmount();
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>>>>>查询卡余额：" + amount + " ID为： " + model.getAccountID() + " 异常！");
+        } finally {
+            try {
+                toClient(amount.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>回写查询卡余额为：" + amount + " ID为： " + model.getAccountID() + " 异常！", e);
+            }
+        }
+    }
+
+    /**
      * 查找结算账户信息
      *
      * @return
@@ -315,6 +335,50 @@ public class AccountAction extends BaseAction<AccountModel> {
     }
 
     /**
+     * 查找结算账户信息
+     *
+     * @return
+     */
+    public void findByNew() {
+        try {
+            PageUtil<Account> pageUtil = new PageUtil<Account>();
+            pageUtil.setPageSize(model.getPageSize());
+            pageUtil.setCurPage(model.getPageNo());
+            pageUtil.setAdvSearch(getCondition());
+            accountService.find(pageUtil);
+            List<Account> dataList = pageUtil.getPageList();
+
+            JSONObject outer = new JSONObject();
+            outer.put("total", pageUtil.getTotalCount());
+            //存放数据json数组
+            JSONArray dataArray = new JSONArray();
+            if (null != dataList) {
+                for (Account account : dataList) {
+                    DecimalFormat df = new DecimalFormat(".##");
+                    JSONObject item = new JSONObject();
+                    item.put("id", account.getId());
+                    //结算账户名称
+                    item.put("name", account.getName());
+                    item.put("serialNo", account.getSerialNo());
+                    item.put("initialAmount", account.getInitialAmount());
+                    item.put("currentAmount", account.getCurrentAmount());  //当前余额
+                    item.put("isDefault", account.getIsDefault());  //是否默认
+                    item.put("remark", account.getRemark());
+                    item.put("op", 1);
+                    dataArray.add(item);
+                }
+            }
+            outer.put("rows", dataArray);
+            //回写查询结果
+            toClient(outer.toString());
+        } catch (DataAccessException e) {
+            Log.errorFileSync(">>>>>>>>>查找结算账户信息异常", e);
+        } catch (IOException e) {
+            Log.errorFileSync(">>>>>>>>>回写查询结算账户信息结果异常", e);
+        }
+    }
+
+    /**
      * 单个账户的金额求和-入库和出库
      *
      * @param id
@@ -331,7 +395,7 @@ public class AccountAction extends BaseAction<AccountModel> {
             List<DepotHead> dataList = pageUtil.getPageList();
             if (dataList != null) {
                 for (DepotHead depotHead : dataList) {
-                    accountSum = accountSum + depotHead.getChangeAmount();
+                    accountSum = accountSum + depotHead.getTotalPrice();
                 }
             }
         } catch (DataAccessException e) {
@@ -520,6 +584,64 @@ public class AccountAction extends BaseAction<AccountModel> {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>查找信息异常", e);
         } catch (IOException e) {
             Log.errorFileSync(">>>>>>>>>>>>>>>>>>>回写查询信息结果异常", e);
+        }
+    }
+
+    /**
+     * 银行互转
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void transAmount() {
+        Log.infoFileSync("==================开始银行互转方法===================");
+        Boolean flag = false;
+        try {
+            //第一步 减去转出
+            accountService.subCurrentAmount(model.getOutAccountId(),model.getCurrentAmount());
+            //记上一笔支出流水
+            AccountHead outAccountHead = new AccountHead();
+            outAccountHead.setType("互转支出");
+            outAccountHead.setHandsPersonId(getUser());
+            outAccountHead.setChangeAmount(model.getCurrentAmount());
+            outAccountHead.setTotalPrice(model.getCurrentAmount());
+            outAccountHead.setAccountId(new Account(model.getOutAccountId()));
+            outAccountHead.setBillNo("ZC"+model.getSerialNo());
+            outAccountHead.setBillTime(new Timestamp(System.currentTimeMillis()));
+            outAccountHead.setRemark("转入账户："+model.getInAccountName());
+            accountHeadService.create(outAccountHead);
+
+            //第二步 加上转入
+            accountService.addCurrentAmount(model.getInAccountId(),model.getCurrentAmount());
+            AccountHead inAccountHead = new AccountHead();
+            inAccountHead.setType("互转收入");
+            inAccountHead.setHandsPersonId(getUser());
+            inAccountHead.setChangeAmount(model.getCurrentAmount());
+            inAccountHead.setTotalPrice(model.getCurrentAmount());
+            inAccountHead.setAccountId(new Account(model.getInAccountId()));
+            inAccountHead.setBillNo("SR"+model.getSerialNo());
+            inAccountHead.setBillTime(new Timestamp(System.currentTimeMillis()));
+            inAccountHead.setRemark("转出账户:"+model.getOutAccountName());
+            accountHeadService.create(inAccountHead);
+
+            flag = true;
+            tipMsg = "成功";
+            tipType = 0;
+
+            logService.create(new Logdetails(getUser(), "银行互转", model.getClientIp(),
+                    new Timestamp(System.currentTimeMillis())
+                    , tipType, "银行互转  转出ID为" + model.getOutAccountId() +"|转入ID为："+model.getInAccountId() +"|转账金额为:"+model.getCurrentAmount() + " " + tipMsg + "！", "银行互转" + tipMsg));
+
+            Log.infoFileSync(">>>>>>>>>>>>>银行互转 转出ID为 ： " + model.getOutAccountId() +"|转入ID为："+model.getInAccountId() +"|转账金额为:"+model.getCurrentAmount() + "信息成功");
+        } catch (DataAccessException | JshException e) {
+            Log.errorFileSync(">>>>>>>>>>>>>银行互转 转出ID为 ： " + model.getOutAccountId() +"|转入ID为："+model.getInAccountId() +"|转账金额为:"+model.getCurrentAmount() + "信息失败", e);
+            flag = false;
+            tipMsg = "失败";
+            tipType = 1;
+        }  finally {
+            try {
+                toClient(flag.toString());
+            } catch (IOException e) {
+                Log.errorFileSync(">>>>>>>>>>>>银行互转回写客户端结果异常", e);
+            }
         }
     }
 

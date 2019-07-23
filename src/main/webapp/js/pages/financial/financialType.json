@@ -1,0 +1,14 @@
+[
+  {
+    "value": "supplier",
+    "name": "供应商"
+  },
+  {
+    "value": "organ",
+    "name": "客户"
+  },
+  {
+    "value": "user",
+    "name": "公司内部"
+  }
+]
