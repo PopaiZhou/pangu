@@ -37,7 +37,7 @@ public class AccountService extends BaseService<Account> implements AccountIServ
         Log.infoFileSync("==================Account计算金额="+bigTotalPrices+"===================");
         BigDecimal bigNewAmount = bigOldAmount.add(bigTotalPrices).setScale(2,BigDecimal.ROUND_HALF_UP);
         Log.infoFileSync("==================Account计算结果="+bigNewAmount+"===================");
-        accountDao.updateCurrentAmount(accountId,bigNewAmount.doubleValue());
+        accountDao.updateCurrentAmount(accountId,bigNewAmount);
         Log.infoFileSync("==================结束调用addCurrentAmount() DAO层===================");
     }
 
@@ -51,7 +51,7 @@ public class AccountService extends BaseService<Account> implements AccountIServ
         Log.infoFileSync("==================Account计算金额="+bigTotalPrices+"===================");
         BigDecimal bigNewAmount = bigOldAmount.subtract(bigTotalPrices).setScale(2,BigDecimal.ROUND_HALF_UP);
         Log.infoFileSync("==================Account计算结果="+bigNewAmount+"===================");
-        accountDao.updateCurrentAmount(accountId,bigNewAmount.doubleValue());
+        accountDao.updateCurrentAmount(accountId,bigNewAmount);
         Log.infoFileSync("==================结束调用subCurrentAmount() DAO层===================");
 
     }

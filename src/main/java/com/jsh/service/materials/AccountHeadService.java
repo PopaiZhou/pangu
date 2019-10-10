@@ -10,6 +10,7 @@ import com.jsh.util.JshException;
 import com.jsh.util.PageUtil;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,9 +59,11 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
             }
         }
         for (long key : sumMap.keySet()) {
-            Log.infoFileSync("==================AccountHeadService.java batchDeleteByBillNos 退款,减去相关金额key="+key+"|amount="+sumMap.get(key)+"===================");
+            //进行精度处理
+            BigDecimal amount = new BigDecimal(sumMap.get(key)).setScale(2,BigDecimal.ROUND_HALF_UP);
+            Log.infoFileSync("==================AccountHeadService.java batchDeleteByBillNos 退款,减去相关金额key="+key+"|amount="+amount+"===================");
             //退款,减去相关金额
-            accountDao.subCurrentAmount(key,sumMap.get(key));
+            accountDao.subCurrentAmount(key,amount);
         }
         accountHeadDao.batchDeleteByBillNos(billNos);
     }
@@ -90,13 +93,17 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
         //更新余额
         if("收入".equalsIgnoreCase(Type)){
             for (long key : sumMap.keySet()) {
-                Log.infoFileSync("==================AccountHeadService.java batchDeleteByIds 收入,加上相关金额key="+key+"|amount="+sumMap.get(key)+"===================");
-                accountDao.subCurrentAmount(key,sumMap.get(key));
+                //进行精度处理
+                BigDecimal amount = new BigDecimal(sumMap.get(key)).setScale(2,BigDecimal.ROUND_HALF_UP);
+                Log.infoFileSync("==================AccountHeadService.java batchDeleteByIds 收入,加上相关金额key="+key+"|amount="+amount+"===================");
+                accountDao.subCurrentAmount(key,amount);
             }
         }else{
             for (long key : sumMap.keySet()) {
-                Log.infoFileSync("==================AccountHeadService.java batchDeleteByIds 支出,减去相关金额key="+key+"|amount="+sumMap.get(key)+"===================");
-                accountDao.addCurrentAmount(key,sumMap.get(key));
+                //进行精度处理
+                BigDecimal amount = new BigDecimal(sumMap.get(key)).setScale(2,BigDecimal.ROUND_HALF_UP);
+                Log.infoFileSync("==================AccountHeadService.java batchDeleteByIds 支出,减去相关金额key="+key+"|amount="+amount+"===================");
+                accountDao.addCurrentAmount(key,amount);
             }
         }
 
