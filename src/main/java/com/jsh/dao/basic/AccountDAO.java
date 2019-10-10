@@ -7,6 +7,8 @@ import com.jsh.util.PageUtil;
 import com.jsh.util.SearchConditionUtil;
 import org.hibernate.Query;
 
+import java.math.BigDecimal;
+
 public class AccountDAO extends BaseDAO<Account> implements AccountIDAO {
     /**
      * 设置dao映射基类
@@ -82,22 +84,22 @@ public class AccountDAO extends BaseDAO<Account> implements AccountIDAO {
 
     //更新结算账户余额
     @Override
-    public void updateCurrentAmount(Long accountId,Double TotalPrices) throws JshException {
-        String sql = "UPDATE jsh_account  set CurrentAmount =  "+TotalPrices+"   where Id = " + accountId ;
+    public void updateCurrentAmount(Long accountId, BigDecimal totalPrices) throws JshException {
+        String sql = "UPDATE jsh_account  set CurrentAmount =  "+totalPrices+"   where Id = " + accountId ;
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
         query.executeUpdate();
     }
 
     @Override
-    public void subCurrentAmount(Long accountId, Double TotalPrices) {
-        String sql = "UPDATE jsh_account  set CurrentAmount = CurrentAmount - "+TotalPrices+"   where Id = " + accountId;
+    public void subCurrentAmount(Long accountId, BigDecimal totalPrices) {
+        String sql = "UPDATE jsh_account  set CurrentAmount = CurrentAmount - "+totalPrices+"   where Id = " + accountId;
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
         query.executeUpdate();
     }
 
     @Override
-    public void addCurrentAmount(Long accountId, Double TotalPrices) {
-        String sql = "UPDATE jsh_account  set CurrentAmount = CurrentAmount + "+TotalPrices+"   where Id = " + accountId;
+    public void addCurrentAmount(Long accountId, BigDecimal totalPrices) {
+        String sql = "UPDATE jsh_account  set CurrentAmount = CurrentAmount + "+totalPrices+"   where Id = " + accountId;
         Query query = this.getHibernateTemplate().getSessionFactory().getCurrentSession().createSQLQuery(sql);
         query.executeUpdate();
     }
