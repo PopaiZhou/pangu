@@ -2,7 +2,13 @@ package com.jsh.action.materials;
 
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
-import com.jsh.model.po.*;
+import com.jsh.model.po.Account;
+import com.jsh.model.po.AccountHead;
+import com.jsh.model.po.AccountItem;
+import com.jsh.model.po.Basicuser;
+import com.jsh.model.po.Customer;
+import com.jsh.model.po.Logdetails;
+import com.jsh.model.po.Supplier;
 import com.jsh.model.vo.materials.AccountHeadModel;
 import com.jsh.service.basic.AccountIService;
 import com.jsh.service.materials.AccountHeadIService;
@@ -13,11 +19,11 @@ import com.jsh.util.Tools;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
-import org.apache.xpath.operations.Or;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -303,13 +309,16 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
             //原来的金额
             double oldAmount = model.getPreTotalPrice();
             double newAmount = model.getTotalPrice();
+            BigDecimal bigOldAmount = new BigDecimal(oldAmount).setScale(2,BigDecimal.ROUND_HALF_UP);
+            BigDecimal bigNewAmount = new BigDecimal(oldAmount).setScale(2,BigDecimal.ROUND_HALF_UP);
+
             long oldAccountId = model.getPreAccountId();
             long newAccountId = model.getAccountId();
             //如果没有修改对应的收款账户，那么直接更新新的金额即可
             if("支出".equalsIgnoreCase(accountHead.getType())){
                 //如果是支出,需要减相关金额
                 if(oldAccountId == newAccountId){
-                    accountService.subCurrentAmount(newAccountId,newAmount - oldAmount);
+                    accountService.subCurrentAmount(newAccountId,bigNewAmount.subtract(bigOldAmount).doubleValue());
                 }else{
                     //如果前后收款账户不一致，那么需要先加回去原来的账户金额，再减掉后来新的账户金额
                     //比如原来 支付宝收20元
@@ -324,7 +333,7 @@ public class AccountHeadAction extends BaseAction<AccountHeadModel> {
                     //新金额= 修改后的金额 - 原来的金额
                     //如果原来 20元 后来变成40元 那么新金额 = 40 - 20 = 20元
                     //如果原来 40元 后来变成20元 那么新金额 = 20 - 40 = -20元
-                    accountService.addCurrentAmount(newAccountId,newAmount - oldAmount);
+                    accountService.addCurrentAmount(newAccountId,bigNewAmount.subtract(bigOldAmount).doubleValue());
                 }else{
                     //如果前后收款账户不一致，那么需要先减掉原来的账户金额，再加上后来新的账户金额
                     //比如原来 支付宝收20元

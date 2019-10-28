@@ -75,15 +75,15 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("Id_s_in", objIDs);
         List<AccountHead> list = accountHeadDao.find(condition);
-        Map<Long,Double> sumMap = new HashMap<>();
+        Map<Long,BigDecimal> sumMap = new HashMap<>();
         //存一下需要修改的账户金额
         for(AccountHead accountHead : list){
             if(sumMap.containsKey(accountHead.getAccountId().getId())){
-                Double total = sumMap.get(accountHead.getAccountId().getId());
-                total = total + accountHead.getTotalPrice();
+                BigDecimal total = sumMap.get(accountHead.getAccountId().getId());
+                total = total.add(new BigDecimal(accountHead.getTotalPrice()));
                 sumMap.put(accountHead.getAccountId().getId(),total);
             }else{
-                sumMap.put(accountHead.getAccountId().getId(),accountHead.getTotalPrice());
+                sumMap.put(accountHead.getAccountId().getId(),new BigDecimal(accountHead.getTotalPrice()));
             }
         }
         //1 删除jsh_accounthead 财务主表
@@ -94,14 +94,14 @@ public class AccountHeadService extends BaseService<AccountHead> implements Acco
         if("收入".equalsIgnoreCase(Type)){
             for (long key : sumMap.keySet()) {
                 //进行精度处理
-                BigDecimal amount = new BigDecimal(sumMap.get(key)).setScale(2,BigDecimal.ROUND_HALF_UP);
+                BigDecimal amount = sumMap.get(key).setScale(2,BigDecimal.ROUND_HALF_UP);
                 Log.infoFileSync("==================AccountHeadService.java batchDeleteByIds 收入,加上相关金额key="+key+"|amount="+amount+"===================");
                 accountDao.subCurrentAmount(key,amount);
             }
         }else{
             for (long key : sumMap.keySet()) {
                 //进行精度处理
-                BigDecimal amount = new BigDecimal(sumMap.get(key)).setScale(2,BigDecimal.ROUND_HALF_UP);
+                BigDecimal amount = sumMap.get(key).setScale(2,BigDecimal.ROUND_HALF_UP);
                 Log.infoFileSync("==================AccountHeadService.java batchDeleteByIds 支出,减去相关金额key="+key+"|amount="+amount+"===================");
                 accountDao.addCurrentAmount(key,amount);
             }
