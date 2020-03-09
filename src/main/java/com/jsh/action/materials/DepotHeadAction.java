@@ -3,7 +3,13 @@ package com.jsh.action.materials;
 import com.jsh.base.BaseAction;
 import com.jsh.base.Log;
 import com.jsh.enums.CustomerTypeEnum;
-import com.jsh.model.po.*;
+import com.jsh.model.po.Account;
+import com.jsh.model.po.Basicuser;
+import com.jsh.model.po.Customer;
+import com.jsh.model.po.Depot;
+import com.jsh.model.po.DepotHead;
+import com.jsh.model.po.Logdetails;
+import com.jsh.model.po.Person;
 import com.jsh.model.vo.materials.DepotHeadModel;
 import com.jsh.service.basic.UserIService;
 import com.jsh.service.materials.CustomerIService;
@@ -18,7 +24,6 @@ import org.springframework.dao.DataAccessException;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -102,11 +107,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
 
             depotHead.setOperPersonName(getUser().getUsername());
             depotHead.setCreateTime(new Timestamp(System.currentTimeMillis()));
-            try {
+            depotHead.setOperTime(new Timestamp(System.currentTimeMillis()));
+            /*try {
                 depotHead.setOperTime(new Timestamp(Tools.parse(model.getOperTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
             } catch (ParseException e) {
                 Log.errorFileSync(">>>>>>>>>>>>>>>解析购买日期格式异常", e);
-            }
+            }*/
             if (model.getOrganId() != null) {
                 depotHead.setOrganId(new Customer(model.getOrganId()));
             }
@@ -216,11 +222,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             }
             depotHead.setNumber(model.getNumber());
             depotHead.setOperPersonName(getUser().getUsername());
-            try {
+            /*try {
                 depotHead.setOperTime(new Timestamp(Tools.parse(model.getOperTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
             } catch (ParseException e) {
                 Log.errorFileSync(">>>>>>>>>>>>>>>解析入库时间格式异常", e);
-            }
+            }*/
+            depotHead.setOperTime(new Timestamp(System.currentTimeMillis()));
             if (model.getOrganId() != null) {
                 depotHead.setOrganId(new Customer(model.getOrganId()));
             }
@@ -307,11 +314,12 @@ public class DepotHeadAction extends BaseAction<DepotHeadModel> {
             //发货员
             depotHead.setSendPersonName(getUser().getUsername());
             //操作时间
-            try {
+            /*try {
                 depotHead.setOperTime(new Timestamp(Tools.parse(model.getOperTime(), "yyyy-MM-dd HH:mm:ss").getTime()));
             } catch (ParseException e) {
                 Log.errorFileSync(">>>>>>>>>>>>>>>解析入库时间格式异常", e);
-            }
+            }*/
+            depotHead.setOperTime(new Timestamp(System.currentTimeMillis()));
 
             depotHeadService.update(depotHead);
 
