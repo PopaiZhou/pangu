@@ -232,10 +232,6 @@
             <td style="padding:5px;width:130px;">
                 <span id="SalesmanShow"></span>
             </td>
-            <td style="width:70px;">单据编号：</td>
-            <td style="padding:5px;width:140px;">
-                <span id="NumberShow"></span>
-            </td>
         </tr>
         <tr>
             <td style="width:80px;">下单日期：</td>
@@ -246,6 +242,10 @@
             <td style="width:80px;">发货日期：</td>
             <td style="padding:5px;width:140px;">
                 <span id="SendTimeShow"></span>
+            </td>
+            <td style="width:70px;">单据编号：</td>
+            <td style="padding:5px;width:140px;">
+                <span id="NumberShow"></span>
             </td>
         </tr>
         <tr>
